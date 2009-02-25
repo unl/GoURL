@@ -1,9 +1,12 @@
 <?php
 require_once 'UNL/Templates.php';
 $page = UNL_Templates::factory('Fixed');
-$page->titlegraphic = "<h1>Go URL</h1><h2>Size doesn't matter</h2>";
+$page->titlegraphic = "<h1>Go URL</h1><h2>The shorter the better</h2>";
 $page->doctitle = '<title>UNL | Go URL, a short URL service</title>';
-$page->head ="<script type=\"text/javascript\" src=\"http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js\"></script>";
-$page->maincontentarea = 'Hello world!';
+$page->leftRandomPromo = '';
+$page->head ="<script type=\"text/javascript\" src=\"http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js\"></script> <script type=\"text/javascript\"> var navl2Links = 0; //Default navline2 links to display (zero based counting) </script>";
+ob_start();
+include 'UNL/views/index.php';
+$page->maincontentarea = ob_get_clean();
 $page->loadSharedcodeFiles();
 echo $page;
