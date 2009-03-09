@@ -1,0 +1,95 @@
+/* CSS styles for forms in <div id="maincontent">
+Author: Seth Meranda, University Communications
+Email: smeranda2@unl.edu
+
+Last Modified Date: 03/08/2009
+*/
+#maincontent form, #maincontent fieldset {
+	margin: 0;
+	padding: 0;
+}
+#maincontent fieldset { border: 1px solid #000; }
+#maincontent legend {
+	padding: 0;
+	color: #000;
+}
+#maincontent input, #maincontent textarea, #maincontent select {
+	margin: 0;
+	padding: 1px;
+	font-size: 100%;
+	font-family: inherit;
+}
+#maincontent textarea {
+	width:300px;
+}
+#maincontent select { padding: 0; }
+#maincontent form fieldset {
+  margin-bottom: 10px;
+  border: 1px dashed #C9C28C;
+  border-top: 1px solid #C9C28C;
+  border-bottom:none;
+  background: url() left bottom repeat-x;
+  width:auto;
+}
+#maincontent form legend {
+  padding-left: 0;
+  font-weight: bold;
+  color:#666;
+}
+#maincontent form label {
+  display: inline-block;
+  line-height: 1.8;
+  vertical-align: top;
+}
+#maincontent form fieldset ol {
+  margin: 0;
+  padding: 0 0 0 0;
+}
+#maincontent form fieldset li {
+  padding: 5px 10px 7px;
+  list-style: none;
+  margin: 0;
+  background: url(/images/formdivider.gif) left bottom repeat-x;
+}
+#maincontent form fieldset fieldset {
+  background:none;
+  border: none;
+  margin: 3px 0 0;
+}
+#maincontent form fieldset fieldset legend {
+  padding: 0 0 5px;
+  font-weight: normal;
+  color:#333;
+}
+#maincontent form fieldset fieldset label {
+  display: block;
+  width: auto;
+}
+#maincontent form em {
+  font-weight: bold;
+  font-style: normal;
+  color: #900;
+}
+#maincontent form label {
+  width: 160px; /* Width of labels */
+}
+#maincontent form table tbody tr td label {
+  width: 100px; /* Width of labels */
+}
+#maincontent form fieldset fieldset label {
+  margin-left: 163px; /* Width plus 3 (html space) */
+}
+#maincontent form #submit {
+	margin-left:163px;
+}
+#maincontent form fieldset ol {
+	padding: 0;
+}
+/*\*//*/ #maincontent form legend { display: inline-block; } /* IE Mac legend fix */
+#maincontent label.error {
+	color: #990000;
+	font-style: italic;
+	margin-left: 10px;
+	width: auto;
+	display: inline;
+}
