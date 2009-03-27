@@ -3,6 +3,10 @@ Author: UNL WDN [http://wdn.unl.edu]
 
 Last Modified Date: 03/08/2009
 */
+#main_right {overflow:visible;}
+#navigation {
+    display:none;
+}
 #maincontent form {
 	margin: 0;
 	padding: 0;
@@ -14,12 +18,12 @@ Last Modified Date: 03/08/2009
     padding: 0;
     display: block;
     border: none;
-    width: 700px;
     border-bottom: 1px solid #dfdfdf;
     position: relative;
     margin: 25px 0 20px 0;
-    background: #ecf4f8 url(images/fieldsetline.gif) no-repeat;
-    padding: 0 0 10px 0;
+    background: #f4f4f4 url(images/fieldsetline.gif) no-repeat;
+    padding: 0 0 0 0;
+    width:940px;
 }
 
 #maincontent form fieldset fieldset {margin-left:-10px !important;}
@@ -29,6 +33,7 @@ Last Modified Date: 03/08/2009
 	margin: 0;
 	padding: 0;
 	clear: left;
+	margin-top:-25px;
 }
 
 #maincontent form fieldset ol:after {
@@ -45,14 +50,15 @@ Last Modified Date: 03/08/2009
 	display: block;
 	float:left;
 	width: 100%;
+	position:relative;
 }
 
-#maincontent form label.element {
+#maincontent form label {
 	display: block;
 	float: left;
-	width: 150px;
+	width: 175px;
 	padding: 0;
-	margin: 10px 0 0 0;
+	margin: 10px 10px 0 0;
 	text-align: right;
 }
 
@@ -60,18 +66,25 @@ Last Modified Date: 03/08/2009
 	width: 700px;
 }
 
-#maincontent form input,#maincontent form textarea,#maincontent form select
+#maincontent form input, #maincontent form textarea, #maincontent form select
 	{
-	width: auto;
+	width: 400px;
 	border: 1px solid #ccc;
 	border-color: #ccc #fff #fff #ccc;
 	padding: 3px;
 	margin: 4px 0;
+	font-size:1.3em;
 }
 
+#maincontent form fieldset li.required label {
+	background:url(../images/forms/requiredIndicator.png) right center no-repeat;
+	padding-right:33px;
+	width:142px;
+	}
 #maincontent form input:focus,#maincontent form textarea:focus,#maincontent form select:focus
 	{
 	background: #ffffcc;
+	border-color: #77b5d4;
 }
 
 #maincontent form select {
@@ -92,20 +105,6 @@ Last Modified Date: 03/08/2009
 	padding: 0;
 	line-height: 0.5;
 }
-
-form div.qfgroup,form div.element {
-	display: inline;
-	float: left;
-	margin: 5px 0 0 10px;
-	padding: 0;
-}
-
-form div.qfelement div.qfgroup {
-	margin: 0 0 0 0;
-	margin: 0 !important;
-	line-height: 0.5 !important;
-}
-
 form span.error {
 	color: red;
 }
@@ -117,29 +116,15 @@ form div.error {
 
 #maincontent form fieldset legend {
 	font-weight: bold;
-	top: -11px;
-	border: 1px solid #ccc;
-	padding: 3px 6px;
-	margin: 0 0 23px 0;
+    border-bottom: 1px solid #bdbcbc;
+	padding: 10px;
 	position: relative;
-	background: #fff;
-}
-
-#maincontent form fieldset span,.required {
-	color: #ff0000;
-}
-
-#maincontent form fieldset li.reqnote {
-    background: #f8e6e9;
-    padding:2px;
-    margin: 0 0 25px 0;
-    bottom: 0;
-    width:140px;
-    font-size:0.9em;
-    left: 0;
-    position: absolute;
-}
-#maincontent form fieldset li.reqnote label{display:none}
+	background: #dfdfdf;
+	border:none;
+	font-size:2em;
+	color:#585d5f;
+	margin:0 0 30px -5px;
+}`
 #maincontent form fieldset.hidden {
 	margin: 0;
 	padding: 0;
@@ -160,51 +145,39 @@ body:last-child:not(:root:root) #maincontent label{vertical-align:baseline; }
 *+html #maincontent form fieldset legend {
     margin: -13px 0 0 -7px;
 }
-#maincontent form fieldset {
-	width:940px;
-	background:#f4f4f4;
-	}
-#maincontent form fieldset legend {
-	border:none;
-	font-size:2em;
-	color:#585d5f;
-	margin:0 0 70px -5px;
-	}
-#maincontent form fieldset ol {
-	margin-top:-25px;
-	}
 
-
-/*
-div.form-help div.help-content {
-	width: 250px;
-  	margin: 0 0 0 14px;
-  	border: 1px solid #c93;
+/*For the form hints*/
+#maincontent form span.hint {
+	position:absolute;
+	left: 620px;
+  	width: 200px;
+  	border: 1px solid #77b5d4;
   	padding: 10px 12px;
-  	background: #ffc;
-  	float:right;
-  	z-index:999;
+  	background:#c8e7f7;
+	display:none;
 }
-
-div.form-help span.help-pointer {
-	background: url(images/pointer.gif) no-repeat top left;
-	width:10px;
-	height:19px;
-	display:block;
-	position:relative;
-	top:5px;
-	left:-22px;
-}*/
+#maincontent form input:focus span.hint {
+	display:inline;	
+}
+#maincontent form span.hint span.hintPointer{
+  	background:url(../images/forms/hintCarret.png) left top no-repeat;
+  	position:absolute;
+  	left:-16px;
+  	top:15px;
+  	width:16px;
+  	height:19px;
+}
 /*Submit Button*/
 p.submit {
 	margin-top: 0px;
-	background:url(../images/submitL.png) top left no-repeat;
+	margin-left: 185px;
+	background:url(../images/forms/submitL.png) top left no-repeat;
 	display:inline-block;
 	height:45px;
 	padding-left:5px;
 }
 p.submit a {
-    background:url(../images/submitR.png) no-repeat top right;
+    background:url(../images/forms/submitR.png) no-repeat top right;
     font-size:1.5em;
     color:#FFF;
     display:inline-block;

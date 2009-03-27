@@ -1,14 +1,13 @@
-<h1 class="sec_main">Create a shorter URL</h1>
+<form action="#" method="POST">
 <fieldset>
 	<legend>Basic Option</legend>
 	<ol>
-		<li>
-			<label for="theURL">Long URL<em>*</em></label>
+		<li class="required">
+			<label for="theURL">Long URL</label>
 			<input name="theURL" id="theURL" type="text" />
 		</li>
 	</ol>
 </fieldset>
-<p>This section only displayed if authenticated. Otherwise, a login link.</p>
 <fieldset>
 	<legend>Custom Alias</legend>
 	<ol>
@@ -18,13 +17,14 @@
 		</li>
 	</ol>
 </fieldset>
-<p>This section is optional</p>
 <fieldset>
 	<legend>Google Analytics Campaign Tagging</legend>
 	<ol>
 		<li>
 			<label for="gaSource">Source</label>
-			<input name="gaSource" id="gaSource" type="text" />
+			<input name="gaSource" id="gaSource" type="text" />			
+			<span class="hint"><span class="hintPointer"></span>The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source</span>
+			
 		</li>	
 		<li>
 			<label for="gaMedium">Medium</label>
@@ -44,4 +44,5 @@
 		</li>		
 	</ol>
 </fieldset>
+</form>
 <p class="submit"><a id="submit" href="#">Create URL</a></p>
