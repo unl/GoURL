@@ -3,92 +3,210 @@ Author: UNL WDN [http://wdn.unl.edu]
 
 Last Modified Date: 03/08/2009
 */
-#maincontent form, #maincontent fieldset {
+#maincontent form {
 	margin: 0;
 	padding: 0;
 }
-#maincontent fieldset { border: 1px solid #000; }
-#maincontent legend {
-	padding: 0;
-	color: #000;
-}
-#maincontent input, #maincontent textarea, #maincontent select {
-	margin: 0;
-	padding: 1px;
-	font-size: 100%;
-	font-family: inherit;
-}
-#maincontent textarea {
-	width:300px;
-}
-#maincontent select { padding: 0; }
+
 #maincontent form fieldset {
-  margin-bottom: 10px;
-  border: 1px dashed #C9C28C;
-  border-top: 1px solid #C9C28C;
-  border-bottom:none;
-  background: url() left bottom repeat-x;
-  width:auto;
+    clear: both;
+    float: left;
+    padding: 0;
+    display: block;
+    border: none;
+    width: 700px;
+    border-bottom: 1px solid #dfdfdf;
+    position: relative;
+    margin: 25px 0 20px 0;
+    background: #ecf4f8 url(images/fieldsetline.gif) no-repeat;
+    padding: 0 0 10px 0;
 }
-#maincontent form legend {
-  padding-left: 0;
-  font-weight: bold;
-  color:#666;
-}
-#maincontent form label {
-  display: inline-block;
-  line-height: 1.8;
-  vertical-align: top;
-}
+
+#maincontent form fieldset fieldset {margin-left:-10px !important;}
+#maincontent form fieldset fieldset fieldset {margin-left:0 !important;}
+
 #maincontent form fieldset ol {
-  margin: 0;
-  padding: 0 0 0 0;
+	margin: 0;
+	padding: 0;
+	clear: left;
 }
+
+#maincontent form fieldset ol:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+}
+
 #maincontent form fieldset li {
-  padding: 5px 10px 7px;
-  list-style: none;
-  margin: 0;
-  background: url(/images/formdivider.gif) left bottom repeat-x;
+	list-style: none;
+	margin: 0;
+	clear: both;
+	display: block;
+	float:left;
+	width: 100%;
 }
-#maincontent form fieldset fieldset {
-  background:none;
-  border: none;
-  margin: 3px 0 0;
+
+#maincontent form label.element {
+	display: block;
+	float: left;
+	width: 150px;
+	padding: 0;
+	margin: 10px 0 0 0;
+	text-align: right;
 }
-#maincontent form fieldset fieldset legend {
-  padding: 0 0 5px;
-  font-weight: normal;
-  color:#333;
+
+#maincontent form .row {
+	width: 700px;
 }
-#maincontent form fieldset fieldset label {
-  display: block;
-  width: auto;
+
+#maincontent form input,#maincontent form textarea,#maincontent form select
+	{
+	width: auto;
+	border: 1px solid #ccc;
+	border-color: #ccc #fff #fff #ccc;
+	padding: 3px;
+	margin: 4px 0;
 }
-#maincontent form em {
-  font-weight: bold;
-  font-style: normal;
-  color: #900;
+
+#maincontent form input:focus,#maincontent form textarea:focus,#maincontent form select:focus
+	{
+	background: #ffffcc;
 }
-#maincontent form label {
-  width: 160px; /* Width of labels */
+
+#maincontent form select {
+	font-size: 0.8em;
 }
-#maincontent form table tbody tr td label {
-  width: 100px; /* Width of labels */
+
+#maincontent form option {
+	padding: 0 0.3em;
 }
-#maincontent form fieldset fieldset label {
-  margin-left: 163px; /* Width plus 3 (html space) */
+
+#maincontent form textarea {
+	overflow: auto;
 }
-#maincontent form #submit {
-	margin-left:163px;
+
+#maincontent form br {
+	clear: left;
+	margin: 0;
+	padding: 0;
+	line-height: 0.5;
 }
-#maincontent form fieldset ol {
+
+form div.qfgroup,form div.element {
+	display: inline;
+	float: left;
+	margin: 5px 0 0 10px;
 	padding: 0;
 }
-/*\*//*/ #maincontent form legend { display: inline-block; } /* IE Mac legend fix */
-#maincontent label.error {
-	color: #990000;
-	font-style: italic;
-	margin-left: 10px;
-	width: auto;
-	display: inline;
+
+form div.qfelement div.qfgroup {
+	margin: 0 0 0 0;
+	margin: 0 !important;
+	line-height: 0.5 !important;
+}
+
+form span.error {
+	color: red;
+}
+
+form div.error {
+	border: 1px solid red;
+	padding: 5px;
+}
+
+#maincontent form fieldset legend {
+	font-weight: bold;
+	top: -11px;
+	border: 1px solid #ccc;
+	padding: 3px 6px;
+	margin: 0 0 23px 0;
+	position: relative;
+	background: #fff;
+}
+
+#maincontent form fieldset span,.required {
+	color: #ff0000;
+}
+
+#maincontent form fieldset li.reqnote {
+    background: #f8e6e9;
+    padding:2px;
+    margin: 0 0 25px 0;
+    bottom: 0;
+    width:140px;
+    font-size:0.9em;
+    left: 0;
+    position: absolute;
+}
+#maincontent form fieldset li.reqnote label{display:none}
+#maincontent form fieldset.hidden {
+	margin: 0;
+	padding: 0;
+	background: 0;
+	border: none;
+}
+
+#maincontent h3 {
+	clear: left;
+}
+
+#maincontent label{vertical-align:40%;margin-right:12px;margin-left:2px;}
+#maincontent .element label{vertical-align:20%;margin-right:12px;margin-left:5px;}
+body:last-child:not(:root:root) #maincontent label{vertical-align:baseline; }
+* html #maincontent form fieldset legend {
+    margin: -13px 0 0 -7px;
+}
+*+html #maincontent form fieldset legend {
+    margin: -13px 0 0 -7px;
+}
+#maincontent form fieldset {
+	width:940px;
+	background:#f4f4f4;
+	}
+#maincontent form fieldset legend {
+	border:none;
+	font-size:2em;
+	color:#585d5f;
+	margin:0 0 70px -5px;
+	}
+#maincontent form fieldset ol {
+	margin-top:-25px;
+	}
+
+
+/*
+div.form-help div.help-content {
+	width: 250px;
+  	margin: 0 0 0 14px;
+  	border: 1px solid #c93;
+  	padding: 10px 12px;
+  	background: #ffc;
+  	float:right;
+  	z-index:999;
+}
+
+div.form-help span.help-pointer {
+	background: url(images/pointer.gif) no-repeat top left;
+	width:10px;
+	height:19px;
+	display:block;
+	position:relative;
+	top:5px;
+	left:-22px;
+}*/
+/*Submit Button*/
+p.submit {
+	margin-top: 0px;
+	background:url(../images/submitL.png) top left no-repeat;
+	display:inline-block;
+	height:45px;
+	padding-left:5px;
+}
+p.submit a {
+    background:url(../images/submitR.png) no-repeat top right;
+    font-size:1.5em;
+    color:#FFF;
+    display:inline-block;
+    padding:15px 45px 15px 10px;
 }
