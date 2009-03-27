@@ -8,6 +8,7 @@
 		</li>
 	</ol>
 </fieldset>
+<p>This section only displayed if authenticated. Otherwise, a login link.</p>
 <fieldset>
 	<legend>Custom Alias</legend>
 	<ol>
@@ -17,6 +18,7 @@
 		</li>
 	</ol>
 </fieldset>
+<p>This section is optional</p>
 <fieldset>
 	<legend>Google Analytics Campaign Tagging</legend>
 	<ol>
