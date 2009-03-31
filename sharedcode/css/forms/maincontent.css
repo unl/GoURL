@@ -2,18 +2,25 @@
 Author: UNL WDN [http://wdn.unl.edu]
 
 Last Modified Date: 03/31/2009
+/*Overrides*/
+#maincontent form input,#maincontent form textarea,#maincontent form select {
+	width:300px;
+}
 /*For the form hints*/
 #maincontent form span.hint {
 	position:absolute;
-	left: 620px;
-  	width: 200px;
+	left: 490px;
+	width: 180px;
+	top:0px;
   	border: 1px solid #77b5d4;
   	padding: 10px 12px;
   	background:#c8e7f7;
-	//display:none;
+	display:block;
+	display:none;
+  	color:#77b5d4;
 }
 #maincontent form input:focus span.hint {
-	display:inline;	
+	display:block;	
 }
 #maincontent form span.hint span.hintPointer{
   	background:url(../images/forms/hintCarret.png) left top no-repeat;
