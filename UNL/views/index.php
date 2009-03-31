@@ -3,8 +3,8 @@
 	<legend>Basic Option</legend>
 	<ol>
 		<li class="required">
-			<label for="theURL">Long URL</label>
-			<input name="theURL" id="theURL" type="text" />
+			<label for="theURL" class="element">Long URL</label>
+			<div class="element"><input name="theURL" id="theURL" type="text" /></div>
 		</li>
 	</ol>
 </fieldset>
@@ -12,8 +12,8 @@
 	<legend>Custom Alias</legend>
 	<ol>
 		<li>
-			<label for="theAlias">Alias</label>
-			<input name="theAlias" id="theAlias" type="text" />
+			<label for="theAlias" class="element">Alias</label>
+			<div class="element"><input name="theAlias" id="theAlias" type="text" /></div>
 		</li>
 	</ol>
 </fieldset>
@@ -21,28 +21,30 @@
 	<legend>Google Analytics Campaign Tagging</legend>
 	<ol>
 		<li>
-			<label for="gaSource">Source</label>
-			<input name="gaSource" id="gaSource" type="text" />			
+			<label for="gaSource" class="element">Source</label>
+			<div class="element"><input name="gaSource" id="gaSource" type="text" />			
 			<span class="hint"><span class="hintPointer"></span>The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source</span>
-			
+			</div>
 		</li>	
 		<li>
-			<label for="gaMedium">Medium</label>
-			<input name="gaMedium" id="gaMedium" type="text" />
+			<label for="gaMedium" class="element">Medium</label>
+			<div class="element"><input name="gaMedium" id="gaMedium" type="text" /></div>
 		</li>
 		<li>
-			<label for="gaTerm">Term</label>
-			<input name="gaTerm" id="gaTerm" type="text" />
+			<label for="gaTerm" class="element">Term</label>
+			<div class="element"><input name="gaTerm" id="gaTerm" type="text" /></div>
 		</li>
 		<li>
-			<label for="gaContent">Content</label>
-			<input name="gaContent" id="gaContent" type="text" />
+			<label for="gaContent" class="element">Content</label>
+			<div class="element"><input name="gaContent" id="gaContent" type="text" /></div>
 		</li>
 		<li>
-			<label for="gaName">Name</label>
-			<input name="gaName" id="gaName" type="text" />
-		</li>		
+			<label for="gaName" class="element">Name</label>
+			<div class="element"><input name="gaName" id="gaName" type="text" /></div>
+		</li>	
+		<li><label class="element">I Can Has Cheezburger?</label>
+		<div class="element"><input name="helpful" value="1" type="radio" id="cheezyes" /><label for="cheezyes">Yes</label><input name="helpful" value="0" type="radio" id="cheezno" /><label for="cheezno">No</label></div></li>	
 	</ol>
 </fieldset>
 </form>
-<p class="submit"><a id="submit" href="#">Create URL</a></p>
+<p class="submit"><input type="submit" value="Create URL" /></p>
