@@ -1,3 +1,11 @@
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function () {
+	$('input').focus( function() {
+		$('.hint').hide();
+		$(this).siblings('.hint').show();
+	});
+});
+</script>
 <form action="#" method="POST">
 <fieldset>
 	<legend>Basic Option</legend>
