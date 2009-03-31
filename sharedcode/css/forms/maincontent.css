@@ -1,151 +1,7 @@
 /* CSS styles for forms in <div id="maincontent">
 Author: UNL WDN [http://wdn.unl.edu]
 
-Last Modified Date: 03/08/2009
-*/
-#main_right {overflow:visible;}
-#navigation {
-    display:none;
-}
-#maincontent form {
-	margin: 0;
-	padding: 0;
-}
-
-#maincontent form fieldset {
-    clear: both;
-    float: left;
-    padding: 0;
-    display: block;
-    border: none;
-    border-bottom: 1px solid #dfdfdf;
-    position: relative;
-    margin: 25px 0 20px 0;
-    background: #f4f4f4 url(images/fieldsetline.gif) no-repeat;
-    padding: 0 0 0 0;
-    width:940px;
-}
-
-#maincontent form fieldset fieldset {margin-left:-10px !important;}
-#maincontent form fieldset fieldset fieldset {margin-left:0 !important;}
-
-#maincontent form fieldset ol {
-	margin: 0;
-	padding: 0;
-	clear: left;
-	margin-top:-25px;
-}
-
-#maincontent form fieldset ol:after {
-	content: ".";
-	display: block;
-	clear: both;
-	visibility: hidden;
-}
-
-#maincontent form fieldset li {
-	list-style: none;
-	margin: 0;
-	clear: both;
-	display: block;
-	float:left;
-	width: 100%;
-	position:relative;
-}
-
-#maincontent form label {
-	display: block;
-	float: left;
-	width: 175px;
-	padding: 0;
-	margin: 10px 10px 0 0;
-	text-align: right;
-}
-
-#maincontent form .row {
-	width: 700px;
-}
-
-#maincontent form input, #maincontent form textarea, #maincontent form select
-	{
-	width: 400px;
-	border: 1px solid #ccc;
-	border-color: #ccc #fff #fff #ccc;
-	padding: 3px;
-	margin: 4px 0;
-	font-size:1.3em;
-}
-
-#maincontent form fieldset li.required label {
-	background:url(../images/forms/requiredIndicator.png) right center no-repeat;
-	padding-right:33px;
-	width:142px;
-	}
-#maincontent form input:focus,#maincontent form textarea:focus,#maincontent form select:focus
-	{
-	background: #ffffcc;
-	border-color: #77b5d4;
-}
-
-#maincontent form select {
-	font-size: 0.8em;
-}
-
-#maincontent form option {
-	padding: 0 0.3em;
-}
-
-#maincontent form textarea {
-	overflow: auto;
-}
-
-#maincontent form br {
-	clear: left;
-	margin: 0;
-	padding: 0;
-	line-height: 0.5;
-}
-form span.error {
-	color: red;
-}
-
-form div.error {
-	border: 1px solid red;
-	padding: 5px;
-}
-
-#maincontent form fieldset legend {
-	font-weight: bold;
-    border-bottom: 1px solid #bdbcbc;
-	padding: 10px;
-	position: relative;
-	background: #dfdfdf;
-	border:none;
-	font-size:2em;
-	color:#585d5f;
-	margin:0 0 30px -5px;
-}`
-#maincontent form fieldset.hidden {
-	margin: 0;
-	padding: 0;
-	background: 0;
-	border: none;
-}
-
-#maincontent h3 {
-	clear: left;
-}
-
-#maincontent label{vertical-align:40%;margin-right:12px;margin-left:2px;}
-#maincontent .element label{vertical-align:20%;margin-right:12px;margin-left:5px;}
-body:last-child:not(:root:root) #maincontent label{vertical-align:baseline; }
-* html #maincontent form fieldset legend {
-    margin: -13px 0 0 -7px;
-}
-*+html #maincontent form fieldset legend {
-    margin: -13px 0 0 -7px;
-}
-
+Last Modified Date: 03/31/2009
 /*For the form hints*/
 #maincontent form span.hint {
 	position:absolute;
@@ -154,7 +10,7 @@ body:last-child:not(:root:root) #maincontent label{vertical-align:baseline; }
   	border: 1px solid #77b5d4;
   	padding: 10px 12px;
   	background:#c8e7f7;
-	display:none;
+	//display:none;
 }
 #maincontent form input:focus span.hint {
 	display:inline;	
@@ -176,10 +32,14 @@ p.submit {
 	height:45px;
 	padding-left:5px;
 }
-p.submit a {
+p.submit input, p.submit a {
     background:url(../images/forms/submitR.png) no-repeat top right;
     font-size:1.5em;
     color:#FFF;
     display:inline-block;
-    padding:15px 45px 15px 10px;
+    padding:10px 45px 15px 10px;
+    border:0;
+}
+p.submit a {
+	padding:15px 45px 15px 10px;
 }
