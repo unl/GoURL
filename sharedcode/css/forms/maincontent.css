@@ -9,6 +9,12 @@ Last Modified Date: 03/31/2009
 .required {
 	color:#434343;
 }
+p.required {
+	background:url(../images/forms/requiredIndicatorBG.png) no-repeat top left;
+	padding:10px 0 16px 45px;
+	margin-bottom:0px;
+	float:right;	
+}
 #maincontent form li img {
 	margin:0 0 0 10px;	
 }
@@ -44,6 +50,7 @@ p.submit {
 	display:inline-block;
 	height:45px;
 	padding-left:5px;
+	float:left;
 }
 p.submit input, p.submit a {
     background:url(../images/forms/submitR.png) no-repeat top right;
