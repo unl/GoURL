@@ -52,7 +52,7 @@ p.required {
 /* End Form hints*/
 
 /*Submit Button*/
-p.submit {
+#maincontent form p.submit {
 	margin-top: 0px;
 	margin-left: 160px;
 	background:url(../images/forms/submitL.png) top left no-repeat;
@@ -61,13 +61,17 @@ p.submit {
 	padding-left:5px;
 	float:left;
 }
-p.submit input, p.submit a {
+#maincontent form p.submit input, p.submit a {
     background:url(../images/forms/submitR.png) no-repeat top right;
     font-size:1.5em;
     color:#FFF;
     display:inline-block;
     padding:10px 45px 15px 10px;
     border:0;
+    height:45px;
+    border:none;
+    margin:0;
+    width:auto;
 }
 p.submit a {
 	padding:15px 45px 15px 10px;
