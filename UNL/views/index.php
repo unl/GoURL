@@ -11,6 +11,7 @@ $(document).ready(function () {
 <p class="required">Indicates a required field.</p>
 <fieldset>
 	<legend>Basic Option</legend>
+	<p>The URL you would like shortened.</p>
 	<ol>
 		<li class="required">
 			<label for="theURL" class="element">Long URL</label>
@@ -20,6 +21,7 @@ $(document).ready(function () {
 </fieldset>
 <fieldset>
 	<legend>Custom Alias</legend>
+	<p>If you would like to control the URL, then use enter the alias you would like to use. Ex:go.unl.edu/<strong>admissions</strong></p>
 	<ol>
 		<li>
 			<label for="theAlias" class="element">Alias</label>
@@ -29,6 +31,7 @@ $(document).ready(function () {
 </fieldset>
 <fieldset>
 	<legend>Google Analytics Campaign Tagging</legend>
+	<p>Add your campaign information here and it will be automatically added to your URL when redirected.</p>
 	<ol>
 		<li class="required">
 			<label for="gaSource" class="element">Source</label>
