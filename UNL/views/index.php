@@ -4,6 +4,7 @@ $(document).ready(function () {
 		$('.hint').hide();
 		$(this).siblings('.hint').show();
 	});
+	$('li.required input').after('<img src="sharedcode/css/images/forms/requiredIndicator.png" alt="Required Information" />');
 });
 </script>
 <form action="#" method="POST">
@@ -28,13 +29,13 @@ $(document).ready(function () {
 <fieldset>
 	<legend>Google Analytics Campaign Tagging</legend>
 	<ol>
-		<li>
+		<li class="required">
 			<label for="gaSource" class="element">Source</label>
 			<div class="element"><input name="gaSource" id="gaSource" type="text" />			
 			<span class="hint"><span class="hintPointer"></span>The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source</span>
 			</div>
 		</li>	
-		<li>
+		<li class="required">
 			<label for="gaMedium" class="element">Medium</label>
 			<div class="element"><input name="gaMedium" id="gaMedium" type="text" /></div>
 		</li>
