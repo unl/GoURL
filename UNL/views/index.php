@@ -8,6 +8,7 @@ $(document).ready(function () {
 });
 </script>
 <form action="#" method="POST">
+<p class="required">Indicates a required field.</p>
 <fieldset>
 	<legend>Basic Option</legend>
 	<ol>
