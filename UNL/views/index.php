@@ -1,31 +1,34 @@
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function () {
+	$('.hint').hide();
 	$('input').focus( function() {
 		$('.hint').hide();
 		$(this).siblings('.hint').show();
 	});
-	$('li.required input').after('<img src="sharedcode/css/images/forms/requiredIndicator.png" alt="Required Information" />');
 });
 </script>
 <form action="#" method="POST">
 <p class="required">Indicates a required field.</p>
 <fieldset>
 	<legend>Basic Option</legend>
-	<p>The URL you would like shortened.</p>
 	<ol>
 		<li class="required">
 			<label for="theURL" class="element">Long URL</label>
-			<div class="element"><input name="theURL" id="theURL" type="text" /></div>
+			<div class="element"><input name="theURL" id="theURL" type="text" />			
+			<span class="hint"><span class="hintPointer"></span>ex: go.unl.edu/<strong>admissions</strong></span>
+			</div>
 		</li>
 	</ol>
 </fieldset>
 <fieldset>
 	<legend>Custom Alias</legend>
-	<p>If you would like to control the URL, then use enter the alias you would like to use. Ex:go.unl.edu/<strong>admissions</strong></p>
+	<p>If you would like to control the URL, then use enter the alias you would like to use.</p>
 	<ol>
 		<li>
 			<label for="theAlias" class="element">Alias</label>
-			<div class="element"><input name="theAlias" id="theAlias" type="text" /></div>
+			<div class="element"><input name="theAlias" id="theAlias" type="text" />			
+			<span class="hint"><span class="hintPointer"></span>ex: go.unl.edu/<strong>admissions</strong></span>
+			</div>
 		</li>
 	</ol>
 </fieldset>
@@ -41,7 +44,9 @@ $(document).ready(function () {
 		</li>	
 		<li class="required">
 			<label for="gaMedium" class="element">Medium</label>
-			<div class="element"><input name="gaMedium" id="gaMedium" type="text" /></div>
+			<div class="element"><input name="gaMedium" id="gaMedium" type="text" />			
+			<span class="hint"><span class="hintPointer"></span>Testing. Testing. Testing. Testing. Testing. Testing.</span>
+			</div>
 		</li>
 		<li>
 			<label for="gaTerm" class="element">Term</label>
