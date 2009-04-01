@@ -6,11 +6,17 @@ Last Modified Date: 03/31/2009
 #maincontent form input,#maincontent form textarea,#maincontent form select {
 	width:300px;
 }
+.required {
+	color:#434343;
+}
+#maincontent form li img {
+	margin:0 0 0 10px;	
+}
 /*For the form hints*/
 #maincontent form span.hint {
 	position:absolute;
 	left: 490px;
-	width: 180px;
+	width: 190px;
 	top:0px;
   	border: 1px solid #77b5d4;
   	padding: 10px 12px;
