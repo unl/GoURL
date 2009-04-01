@@ -4,13 +4,13 @@
 define('PAGE_TITLE', 'lil&#180; URL Generator');
 
 // MySQL connection info
-define('MYSQL_USER', 'dabney');
-define('MYSQL_PASS', 'coleman');
-define('MYSQL_DB', 'gourl');
+define('MYSQL_USER', 'smeranda');
+define('MYSQL_PASS', '12345');
+define('MYSQL_DB', 'goURL');
 define('MYSQL_HOST', 'localhost');
 
 // MySQL tables
-define('URL_TABLE', 'go_url');
+define('URL_TABLE', 'tblURLs');
 
 // use mod_rewrite?
 define('REWRITE', true);
