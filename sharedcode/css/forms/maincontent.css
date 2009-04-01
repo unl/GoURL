@@ -3,11 +3,21 @@ Author: UNL WDN [http://wdn.unl.edu]
 
 Last Modified Date: 03/31/2009
 /*Overrides*/
+#maincontent form li div.element {
+	position:absolute;
+	left:150px;
+}
 #maincontent form input,#maincontent form textarea,#maincontent form select {
 	width:300px;
 }
+/*Required Indicators*/
 .required {
 	color:#434343;
+}
+#maincontent form li.required label {
+	background:url(../images/forms/requiredIndicator.png) no-repeat top right;
+	padding-right:33px;
+	width:117px;		
 }
 p.required {
 	background:url(../images/forms/requiredIndicatorBG.png) no-repeat top left;
@@ -15,21 +25,18 @@ p.required {
 	margin-bottom:0px;
 	float:right;	
 }
-#maincontent form li img {
-	margin:0 0 0 10px;	
-}
 /*For the form hints*/
 #maincontent form span.hint {
-	position:absolute;
-	left: 490px;
+	position:relative;
+	display:block;
+	left: 330px;
 	width: 190px;
-	top:0px;
+	top:-34px;
   	border: 1px solid #77b5d4;
   	padding: 10px 12px;
   	background:#c8e7f7;
-	display:block;
-	display:none;
   	color:#77b5d4;
+  	z-index:3;
 }
 #maincontent form input:focus span.hint {
 	display:block;	
@@ -42,6 +49,8 @@ p.required {
   	width:16px;
   	height:19px;
 }
+/* End Form hints*/
+
 /*Submit Button*/
 p.submit {
 	margin-top: 0px;
@@ -63,3 +72,4 @@ p.submit input, p.submit a {
 p.submit a {
 	padding:15px 45px 15px 10px;
 }
+/*End submit button*/
