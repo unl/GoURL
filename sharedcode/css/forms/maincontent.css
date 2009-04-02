@@ -78,10 +78,14 @@ p.submit a {
 }
 /*End submit button*/
 
-/*Handle Form Errors*/
-p.error {
+/*Handle Form Feedback*/
+p.error, p.success {
 	border:1px solid #c50000;
 	background: #dc6767;
 	padding:10px;
 	color:white;
+}
+p.success {
+	border:1px solid #349804;
+	background: #6cbd45;	
 }
