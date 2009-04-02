@@ -13,7 +13,7 @@ class lilURL
 	// return the id for a given url (or -1 if the url doesn't exist)
 	function get_id($url)
 	{
-		$q = 'SELECT id FROM '.URL_TABLE.' WHERE (longURL="'.$url.'")';
+		$q = 'SELECT urlID FROM '.URL_TABLE.' WHERE (longURL="'.$url.'")';
 		$result = mysql_query($q);
 
 		if ( mysql_num_rows($result) )
@@ -58,6 +58,7 @@ class lilURL
 		else // otherwise, put it in
 		{
 			$id = $this->get_next_id($this->get_last_id());
+			//echo($id);
 			$q = 'INSERT INTO '.URL_TABLE.' (urlID, longURL, submitDate) VALUES ("'.$id.'", "'.$url.'", NOW())';
 
 			return mysql_query($q);
