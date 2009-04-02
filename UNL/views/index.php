@@ -45,7 +45,7 @@ if ( isset($_POST['theURL']) )
 			$url = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$lilurl->get_id($longurl);
 		}
 
-		$msg = '<p class="success">Your lil&#180; URL is: <a href="'.$url.'">'.$url.'</a></p>';
+		$msg = '<p class="success">Your Go URL is: <a href="'.$url.'">'.$url.'</a></p>';
 	}
 	elseif ( !$protocol_ok )
 	{
@@ -53,7 +53,7 @@ if ( isset($_POST['theURL']) )
 	}
 	else
 	{
-		$msg = '<p class="error">Creation of your lil&#180; URL failed for some reason.</p>';
+		$msg = '<p class="error">Creation of your Go URL failed for some reason.</p>';
 	}
 }
 else // if the form hasn't been submitted, look for an id to redirect to
@@ -100,7 +100,7 @@ $(document).ready(function () {
 	});
 });
 </script>
-<p><?php echo $msg; ?></p>
+<?php echo $msg; ?>
 <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <p class="required">Indicates a required field.</p>
 <fieldset>
