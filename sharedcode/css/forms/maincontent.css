@@ -10,6 +10,9 @@ Last Modified Date: 03/31/2009
 #maincontent form input,#maincontent form textarea,#maincontent form select {
 	width:300px;
 }
+#maincontent form fieldset p {
+	margin: 10px;	
+}
 /*Required Indicators*/
 .required {
 	color:#434343;
@@ -19,11 +22,15 @@ Last Modified Date: 03/31/2009
 	padding-right:33px;
 	width:117px;		
 }
-p.required {
+p.required, p.attention {
 	background:url(../images/forms/requiredIndicatorBG.png) no-repeat top left;
 	padding:10px 0 16px 45px;
 	margin-bottom:0px;
 	float:right;	
+}
+p.attention {
+	background:url(../images/forms/alertIndicatorBG.png) no-repeat top left;
+	float:left;	
 }
 /*For the form hints*/
 #maincontent form span.hint {
