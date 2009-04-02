@@ -115,7 +115,7 @@ $(document).ready(function () {
 		</li>
 	</ol>
 </fieldset>
-<?php if ($cas_client->isAuthenticated()) : ?>
+<?php if ($cas_client->isLoggedIn()) : ?>
 <fieldset>
 	<legend>Custom Alias</legend>
 	<p>If you would like to control the URL, then use enter the alias you would like to use.</p>
