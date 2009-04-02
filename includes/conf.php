@@ -1,7 +1,7 @@
 <?php /* conf.php ( config file ) */
 
 // page title
-define('PAGE_TITLE', 'lil&#180; URL Generator');
+define('PAGE_TITLE', 'GO URL Generator');
 
 // MySQL connection info
 define('MYSQL_USER', 'smeranda');
