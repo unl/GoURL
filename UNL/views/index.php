@@ -49,7 +49,7 @@ if ( isset($_POST['theURL']) )
 	}
 	elseif ( !$protocol_ok )
 	{
-		$msg = '<p class="error">Invalid protocol!</p>';
+		$msg = '<p class="error">Your URL must begin with <code>http:</code>, <code>https:</code> or <code>mailto:</code>.</p>';
 	}
 	else
 	{
