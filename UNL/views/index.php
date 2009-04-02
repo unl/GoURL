@@ -3,6 +3,7 @@
 require_once 'includes/conf.php'; // <- site-specific settings
 require_once 'includes/lilurl.php'; // <- lilURL class file
 
+
 $lilurl = new lilURL();
 $msg = '';
 
@@ -114,6 +115,7 @@ $(document).ready(function () {
 		</li>
 	</ol>
 </fieldset>
+<?php if ($cas_client->isAuthenticated()) : ?>
 <fieldset>
 	<legend>Custom Alias</legend>
 	<p>If you would like to control the URL, then use enter the alias you would like to use.</p>
@@ -125,6 +127,7 @@ $(document).ready(function () {
 		</li>
 	</ol>
 </fieldset>
+<?php endif; ?>
 <fieldset>
 	<legend>Google Analytics Campaign Tagging</legend>
 	<p>Add your campaign information here and it will be automatically added to your URL when redirected.</p>
