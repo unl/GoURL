@@ -68,9 +68,9 @@ class lilURL
 	// return the most recent id (or -1 if no ids exist)
 	function get_last_id()
 	{	
-		$q = 'SELECT urlID FROM '.URL_TABLE.' ORDER BY date DESC LIMIT 1';
-		$result = mysql_query($q);
-
+		$q = 'SELECT urlID FROM '.URL_TABLE.' ORDER BY submitDate DESC LIMIT 1';
+		$result = mysql_query($q)  or die('Query failed: ' . mysql_error());
+		
 		if ( mysql_num_rows($result) )
 		{
 			$row = mysql_fetch_array($result);
