@@ -114,10 +114,11 @@ $(document).ready(function () {
 		</li>
 	</ol>
 </fieldset>
-<?php if ($cas_client->isLoggedIn()) : ?>
+
 <fieldset>
 	<legend>Custom Alias</legend>
 	<p>If you would like to control the URL, then use enter the alias you would like to use.</p>
+	<?php if ($cas_client->isLoggedIn()) : ?>
 	<ol>
 		<li>
 			<label for="theAlias" class="element">Alias</label>
@@ -125,8 +126,17 @@ $(document).ready(function () {
 			</div>
 		</li>
 	</ol>
-</fieldset>
+<?php else: ?>
+	<ol>
+		<li>
+			<label for="theAlias" class="element">Alias</label>
+			<div class="element"><input name="theAlias" id="theAlias" type="text" disabled="disabled"/>			
+			</div>
+		</li>
+	</ol>
+<p class="attention">Please login to use this feature</p>
 <?php endif; ?>
+</fieldset>
 <fieldset>
 	<legend>Google Analytics Campaign Tagging</legend>
 	<p>Add your campaign information here and it will be automatically added to your URL when redirected.</p>
