@@ -77,3 +77,11 @@ p.submit a {
 	padding:15px 45px 15px 10px;
 }
 /*End submit button*/
+
+/*Handle Form Errors*/
+p.error {
+	border:1px solid #c50000;
+	background: #dc6767;
+	padding:10px;
+	color:white;
+}
