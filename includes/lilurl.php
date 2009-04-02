@@ -13,13 +13,13 @@ class lilURL
 	// return the id for a given url (or -1 if the url doesn't exist)
 	function get_id($url)
 	{
-		$q = 'SELECT id FROM '.URL_TABLE.' WHERE (url="'.$url.'")';
+		$q = 'SELECT id FROM '.URL_TABLE.' WHERE (longURL="'.$url.'")';
 		$result = mysql_query($q);
 
 		if ( mysql_num_rows($result) )
 		{
 			$row = mysql_fetch_array($result);
-			return $row['id'];
+			return $row['urlID'];
 		}
 		else
 		{
@@ -30,13 +30,13 @@ class lilURL
 	// return the url for a given id (or -1 if the id doesn't exist)
 	function get_url($id)
 	{
-		$q = 'SELECT url FROM '.URL_TABLE.' WHERE (id="'.$id.'")';
+		$q = 'SELECT longURL FROM '.URL_TABLE.' WHERE (urlID="'.$id.'")';
 		$result = mysql_query($q);
 
 		if ( mysql_num_rows($result) )
 		{
 			$row = mysql_fetch_array($result);
-			return $row['url'];
+			return $row['longURL'];
 		}
 		else
 		{
@@ -58,7 +58,7 @@ class lilURL
 		else // otherwise, put it in
 		{
 			$id = $this->get_next_id($this->get_last_id());
-			$q = 'INSERT INTO '.URL_TABLE.' (id, url, date) VALUES ("'.$id.'", "'.$url.'", NOW())';
+			$q = 'INSERT INTO '.URL_TABLE.' (urlID, longURL, submitDate) VALUES ("'.$id.'", "'.$url.'", NOW())';
 
 			return mysql_query($q);
 		}
@@ -67,13 +67,13 @@ class lilURL
 	// return the most recent id (or -1 if no ids exist)
 	function get_last_id()
 	{	
-		$q = 'SELECT id FROM '.URL_TABLE.' ORDER BY date DESC LIMIT 1';
+		$q = 'SELECT urlID FROM '.URL_TABLE.' ORDER BY date DESC LIMIT 1';
 		$result = mysql_query($q);
 
 		if ( mysql_num_rows($result) )
 		{
 			$row = mysql_fetch_array($result);
-			return $row['id'];
+			return $row['urlID'];
 		}
 		else
 		{
@@ -117,7 +117,7 @@ class lilURL
 		//
 		// (this is basically a failsafe to get around the potential dangers of
 		//  my kludgey use of a timestamp to pick the most recent id)
-		$q = 'SELECT id FROM '.URL_TABLE.' WHERE (id="'.$next_id.'")';
+		$q = 'SELECT urlID FROM '.URL_TABLE.' WHERE (urlID="'.$next_id.'")';
 		$result = mysql_query($q);
 		
 		if ( mysql_num_rows($result) )
