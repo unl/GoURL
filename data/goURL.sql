@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Mar 27, 2009 at 09:15 AM
+-- Generation Time: Apr 02, 2009 at 11:04 AM
 -- Server version: 5.1.31
 -- PHP Version: 5.2.6
 
@@ -21,16 +21,10 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 DROP TABLE IF EXISTS `tblURLs`;
 CREATE TABLE IF NOT EXISTS `tblURLs` (
-  `urlID` int(11) NOT NULL,
+  `urlID` varchar(255) NOT NULL,
   `longURL` varchar(1000) NOT NULL,
   `submitDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createdBy` varchar(25) DEFAULT NULL,
-  `alias` varchar(50) DEFAULT NULL,
-  `gaCampaignSource` varchar(50) DEFAULT NULL,
-  `gaCampaignName` varchar(100) DEFAULT NULL,
-  `gaCampaignTerm` varchar(50) DEFAULT NULL,
-  `gaCampaignContent` varchar(50) DEFAULT NULL,
-  `gaCampaignMedium` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`urlID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -38,3 +32,5 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
 -- Dumping data for table `tblURLs`
 --
 
+INSERT INTO `tblURLs` (`urlID`, `longURL`, `submitDate`, `createdBy`) VALUES
+('0', 'http://admissions.unl.edu/consider', '2009-04-02 11:01:08', NULL);
