@@ -134,7 +134,7 @@ $(document).ready(function () {
 			</div>
 		</li>
 	</ol>
-<p class="attention">Please login to use this feature</p>
+<p class="attention"><a href="#">Please login to use this feature.</a></p>
 <?php endif; ?>
 </fieldset>
 <fieldset>
