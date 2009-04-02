@@ -4,9 +4,9 @@
 define('PAGE_TITLE', 'GO URL Generator');
 
 // MySQL connection info
-define('MYSQL_USER', 'smeranda');
-define('MYSQL_PASS', '12345');
-define('MYSQL_DB', 'goURL');
+define('MYSQL_USER', 'myuser');
+define('MYSQL_PASS', 'mypass');
+define('MYSQL_DB',   'goURL');
 define('MYSQL_HOST', 'localhost');
 
 // MySQL tables
@@ -20,5 +20,3 @@ $allowed_protocols = array('http:', 'https:', 'mailto:');
 
 // uncomment the line below to skip the protocol check
 // $allowed_procotols = array();
-
-?>
