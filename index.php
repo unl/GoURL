@@ -1,4 +1,6 @@
 <?php
+require_once 'includes/conf.php'; // <- site-specific settings
+
 require_once 'UNL/Auth.php';
 require_once 'UNL/Templates.php';
 $page = UNL_Templates::factory('Fixed');

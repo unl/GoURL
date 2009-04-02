@@ -1,6 +1,5 @@
 <?php /* index.php ( lilURL implementation ) */
 
-require_once 'includes/conf.php'; // <- site-specific settings
 require_once 'includes/lilurl.php'; // <- lilURL class file
 
 
@@ -84,7 +83,7 @@ else // if the form hasn't been submitted, look for an id to redirect to
 		}
 		else
 		{
-			$msg = '<p class="error">Sorry, but that lil&#180; URL isn\'t in our database.</p>';
+			$msg = '<p class="error">Sorry, but that Go URL isn\'t in our database.</p>';
 		}
 	}
 }
