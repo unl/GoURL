@@ -3,16 +3,30 @@ require_once 'includes/conf.php'; // <- site-specific settings
 
 require_once 'UNL/Auth.php';
 require_once 'UNL/Templates.php';
+
 $page = UNL_Templates::factory('Fixed');
 $page->titlegraphic = "<h1>Go URL</h1><h2>The shorter the better</h2>";
 $page->doctitle = '<title>UNL | Go URL, a short URL service</title>';
-$page->collegenavigationlist = '<ul><li>Login</li><li>Logout</li></ul>';
 $page->leftRandomPromo = '';
 $page->addScript('http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js');
 $page->addStylesheet('/ucomm/templatedependents/templatecss/components/forms.css');
 $page->addStylesheet('sharedcode/css/forms/maincontent.css');
 
 $cas_client = UNL_Auth::factory('SimpleCAS');
+if (isset($_GET['login'])) {
+    $cas_client->login();
+}
+
+if (isset($_GET['logout'])) {
+    $cas_client->logout();
+}
+
+$login_link = '<a href="?login">Login</a>';
+if ($cas_client->isLoggedIn()) {
+    $login_link = '<a href="?logout">Logout</a>';
+}
+
+$page->collegenavigationlist = '<ul><li>'.$login_link.'</li></ul>';
 
 
 ob_start();

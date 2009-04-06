@@ -126,7 +126,7 @@ $(document).ready(function () {
 			</div>
 		</li>
 	</ol>
-<?php else: ?>
+    <?php else: ?>
 	<ol>
 		<li>
 			<label for="theAlias" class="element">Alias</label>
@@ -134,8 +134,8 @@ $(document).ready(function () {
 			</div>
 		</li>
 	</ol>
-<p class="attention"><a href="#">Please login to use this feature.</a></p>
-<?php endif; ?>
+    <p class="attention"><a href="?login">Please login to use this feature.</a></p>
+    <?php endif; ?>
 </fieldset>
 <fieldset>
 	<legend>Google Analytics Campaign Tagging</legend>
