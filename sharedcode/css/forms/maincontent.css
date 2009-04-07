@@ -26,7 +26,6 @@ p.required, p.attention {
 	background:url(../images/forms/requiredIndicatorBG.png) no-repeat top left;
 	padding:10px 0 16px 45px;
 	margin-bottom:0px;
-	float:right;	
 }
 p.attention {
 	background:url(../images/forms/alertIndicatorBG.png) no-repeat top left;
@@ -66,7 +65,6 @@ p.attention {
 	display:inline-block;
 	height:45px;
 	padding-left:5px;
-	float:left;
 }
 #maincontent form p.submit input, p.submit a {
     background:url(../images/forms/submitR.png) no-repeat top right;
@@ -80,9 +78,10 @@ p.attention {
     margin:0;
     width:auto;
 }
-p.submit a {
+#maincontent form p.submit a {
 	padding:15px 45px 15px 10px;
 }
+
 /*End submit button*/
 
 /*Handle Form Feedback*/
