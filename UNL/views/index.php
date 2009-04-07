@@ -73,7 +73,7 @@ else // if the form hasn't been submitted, look for an id to redirect to
 	}
 	
 	// if the id isn't empty and it's not this file, redirect to it's url
-	if ( $id != '' && $id != basename($_SERVER['PHP_SELF']) )
+	if ( $id != '' && $id != basename($_SERVER['PHP_SELF']) && $id != 'index.php?login')
 	{
 		$location = $lilurl->get_url($id);
 		
@@ -83,7 +83,7 @@ else // if the form hasn't been submitted, look for an id to redirect to
 		}
 		else
 		{
-			$msg = '<p class="error">Sorry, but that Go URL isn\'t in our database.</p>';
+			$msg = '<p class="error">'.$id.' - Sorry, but that Go URL isn\'t in our database.</p>';
 		}
 	}
 }
