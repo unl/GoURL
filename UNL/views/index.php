@@ -9,8 +9,29 @@ $msg = '';
 // if the form has been submitted
 if ( isset($_POST['theURL']) )
 {
-	// escape bad characters from the user's url
-	$longurl = trim(mysql_escape_string($_POST['theURL']));
+	//First, build the $longurl by combining theURL and the GA stuff
+	
+	//Start by gathering all the GA items
+	if ( isset($_POST['gaSource']) )
+	{
+		$gaTags = 'utm_source='.($_POST['gaSource']);
+		$gaTags = $gaTags.'&utm_medium='.($_POST['gaMedium']);
+		$gaTags = $gaTags.'&utm_term='.($_POST['gaTerm']);
+		$gaTags = $gaTags.'&utm_content='.($_POST['gaContent']);
+		$gaTags = $gaTags.'&utm_campaign='.($_POST['gaName']);
+	}
+	//http://www.unl.edu/?utm_source=source&utm_medium=medium&utm_term=term&utm_content=content&utm_campaign=name
+	if (strpbrk($_POST['theURL'], '?')) //if the URL already contains a '?' then add GA stuff with '&' 
+	{ 
+		$longurl = $_POST['theURL'].'&'.$gaTags;
+	}
+	else // we don't have a '?', so use one in the URL
+	{
+		$longurl = $_POST['theURL'].'?'.$gaTags;
+	}
+	
+	//escape bad characters from the user's url
+	$longurl = trim(mysql_escape_string($longurl));
 
 	// set the protocol to not ok by default
 	$protocol_ok = false;
