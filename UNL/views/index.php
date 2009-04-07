@@ -109,7 +109,7 @@ $(document).ready(function () {
 		<li class="required">
 			<label for="theURL" class="element">Long URL</label>
 			<div class="element"><input name="theURL" id="theURL" type="text" />			
-			<span class="hint"><span class="hintPointer"></span>ex: go.unl.edu/<strong>admissions</strong></span>
+			<span class="hint"><span class="hintPointer">&nbsp;</span>ex: go.unl.edu/<strong>admissions</strong></span>
 			</div>
 		</li>
 	</ol>
@@ -144,13 +144,13 @@ $(document).ready(function () {
 		<li>
 			<label for="gaSource" class="element">Source</label>
 			<div class="element"><input name="gaSource" id="gaSource" type="text" />			
-			<span class="hint"><span class="hintPointer"></span>The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source</span>
+			<span class="hint"><span class="hintPointer">&nbsp;</span>The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source The Google Analytics Source</span>
 			</div>
 		</li>	
 		<li>
 			<label for="gaMedium" class="element">Medium</label>
 			<div class="element"><input name="gaMedium" id="gaMedium" type="text" />			
-			<span class="hint"><span class="hintPointer"></span>Testing. Testing. Testing. Testing. Testing. Testing.</span>
+			<span class="hint"><span class="hintPointer">&nbsp;</span>Testing. Testing. Testing. Testing. Testing. Testing.</span>
 			</div>
 		</li>
 		<li>
