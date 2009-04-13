@@ -59,7 +59,7 @@ if (isset($_POST['theURL'])) {
 
         $msg = '<p class="success">Your Go URL is: <a href="'.$url.'">'.$url.'</a></p>';
     } elseif (!$protocol_ok) {
-        $msg = '<p class="error">Your URL must begin with <code>http:</code>, <code>https:</code> or <code>mailto:</code>.</p>';
+        $msg = '<p class="error">Your URL must begin with <code>http://</code>, <code>https://</code> or <code>mailto:</code>.</p>';
     } else {
         $msg = '<p class="error">Creation of your Go URL failed for some reason.</p>';
     }

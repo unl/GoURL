@@ -16,7 +16,7 @@ define('URL_TABLE', 'tblURLs');
 define('REWRITE', true);
 
 // allow urls that begin with these strings
-$allowed_protocols = array('http:', 'https:', 'mailto:');
+$allowed_protocols = array('http://', 'https://', 'mailto:');
 
 // uncomment the line below to skip the protocol check
 // $allowed_procotols = array();
