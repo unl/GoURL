@@ -4,94 +4,34 @@ require_once 'includes/lilurl.php'; // <- lilURL class file
 
 
 $lilurl = new lilURL();
+$lilurl->setAllowedProtocols($allowed_protocols);
+
 $msg = '';
 
-// if the form has been submitted
 if (isset($_POST['theURL'])) {
-    //First, build the $longurl by combining theURL and the GA stuff
-    
-    //Start by gathering all the GA items
-    if (isset($_POST['gaSource'])) {
-        $gaTags = 'utm_source='.($_POST['gaSource']);
-        $gaTags = $gaTags.'&utm_medium='.($_POST['gaMedium']);
-        $gaTags = $gaTags.'&utm_term='.($_POST['gaTerm']);
-        $gaTags = $gaTags.'&utm_content='.($_POST['gaContent']);
-        $gaTags = $gaTags.'&utm_campaign='.($_POST['gaName']);
-    }
-    //http://www.unl.edu/?utm_source=source&utm_medium=medium&utm_term=term&utm_content=content&utm_campaign=name
-    if (strpbrk($_POST['theURL'], '?')) {
-        //if the URL already contains a '?' then add GA stuff with '&' 
-        $longurl = $_POST['theURL'].'&'.$gaTags;
-    } else {
-        // we don't have a '?', so use one in the URL
-        $longurl = $_POST['theURL'].'?'.$gaTags;
-    }
-    
-    //escape bad characters from the user's url
-    $longurl = trim(mysql_escape_string($longurl));
-
-    // set the protocol to not ok by default
-    $protocol_ok = false;
-    
-    // if there's a list of allowed protocols, 
-    // check to make sure that the user's url uses one of them
-    if (count($allowed_protocols)) {
-        foreach ($allowed_protocols as $ap) {
-            if (strtolower(substr($longurl, 0, strlen($ap))) == strtolower($ap)) {
-                $protocol_ok = true;
-                break;
-            }
-        }
-    } else {
-        // if there's no protocol list, screw all that
-        $protocol_ok = true;
-    }
-        
-    // add the url to the database
-    if ($protocol_ok && $lilurl->add_url($longurl)) {
-        if (REWRITE) {
-            // mod_rewrite style link
-            $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).'/'.$lilurl->get_id($longurl);
-        } else {
-            // regular GET style link
-            $url = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$lilurl->get_id($longurl);
-        }
-
+    try {
+        $url = $lilurl->handlePOST();
         $msg = '<p class="success">Your Go URL is: <a href="'.$url.'">'.$url.'</a></p>';
-    } elseif (!$protocol_ok) {
-        $msg = '<p class="error">Your URL must begin with <code>http://</code>, <code>https://</code> or <code>mailto:</code>.</p>';
-    } else {
-        $msg = '<p class="error">Creation of your Go URL failed for some reason.</p>';
+    } catch (Exception $e) {
+        switch ($e->getCode()) {
+            case lilurl::ERR_INVALID_PROTOCOL:
+                $msg = 'Your URL must begin with <code>http://</code>, <code>https://</code> or <code>mailto:</code>.';
+                break;
+            default:
+                $msg = 'There was an error submitting your url. Please try again later.';
+        }
+        $msg = '<p class="error">'.$msg.'</p>';
     }
 } else {
     // if the form hasn't been submitted, look for an id to redirect to
-    if (isset($_GET['id'])) {
-        // check GET first
-        $id = mysql_escape_string($_GET['id']);
-    } elseif (REWRITE) {
-        // check the URI if we're using mod_rewrite
-        $explodo = explode('/', $_SERVER['REQUEST_URI']);
-        $id = mysql_escape_string($explodo[count($explodo)-1]);
-    } else {
-        // otherwise, just make it empty
-        $id = '';
-    }
-    
-    // if the id isn't empty and it's not this file, redirect to it's url
-    if ($id != '' && $id != basename($_SERVER['PHP_SELF']) && $id != '?login') {
-        $location = $lilurl->get_url($id);
-        
-        if ($location != -1) {
-            header('Location: '.$location);
-            exit();
-        } else {
-            $msg = '<p class="error">'.$id.' - Sorry, but that Go URL isn\'t in our database.</p>';
+    $explodo = explode('/', $_SERVER['REQUEST_URI']);
+    $id = mysql_escape_string($explodo[count($explodo)-1]);
+    if (!empty($id)) {
+        if (!$lilurl->handleRedirect($id)) {
+            $msg = '<p class="error">'.htmlentities($id).' - Sorry, but that Go URL isn\'t in our database.</p>';
         }
     }
 }
-
-// print the form
-
 ?>
 <script type="text/javascript" charset="utf-8">
 $(document).ready(function () {

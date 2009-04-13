@@ -5,6 +5,11 @@
  */
 class lilURL
 {
+    const ERR_UNKNOWN          = -1;
+    const ERR_INVALID_PROTOCOL = -2;
+    
+    protected $allowed_protocols = array();
+    
     /**
      * Construct a lilURL object
      */
@@ -13,6 +18,83 @@ class lilURL
         // open mysql connection
         mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS) or die('Could not connect to database');
         mysql_select_db(MYSQL_DB) or die('Could not select database');
+    }
+    
+    function handleRedirect($id)
+    {
+        $id = mysql_escape_string($id);
+        // if the id isn't empty and it's not this file, redirect to it's url
+        if ($id != '' && $id != basename($_SERVER['PHP_SELF']) && $id != '?login') {
+            $location = $this->get_url($id);
+            if ($location != -1) {
+                header('Location: '.$location);
+                exit();
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * handles adding a new url
+     * 
+     * @return string The URL
+     */
+    function handlePOST()
+    {
+        // First, build the $longurl by combining theURL and the GA stuff
+            
+        //Start by gathering all the GA items
+        if (isset($_POST['gaSource'])) {
+            $gaTags = 'utm_source='.($_POST['gaSource']);
+            $gaTags = $gaTags.'&utm_medium='.($_POST['gaMedium']);
+            $gaTags = $gaTags.'&utm_term='.($_POST['gaTerm']);
+            $gaTags = $gaTags.'&utm_content='.($_POST['gaContent']);
+            $gaTags = $gaTags.'&utm_campaign='.($_POST['gaName']);
+        }
+        //http://www.unl.edu/?utm_source=source&utm_medium=medium&utm_term=term&utm_content=content&utm_campaign=name
+        if (strpbrk($_POST['theURL'], '?')) {
+            //if the URL already contains a '?' then add GA stuff with '&' 
+            $longurl = $_POST['theURL'].'&'.$gaTags;
+        } else {
+            // we don't have a '?', so use one in the URL
+            $longurl = $_POST['theURL'].'?'.$gaTags;
+        }
+        
+        //escape bad characters from the user's url
+        $longurl = trim(mysql_escape_string($longurl));
+    
+        // set the protocol to not ok by default
+        $protocol_ok = false;
+        
+        // if there's a list of allowed protocols, 
+        // check to make sure that the user's url uses one of them
+        if (count($this->allowed_protocols)) {
+            foreach ($this->allowed_protocols as $ap) {
+                if (strtolower(substr($longurl, 0, strlen($ap))) == strtolower($ap)) {
+                    $protocol_ok = true;
+                    break;
+                }
+            }
+        } else {
+            // if there's no protocol list, screw all that
+            $protocol_ok = true;
+        }
+            
+        // add the url to the database
+        if ($protocol_ok && $this->add_url($longurl)) {
+            if (REWRITE) {
+                // mod_rewrite style link
+                $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).'/'.$this->get_id($longurl);
+            } else {
+                // regular GET style link
+                $url = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$this->get_id($longurl);
+            }
+            return $url;
+        } elseif (!$protocol_ok) {
+            throw new Exception('Invalid Protocol', self::ERR_INVALID_PROTOCOL);
+        }
+        
+        throw new Exception('Unknown error', self::ERR_UNKNOWN);
     }
 
     /**
@@ -96,7 +178,21 @@ class lilURL
         } else {
             return -1;
         }
-    }    
+    }
+    
+    /**
+     * Set the list of allowed protocols.
+     * 
+     * @param array $protocols Protocols/prefixes to allow
+     * 
+     * @return void
+     */
+    function setAllowedProtocols($protocols)
+    {
+        if (count($protocols)) {
+            $this->allowed_protocols = $protocols;
+        }
+    }
 
     /**
      * return the next id
