@@ -28,7 +28,10 @@ if ($cas_client->isLoggedIn()) {
 }
 
 $page->collegenavigationlist = '<ul><li>'.$login_link.'</li></ul>';
-
+$page->breadcrumbs = '<ul>
+                        <li><a href="http://www.unl.edu/">UNL</a></li>
+                        <li>Go URL</li>
+                      </ul>';
 
 ob_start();
 include 'UNL/views/index.php';
