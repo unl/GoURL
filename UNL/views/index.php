@@ -143,7 +143,6 @@ $(document).ready(function () {
     </ol>
 </fieldset>
 <p class="submit"><input type="submit" id="submit1" name="submit" value="Create URL" /></p>
-<p class="clear">This is a test.</p>
 <fieldset>
     <legend>Custom Alias</legend>
     <p>If you would like to control the URL, then enter the alias you would like to use.</p>
