@@ -114,13 +114,18 @@ $(document).ready(function () {
 </script>
 <?php echo $msg; ?>
 <div id="serviceIndicator">
-    <div class="close">
-        <a href="#">Close message</a>
-    </div>
-    <div class="message">
-        <p><a href="?login"><strong>Login with your My.UNL Account</strong></a><br/>
-        This service has advanced features reserved for authenticated UNL users. <a href="?login">Please login</a> with your My.UNL username and password.</p>
-    </div>
+	<div class="close">
+		<a href="#">Close message</a>
+	</div>
+	<div class="message">
+		<?php if ($cas_client->isLoggedIn()) : ?>
+		<p><strong style="font-size:1.2em">You are logged in</strong><br/>
+		Since you have logged in with your My.UNL username and password, you can use the advanced features.</p>
+		<?php else: ?>
+		<p><a href="?login"><strong>Login with your My.UNL Account</strong></a><br/>
+		This service has advanced features reserved for authenticated UNL users. <a href="?login">Please login</a> with your My.UNL username and password.</p>
+		<?php endif;?>
+	</div>
 </div>
 <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <p class="required">Indicates a required field.</p>
