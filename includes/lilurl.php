@@ -1,16 +1,27 @@
-<?php /* lilurl.php ( lilURL class file ) */
-
+<?php
+/**
+ * This class handles the lilURL database interactions.
+ * 
+ */
 class lilURL
 {
-    // constructor
-    function lilURL()
+    /**
+     * Construct a lilURL object
+     */
+    function __construct()
     {
         // open mysql connection
         mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS) or die('Could not connect to database');
-        mysql_select_db(MYSQL_DB) or die('Could not select database');    
+        mysql_select_db(MYSQL_DB) or die('Could not select database');
     }
 
-    // return the id for a given url (or -1 if the url doesn't exist)
+    /**
+     * Return the id for a given url (or -1 if the url doesn't exist)
+     * 
+     * @param string $url URL to check for an id
+     * 
+     * @return int
+     */
     function get_id($url)
     {
         $q = 'SELECT urlID FROM '.URL_TABLE.' WHERE (longURL="'.$url.'")';
@@ -24,7 +35,13 @@ class lilURL
         }
     }
 
-    // return the url for a given id (or -1 if the id doesn't exist)
+    /**
+     * return the url for a given id (or -1 if the id doesn't exist)
+     * 
+     * @param string|int $id The id of the URL to find.
+     * 
+     * @return string
+     */
     function get_url($id)
     {
         $q = 'SELECT longURL FROM '.URL_TABLE.' WHERE (urlID="'.$id.'")';
@@ -38,7 +55,13 @@ class lilURL
         }
     }
     
-    // add a url to the database
+    /**
+     * add a url to the database
+     * 
+     * @param string $url URL to add
+     * 
+     * @return bool
+     */
     function add_url($url)
     {
         // check to see if the url's already in there
@@ -57,7 +80,11 @@ class lilURL
         }
     }
 
-    // return the most recent id (or -1 if no ids exist)
+    /**
+     * Return the most recent id (or -1 if no ids exist)
+     * 
+     * @return int
+     */
     function get_last_id()
     {    
         $q = 'SELECT urlID FROM '.URL_TABLE.' ORDER BY submitDate DESC LIMIT 1';
@@ -71,7 +98,13 @@ class lilURL
         }
     }    
 
-    // return the next id
+    /**
+     * return the next id
+     * 
+     * @param int $last_id
+     * 
+     * @return int
+     */ 
     function get_next_id($last_id)
     { 
     
@@ -111,10 +144,16 @@ class lilURL
         return $next_id;
     }
 
-    // make every character in the string 0, and then add an additional 0 to that
+    /**
+     * make every character in the string 0, and then add an additional 0 to that
+     * 
+     * @param int $id
+     * 
+     * @return string
+     */
     function append_id($id)
     {
-        for ( $x = 0; $x < strlen($id); $x++ ) {
+        for ($x = 0; $x < strlen($id); $x++) {
             $id[$x] = 0;
         }
 
@@ -123,7 +162,14 @@ class lilURL
         return $id;
     }
 
-    // increment a character to the next alphanumeric value and return the modified id
+    /**
+     * increment a character to the next alphanumeric value and return the modified id
+     * 
+     * @param string $id
+     * @param $pos
+     * 
+     * @return string
+     */
     function increment_id($id, $pos)
     {        
         $char = $id[$pos];
