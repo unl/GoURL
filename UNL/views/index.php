@@ -126,9 +126,22 @@ $(document).ready(function () {
 			$('#gaName').parent('.element').parent('li').addClass('required');
 		}
 	});
+	$('div.close a').click(function() {
+		$('#serviceIndicator').slideUp("slow");
+		return false;
+	});
 });
 </script>
 <?php echo $msg; ?>
+<div id="serviceIndicator">
+	<div class="close">
+		<a href="#">Close message</a>
+	</div>
+	<div class="message">
+		<p><a href="?login"><strong>Login with your My.UNL Account</strong></a><br/>
+		This service has advanced features reserved for authenticated UNL users. <a href="?login">Please login</a> with your My.UNL username and password.</p>
+	</div>
+</div>
 <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <p class="required">Indicates a required field.</p>
 <fieldset>
