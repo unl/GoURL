@@ -36,7 +36,7 @@ if (isset($_POST['theURL'])) {
     // if there's a list of allowed protocols, 
     // check to make sure that the user's url uses one of them
     if (count($allowed_protocols)) {
-        foreach ( $allowed_protocols as $ap) {
+        foreach ($allowed_protocols as $ap) {
             if (strtolower(substr($longurl, 0, strlen($ap))) == strtolower($ap)) {
                 $protocol_ok = true;
                 break;
@@ -65,7 +65,7 @@ if (isset($_POST['theURL'])) {
     }
 } else {
     // if the form hasn't been submitted, look for an id to redirect to
-    if (isSet($_GET['id'])) {
+    if (isset($_GET['id'])) {
         // check GET first
         $id = mysql_escape_string($_GET['id']);
     } elseif (REWRITE) {
@@ -78,11 +78,12 @@ if (isset($_POST['theURL'])) {
     }
     
     // if the id isn't empty and it's not this file, redirect to it's url
-    if ($id != '' && $id != basename($_SERVER['PHP_SELF']) && $id != 'index.php?login') {
+    if ($id != '' && $id != basename($_SERVER['PHP_SELF']) && $id != '?login') {
         $location = $lilurl->get_url($id);
         
         if ($location != -1) {
             header('Location: '.$location);
+            exit();
         } else {
             $msg = '<p class="error">'.$id.' - Sorry, but that Go URL isn\'t in our database.</p>';
         }
@@ -113,6 +114,7 @@ $(document).ready(function () {
 });
 </script>
 <?php echo $msg; ?>
+<?php if (!$cas_client->isLoggedIn()) : ?>
 <div id="serviceIndicator">
 	<div class="close">
 		<a href="#">Close message</a>
@@ -127,6 +129,7 @@ $(document).ready(function () {
 		<?php endif;?>
 	</div>
 </div>
+<?php endif; ?>
 <form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
 <p class="required">Indicates a required field.</p>
 <fieldset>
