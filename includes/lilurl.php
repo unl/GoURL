@@ -20,6 +20,13 @@ class lilURL
         mysql_select_db(MYSQL_DB) or die('Could not select database');
     }
     
+    /**
+     * Redirect the clien to the appropriate URL
+     * 
+     * @param string $id tinyurl id
+     * 
+     * @return false on error
+     */
     function handleRedirect($id)
     {
         $id = mysql_escape_string($id);
@@ -42,9 +49,10 @@ class lilURL
     function handlePOST()
     {
         // First, build the $longurl by combining theURL and the GA stuff
-            
+        $gaTags = '';    
+        
         //Start by gathering all the GA items
-        if (isset($_POST['gaSource'])) {
+        if (!empty($_POST['gaSource'])) {
             $gaTags = 'utm_source='.($_POST['gaSource']);
             $gaTags = $gaTags.'&utm_medium='.($_POST['gaMedium']);
             $gaTags = $gaTags.'&utm_term='.($_POST['gaTerm']);
@@ -60,28 +68,15 @@ class lilURL
             $longurl = $_POST['theURL'].'?'.$gaTags;
         }
         
-        //escape bad characters from the user's url
-        $longurl = trim(mysql_escape_string($longurl));
-    
-        // set the protocol to not ok by default
-        $protocol_ok = false;
-        
-        // if there's a list of allowed protocols, 
-        // check to make sure that the user's url uses one of them
-        if (count($this->allowed_protocols)) {
-            foreach ($this->allowed_protocols as $ap) {
-                if (strtolower(substr($longurl, 0, strlen($ap))) == strtolower($ap)) {
-                    $protocol_ok = true;
-                    break;
-                }
-            }
-        } else {
-            // if there's no protocol list, screw all that
-            $protocol_ok = true;
+        //escape bad characters from the user's url, and trim extraneous stuff
+        $longurl = trim(mysql_escape_string($longurl), ' ?&');
+
+        if (!$this->urlIsAllowed($longurl)) {
+            throw new Exception('Invalid Protocol', self::ERR_INVALID_PROTOCOL);
         }
-            
+        
         // add the url to the database
-        if ($protocol_ok && $this->add_url($longurl)) {
+        if ($this->add_url($longurl)) {
             if (REWRITE) {
                 // mod_rewrite style link
                 $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).'/'.$this->get_id($longurl);
@@ -90,11 +85,31 @@ class lilURL
                 $url = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$this->get_id($longurl);
             }
             return $url;
-        } elseif (!$protocol_ok) {
-            throw new Exception('Invalid Protocol', self::ERR_INVALID_PROTOCOL);
         }
         
         throw new Exception('Unknown error', self::ERR_UNKNOWN);
+    }
+    
+    /**
+     * check to make sure that the user's url is allowed
+     * 
+     * @param string $url
+     * 
+     * @return bool
+     */
+    protected function urlIsAllowed($url)
+    {
+        if (!count($this->allowed_protocols)) {
+            return true;
+        }
+        
+        foreach ($this->allowed_protocols as $ap) {
+            if (strtolower(substr($url, 0, strlen($ap))) == strtolower($ap)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
