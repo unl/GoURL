@@ -9,8 +9,15 @@ $lilurl->setAllowedProtocols($allowed_protocols);
 $msg = '';
 
 if (isset($_POST['theURL'])) {
+    $user = $alias = null;
+    if ($cas_client->isLoggedIn()) {
+        $user = $cas_client->getUser();
+        if (!empty($_POST['theAlias'])) {
+            $alias = $_POST['theAlias'];
+        }
+    }
     try {
-        $url = $lilurl->handlePOST();
+        $url = $lilurl->handlePOST($alias, $user);
         $msg = '<p class="success">Your Go URL is: <a href="'.$url.'">'.$url.'</a></p>';
     } catch (Exception $e) {
         switch ($e->getCode()) {
@@ -25,8 +32,8 @@ if (isset($_POST['theURL'])) {
 } else {
     // if the form hasn't been submitted, look for an id to redirect to
     $explodo = explode('/', $_SERVER['REQUEST_URI']);
-    $id = mysql_escape_string($explodo[count($explodo)-1]);
-    if (!empty($id)) {
+    $id = $explodo[count($explodo)-1];
+    if (!empty($id) && $id != '?login') {
         if (!$lilurl->handleRedirect($id)) {
             $msg = '<p class="error">'.htmlentities($id).' - Sorry, but that Go URL isn\'t in our database.</p>';
         }
@@ -77,7 +84,7 @@ $(document).ready(function () {
     <ol>
         <li class="required">
             <label for="theURL" class="element">Long URL</label>
-            <div class="element"><input name="theURL" id="theURL" type="text" />
+            <div class="element"><input name="theURL" id="theURL" type="text" value="<?php echo (isset($_POST['theURL']))?htmlentities($_POST['theURL'], ENT_QUOTES):'';?>" />
             </div>
         </li>
     </ol>

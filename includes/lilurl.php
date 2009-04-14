@@ -29,10 +29,9 @@ class lilURL
      */
     function handleRedirect($id)
     {
-        $id = mysql_escape_string($id);
         // if the id isn't empty and it's not this file, redirect to it's url
         if ($id != '' && $id != basename($_SERVER['PHP_SELF']) && $id != '?login') {
-            $location = $this->get_url($id);
+            $location = $this->getURL($id);
             if ($location != -1) {
                 header('Location: '.$location);
                 exit();
@@ -46,7 +45,7 @@ class lilURL
      * 
      * @return string The URL
      */
-    function handlePOST()
+    function handlePOST($id = null, $user = null)
     {
         // First, build the $longurl by combining theURL and the GA stuff
         $gaTags = '';    
@@ -76,8 +75,8 @@ class lilURL
         }
         
         // add the url to the database
-        if ($this->add_url($longurl)) {
-            $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).'/'.$this->get_id($longurl);
+        if ($id = $this->addURL($longurl, $id, $user)) {
+            $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).'/'.$id;
             return $url;
         }
         
@@ -113,37 +112,39 @@ class lilURL
      * 
      * @return int
      */
-    function get_id($url)
+    function getID($url)
     {
+        $url = mysql_escape_string($url);
         $q = 'SELECT urlID FROM '.URL_TABLE.' WHERE (longURL="'.$url.'")';
         $result = mysql_query($q);
 
         if (mysql_num_rows($result)) {
             $row = mysql_fetch_array($result);
             return $row['urlID'];
-        } else {
-            return -1;
         }
+        
+        return false;
     }
 
     /**
      * return the url for a given id (or -1 if the id doesn't exist)
      * 
-     * @param string|int $id The id of the URL to find.
+     * @param string $id The id of the URL to find.
      * 
      * @return string
      */
-    function get_url($id)
+    function getURL($id)
     {
+        $id = mysql_escape_string($id);
         $q = 'SELECT longURL FROM '.URL_TABLE.' WHERE (urlID="'.$id.'")';
         $result = mysql_query($q);
 
         if (mysql_num_rows($result)) {
             $row = mysql_fetch_array($result);
             return $row['longURL'];
-        } else {
-            return -1;
         }
+        
+        return false;
     }
     
     /**
@@ -153,42 +154,28 @@ class lilURL
      * 
      * @return bool
      */
-    function add_url($url)
+    function addURL($url, $id = null, $user = null)
     {
-        $url = mysql_escape_string($url);
-        
-        // check to see if the url's already in there
-        $id = $this->get_id($url);
-        
-        // if it is, return true
-        if ($id != -1) {
-            return true;
-        } else {
-            // otherwise, put it in
-            $id = $this->get_next_id($this->get_last_id());
-            //echo($id);
-            $q = 'INSERT INTO '.URL_TABLE.' (urlID, longURL, submitDate) VALUES ("'.$id.'", "'.$url.'", NOW())';
-
-            return mysql_query($q);
+        // if the url is already in here, return true
+        if ($existing_id = $this->getID($url)) {
+            // Already in the DB
+            return $existing_id;
         }
-    }
-
-    /**
-     * Return the most recent id (or -1 if no ids exist)
-     * 
-     * @return int
-     */
-    function get_last_id()
-    {    
-        $q = 'SELECT urlID FROM '.URL_TABLE.' ORDER BY submitDate DESC LIMIT 1';
-        $result = mysql_query($q)  or die('Query failed: ' . mysql_error());
         
-        if (mysql_num_rows($result)) {
-            $row = mysql_fetch_array($result);
-            return $row['urlID'];
-        } else {
-            return -1;
+        if ($id == null) {
+            $id = $this->getRandomID();
         }
+
+        $q = 'INSERT INTO '.URL_TABLE.' (urlID, longURL, submitDate, createdBy)
+              VALUES ("'.mysql_escape_string($id).'", "'.mysql_escape_string($url).'", NOW(), "'.mysql_escape_string($user).'")';
+
+        $result = mysql_query($q);
+        
+        if ($result) {
+            return $id;
+        }
+        
+        return false;
     }
     
     /**
@@ -204,105 +191,24 @@ class lilURL
             $this->allowed_protocols = $protocols;
         }
     }
-
+    
     /**
-     * return the next id
-     * 
-     * @param int $last_id
-     * 
-     * @return int
-     */ 
-    function get_next_id($last_id)
-    {
-        // if the last id is -1 (non-existant), start at the begining with 0
-        if ($last_id == -1) {
-            $next_id = 0;
-        } else {
-            // loop through the id string until we find a character to increment
-            for ($x = 1; $x <= strlen($last_id); $x++) {
-                $pos = strlen($last_id) - $x;
-
-                if ($last_id[$pos] != 'z') {
-                    $next_id = $this->increment_id($last_id, $pos);
-                    break; // <- kill the for loop once we've found our char
-                }
-            }
-
-            // if every character was already at its max value (z),
-            // append another character to the string
-            if (!isSet($next_id)) {
-                $next_id = $this->append_id($last_id);
-            }
-        }
-
-        // check to see if the $next_id we made already exists, and if it does, 
-        // loop the function until we find one that doesn't
-        //
-        // (this is basically a failsafe to get around the potential dangers of
-        //  my kludgey use of a timestamp to pick the most recent id)
-        $q = 'SELECT urlID FROM '.URL_TABLE.' WHERE (urlID="'.$next_id.'")';
-        $result = mysql_query($q);
-        
-        if (mysql_num_rows($result)) {
-            $next_id = $this->get_next_id($next_id);
-        }
-
-        return $next_id;
-    }
-
-    /**
-     * make every character in the string 0, and then add an additional 0 to that
-     * 
-     * @param int $id
+     * Returns a random ID
      * 
      * @return string
      */
-    function append_id($id)
+    function getRandomID()
     {
-        for ($x = 0; $x < strlen($id); $x++) {
-            $id[$x] = 0;
+        mt_srand();
+        $possible_characters = 'abcdefghijkmnopqrstuvwxyz234567890';
+        $string = '';
+        while (strlen($string) < 3) {
+            $string .= substr($possible_characters, rand()%(strlen($possible_characters)),1);
         }
-
-        $id .= 0;
-
-        return $id;
-    }
-
-    /**
-     * increment a character to the next alphanumeric value and return the modified id
-     * 
-     * @param string $id
-     * @param $pos
-     * 
-     * @return string
-     */
-    function increment_id($id, $pos)
-    {        
-        $char = $id[$pos];
-        
-        // add 1 to numeric values
-        if (is_numeric($char)) {
-            if ($char < 9 ) {
-                $new_char = $char + 1;
-            } else {
-                // if we're at 9, it's time to move to the alphabet
-                $new_char = 'a';
-            }
-        } else {
-            // move it up the alphabet
-            $new_char = chr(ord($char) + 1);
+        if (false === $this->getURL($string)) {
+            return $string;
         }
-
-        $id[$pos] = $new_char;
-        
-        // set all characters after the one we're modifying to 0
-        if ($pos != (strlen($id) - 1)) {
-            for ( $x = ($pos + 1); $x < strlen($id); $x++ ) {
-                $id[$x] = 0;
-            }
-        }
-
-        return $id;
+        return $this->getRandomID();
     }
 
 }
