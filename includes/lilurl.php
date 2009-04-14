@@ -8,6 +8,8 @@ class lilURL
     const ERR_UNKNOWN          = -1;
     const ERR_INVALID_PROTOCOL = -2;
     
+    protected static $random_id_length = 3;
+    
     protected $allowed_protocols = array();
     
     /**
@@ -164,6 +166,8 @@ class lilURL
         
         if ($id == null) {
             $id = $this->getRandomID();
+        } else {
+            $id = strtolower($id);
         }
 
         $q = 'INSERT INTO '.URL_TABLE.' (urlID, longURL, submitDate, createdBy)
@@ -202,13 +206,18 @@ class lilURL
         mt_srand();
         $possible_characters = 'abcdefghijkmnopqrstuvwxyz234567890';
         $string = '';
-        while (strlen($string) < 3) {
+        while (strlen($string) < self::$random_id_length) {
             $string .= substr($possible_characters, rand()%(strlen($possible_characters)),1);
         }
         if (false === $this->getURL($string)) {
             return $string;
         }
         return $this->getRandomID();
+    }
+    
+    public function setRandomIDLength($length)
+    {
+        self::$random_id_length = (int)$length;
     }
 
 }
