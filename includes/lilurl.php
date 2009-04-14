@@ -69,7 +69,7 @@ class lilURL
         }
         
         //escape bad characters from the user's url, and trim extraneous stuff
-        $longurl = trim(mysql_escape_string($longurl), ' ?&');
+        $longurl = trim($longurl, ' ?&');
 
         if (!$this->urlIsAllowed($longurl)) {
             throw new Exception('Invalid Protocol', self::ERR_INVALID_PROTOCOL);
@@ -77,13 +77,7 @@ class lilURL
         
         // add the url to the database
         if ($this->add_url($longurl)) {
-            if (REWRITE) {
-                // mod_rewrite style link
-                $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).'/'.$this->get_id($longurl);
-            } else {
-                // regular GET style link
-                $url = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$this->get_id($longurl);
-            }
+            $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).'/'.$this->get_id($longurl);
             return $url;
         }
         
@@ -161,6 +155,8 @@ class lilURL
      */
     function add_url($url)
     {
+        $url = mysql_escape_string($url);
+        
         // check to see if the url's already in there
         $id = $this->get_id($url);
         
@@ -217,8 +213,7 @@ class lilURL
      * @return int
      */ 
     function get_next_id($last_id)
-    { 
-    
+    {
         // if the last id is -1 (non-existant), start at the begining with 0
         if ($last_id == -1) {
             $next_id = 0;
