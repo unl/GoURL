@@ -78,7 +78,8 @@ class lilURL
         
         // add the url to the database
         if ($id = $this->addURL($longurl, $id, $user)) {
-            $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']).'/'.$id;
+            $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']);
+            $url = trim($url, '/').'/'.$id;
             return $url;
         }
         
