@@ -98,7 +98,7 @@ $(document).ready(function () {
         <li>
             <label for="theAlias" class="element">Alias</label>
             <div class="element"><input name="theAlias" id="theAlias" type="text" />            
-            <span class="hint"><span class="hintPointer">&nbsp;</span>ex: go.unl.edu/<strong>admissions</strong></span>            
+            <span class="hint"><span class="hintPointer">&nbsp;</span>ex: <strong>admissions</strong> for go.unl.edu/admissions</span>            
             </div>
         </li>
     </ol>
