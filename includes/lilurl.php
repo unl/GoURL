@@ -104,6 +104,7 @@ class lilURL
             return false;
         }
         
+        return true;
     }
     
     /**
