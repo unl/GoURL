@@ -34,7 +34,7 @@ class lilURL
         // if the id isn't empty and it's not this file, redirect to it's url
         if ($id != '' && $id != basename($_SERVER['PHP_SELF']) && $id != '?login') {
             $location = $this->getURL($id);
-            if ($location != -1) {
+            if ($location != false) {
                 header('Location: '.$location);
                 exit();
             }
@@ -76,6 +76,10 @@ class lilURL
             throw new Exception('Invalid Protocol', self::ERR_INVALID_PROTOCOL);
         }
         
+        if (!$this->isSafeURL($longurl)) {
+            throw new Exception('Indvalid URL.');
+        }
+        
         // add the url to the database
         if ($id = $this->addURL($longurl, $id, $user)) {
             $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']);
@@ -84,6 +88,22 @@ class lilURL
         }
         
         throw new Exception('Unknown error', self::ERR_UNKNOWN);
+    }
+    
+    function isSafeURL($url)
+    {
+        if (strip_tags($url) != $url) {
+            return false;
+        }
+        
+        if (strip_tags(urldecode($url)) != urldecode($url)) {
+            return false;
+        }
+        
+        if (strip_tags(html_entity_decode($url)) != html_entity_decode($url)) {
+            return false;
+        }
+        
     }
     
     /**
