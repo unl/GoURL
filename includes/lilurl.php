@@ -104,6 +104,10 @@ class lilURL
             return false;
         }
         
+        if (strpos($url,'http://go.unl.edu/') !== false) {
+            return false;
+        }
+        
         return true;
     }
     

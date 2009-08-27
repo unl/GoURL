@@ -3,9 +3,9 @@ require_once 'includes/conf.php'; // <- site-specific settings
 
 require_once 'UNL/Auth.php';
 require_once 'UNL/Templates.php';
-
+UNL_Templates::$options['version'] = 3;
 $page = UNL_Templates::factory('Fixed');
-$page->titlegraphic = "<h1>Go URL</h1><h2>The shorter the better</h2>";
+$page->titlegraphic = "<h1>Go URL</h1>";
 $page->doctitle = '<title>UNL | Go URL, a short URL service</title>';
 $page->leftRandomPromo = '';
 $page->addScript('http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js');
