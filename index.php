@@ -7,10 +7,7 @@ UNL_Templates::$options['version'] = 3;
 $page = UNL_Templates::factory('Fixed');
 $page->titlegraphic = "<h1>Go URL</h1>";
 $page->doctitle = '<title>UNL | Go URL, a short URL service</title>';
-$page->leftRandomPromo = '';
-$page->addScript('http://jqueryjs.googlecode.com/files/jquery-1.3.2.min.js');
-$page->addStylesheet('/ucomm/templatedependents/templatecss/components/forms.css');
-$page->addStylesheet('sharedcode/css/forms/maincontent.css');
+$page->addStylesheet('/wdn/templates_3.0/css/content/forms.css');
 $page->addStylesheet('sharedcode/css/identity/serviceIndicator.css');
 
 $cas_client = UNL_Auth::factory('SimpleCAS');

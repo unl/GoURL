@@ -41,21 +41,21 @@ if (isset($_POST['theURL'])) {
 }
 ?>
 <script type="text/javascript" charset="utf-8">
-$(document).ready(function () {
-    $('.hint').hide();
-    $('input').focus(function() {
-        $('.hint').hide();
-        $(this).siblings('.hint').show();
+WDN.jQuery(document).ready(function () {
+	WDN.jQuery('.hint').hide();
+	WDN.jQuery('input').focus(function() {
+		WDN.jQuery('.hint').hide();
+		WDN.jQuery(this).siblings('.hint').show();
     });
-    $('#gaSource'|'#gaMedium'|'#gaName').change(function() {
-        if ($(this) != "") {
-            $('#gaSource').parent('.element').parent('li').addClass('required');
-            $('#gaMedium').parent('.element').parent('li').addClass('required');
-            $('#gaName').parent('.element').parent('li').addClass('required');
+	WDN.jQuery('#gaSource'|'#gaMedium'|'#gaName').change(function() {
+        if (WDN.jQuery(this) != "") {
+        	WDN.jQuery('#gaSource').parent('.element').parent('li').addClass('required');
+        	WDN.jQuery('#gaMedium').parent('.element').parent('li').addClass('required');
+        	WDN.jQuery('#gaName').parent('.element').parent('li').addClass('required');
         }
     });
-    $('div.close a').click(function() {
-        $('#serviceIndicator').slideUp("slow");
+	WDN.jQuery('div.close a').click(function() {
+		WDN.jQuery('#serviceIndicator').slideUp("slow");
         return false;
     });
 });
@@ -77,7 +77,8 @@ $(document).ready(function () {
 	</div>
 </div>
 <?php endif; ?>
-<form action="<?php echo $_SERVER['PHP_SELF']?>" method="post">
+<div class="three_col left">
+<form action="<?php echo $_SERVER['PHP_SELF']?>" method="post" class="cool">
 <p class="required">Indicates a required field.</p>
 <fieldset>
     <legend>Basic Option</legend>
@@ -151,3 +152,10 @@ $(document).ready(function () {
 </fieldset>
 <p class="submit"><input type="submit" id="submit" name="submit" value="Create URL" /></p>
 </form>
+</div>
+<div class="col right">
+<div class="zenbox">
+	<h4 class="sec_header">What is Go URL?</h4>
+	<p>Go URL is a URL shortening service similar to <a href="http://www.tinyurl.com" class="external">TinyURL</a>. Use this when you would like to retain a unl.edu URL.</p>
+</div>
+</div>
