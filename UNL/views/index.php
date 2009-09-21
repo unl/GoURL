@@ -156,6 +156,6 @@ WDN.jQuery(document).ready(function () {
 <div class="col right">
 <div class="zenbox">
 	<h4 class="sec_header">What is Go URL?</h4>
-	<p>Go URL is a URL shortening service similar to <a href="http://www.tinyurl.com" class="external">TinyURL</a>. Use this when you would like to retain a unl.edu URL.</p>
+	<p>Go URL is a URL shortening service similar to <a href="http://www.tinyurl.com" class="external">TinyURL</a>. Use this when you would like a shorter URL while retaining a unl.edu URL.</p>
 </div>
 </div>
