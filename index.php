@@ -4,7 +4,7 @@ require_once 'includes/conf.php'; // <- site-specific settings
 require_once 'UNL/Auth.php';
 require_once 'UNL/Templates.php';
 UNL_Templates::$options['version'] = 3;
-$page = UNL_Templates::factory('Fixed');
+$page = UNL_Templates::factory('Document');
 $page->titlegraphic = "<h1>Go URL</h1>";
 $page->doctitle = '<title>UNL | Go URL, a short URL service</title>';
 $page->addStylesheet('/wdn/templates_3.0/css/content/forms.css');
