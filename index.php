@@ -2,13 +2,6 @@
 require_once 'includes/conf.php'; // <- site-specific settings
 
 require_once 'UNL/Auth.php';
-require_once 'UNL/Templates.php';
-UNL_Templates::$options['version'] = 3;
-$page = UNL_Templates::factory('Document');
-$page->titlegraphic = "<h1>Go URL</h1>";
-$page->doctitle = '<title>UNL | Go URL, a short URL service</title>';
-$page->addStylesheet('/wdn/templates_3.0/css/content/forms.css');
-$page->addStylesheet('sharedcode/css/identity/serviceIndicator.css');
 
 $cas_client = UNL_Auth::factory('SimpleCAS');
 if (isset($_GET['login'])) {
@@ -20,11 +13,21 @@ if (isset($_GET['logout'])) {
 }
 
 $login_link = '<a href="?login">Login</a>';
+$template = 'Document';
 if ($cas_client->isLoggedIn()) {
+    $template = 'Fixed';
     $login_link = '<a href="?logout">Logout</a>';
 }
 
-$page->collegenavigationlist = '<ul><li>'.$login_link.'</li></ul>';
+require_once 'UNL/Templates.php';
+UNL_Templates::$options['version'] = 3;
+$page = UNL_Templates::factory($template);
+$page->titlegraphic = "<h1>Go URL</h1>";
+$page->doctitle = '<title>UNL | Go URL, a short URL service</title>';
+$page->addStylesheet('/wdn/templates_3.0/css/content/forms.css');
+$page->addStylesheet('sharedcode/css/identity/serviceIndicator.css');
+
+
 $page->breadcrumbs = '<ul>
                         <li><a href="http://www.unl.edu/">UNL</a></li>
                         <li>Go URL</li>
