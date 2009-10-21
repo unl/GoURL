@@ -245,6 +245,18 @@ class lilURL
     {
         self::$random_id_length = (int)$length;
     }
+    
+    public function getUserURLs($user)
+    {
+        $result = mysql_query('SELECT * FROM '.URL_TABLE.' WHERE createdBy ="'.mysql_escape_string($user).'"');
+        return $result;
+    }
+    
+    public function deleteURL($urlID, $user)
+    {
+        $result = mysql_query('DELETE FROM '.URL_TABLE.' WHERE urlID = "'.mysql_escape_string($urlID).'" AND createdBy ="'.mysql_escape_string($user).'" LIMIT 1;');
+        return $result;
+    }
 
 }
 

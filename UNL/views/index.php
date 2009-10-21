@@ -78,7 +78,7 @@ WDN.jQuery(document).ready(function () {
 </div>
 <?php endif; ?>
 <div class="three_col left">
-<form action="<?php echo $_SERVER['PHP_SELF']?>" method="post" class="cool">
+<form action="./" method="post" class="cool">
 <p class="required">Indicates a required field.</p>
 <fieldset>
     <legend>Basic Option</legend>

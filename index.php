@@ -30,8 +30,29 @@ $page->breadcrumbs = '<ul>
                         <li>Go URL</li>
                       </ul>';
 
+require_once 'includes/lilurl.php'; // <- lilURL class file
+$lilurl = new lilURL();
+$lilurl->setAllowedProtocols($allowed_protocols);
+
 ob_start();
-include 'UNL/views/index.php';
+if ($cas_client->isLoggedIn()
+    && isset($_GET['manage'])) {
+    // Show the url management screen
+    include 'UNL/views/manage.php';
+} else {
+    // Show the submission interface
+    include 'UNL/views/index.php';
+}
 $page->maincontentarea = ob_get_clean();
 $page->loadSharedcodeFiles();
+if ($cas_client->isLoggedIn()) {
+    $page->navlinks = str_replace('<!-- sublinks -->',
+                                  '<ul>
+                                    <li><a href="./?manage">Manage URLs</a></li>
+                                    <li><a href="./?logout">Logout</a></li>
+                                  </ul>',
+                                  $page->navlinks);
+    
+}
+
 echo $page;
