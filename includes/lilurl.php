@@ -7,10 +7,13 @@ class lilURL
 {
     const ERR_UNKNOWN          = -1;
     const ERR_INVALID_PROTOCOL = -2;
+    const ERR_INVALID_DOMAIN = -3;
     
     protected static $random_id_length = 3;
     
     protected $allowed_protocols = array();
+    
+    protected $allowed_domains = array();
     
     /**
      * Construct a lilURL object
@@ -77,7 +80,13 @@ class lilURL
         }
         
         if (!$this->isSafeURL($longurl)) {
-            throw new Exception('Indvalid URL.');
+            throw new Exception('Invalid URL.');
+        }
+        
+        if ($user == null) {
+	        if (!$this->urlIsAllowedDomain($longurl)) {
+	            throw new Exception('Invalid domain.', self::ERR_INVALID_DOMAIN);
+	        }
         }
         
         // add the url to the database
@@ -111,6 +120,23 @@ class lilURL
         return true;
     }
     
+    /**
+     * check to make sure the user's url is allowed for non-authenticated users.
+     * 
+     * 
+     */
+    
+    protected function urlIsAllowedDomain($url)
+    {
+    	foreach ($this->allowed_domains as $ad) {
+    		$attemptedHostName = strtolower(parse_url($url, PHP_URL_HOST)); // returns subdomains.xxx.com
+    		if (strpos($attemptedHostName, strtolower($ad)) == true) {
+    			return true;
+    		}
+    	}
+    	
+    	return false;
+    }
     /**
      * check to make sure that the user's url is allowed
      * 
@@ -219,6 +245,20 @@ class lilURL
     {
         if (count($protocols)) {
             $this->allowed_protocols = $protocols;
+        }
+    }
+    
+    /**
+     * Set the list of allowed domains.
+     * 
+     * @param array $domains domains to allow
+     * 
+     * @return void
+     */
+    function setAllowedDomains($domains)
+    {
+        if (count($domains)) {
+            $this->allowed_domains = $domains;
         }
     }
     

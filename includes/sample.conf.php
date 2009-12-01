@@ -18,5 +18,16 @@ define('REWRITE', true);
 // allow urls that begin with these strings
 $allowed_protocols = array('http://', 'https://', 'mailto:');
 
+// allow urls from these domains for non-authenticated users.
+/* $allowed_domains = array(
+	'unl.edu', 
+	'nebraska.edu', 
+	'huskers.com',
+	'huskeralum.org'
+);
+*/
 // uncomment the line below to skip the protocol check
 // $allowed_procotols = array();
+
+// uncomment the line below to skip the domain check
+$allowed_domains = array();

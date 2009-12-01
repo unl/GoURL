@@ -30,11 +30,11 @@ WDN.jQuery(document).ready(function () {
 	</div>
 	<div class="message">
 		<?php if ($cas_client->isLoggedIn()) : ?>
-		<p><strong style="font-size:1.2em">You are logged in</strong><br/>
-		Since you have logged in with your My.UNL username and password, you can use the advanced features.</p>
+		<p><strong style="font-size:1.2em">You are signed in</strong><br/>
+		Since you have signed in with your My.UNL username and password, you can use the advanced features.</p>
 		<?php else: ?>
-		<p><a href="?login"><strong>Login with your My.UNL Account</strong></a><br/>
-		This service has advanced features reserved for authenticated UNL users. <a href="?login">Please login</a> with your My.UNL username and password.</p>
+		<p><a href="?login"><strong>Sign in with your My.UNL Account</strong></a><br/>
+		This service has advanced features reserved for authenticated UNL users. <a href="?login">Please sign in</a> with your My.UNL username and password.</p>
 		<?php endif;?>
 	</div>
 </div>
@@ -73,7 +73,7 @@ WDN.jQuery(document).ready(function () {
             </div>
         </li>
     </ol>
-    <p class="attention"><a href="?login">Please login to use this feature.</a></p>
+    <p class="attention"><a href="?login">Please sign in to use this feature.</a></p>
     <?php endif; ?>
 </fieldset>
 <fieldset>

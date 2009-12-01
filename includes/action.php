@@ -5,6 +5,7 @@ require_once 'includes/lilurl.php'; // <- lilURL class file
 
 $lilurl = new lilURL();
 $lilurl->setAllowedProtocols($allowed_protocols);
+$lilurl->setAllowedDomains($allowed_domains);
 
 $msg = '';
 
@@ -12,7 +13,7 @@ if (isset($_POST['theURL'])) {
     $user = $alias = null;
     if ($cas_client->isLoggedIn()) {
         $user = $cas_client->getUser();
-        if (!empty($_POST['theAlias'])) {
+        if (!empty($_POST['theAlias'])) { //if the user is CAS authenticated, then he/she can use the $alias
             $alias = $_POST['theAlias'];
         }
     }
@@ -23,6 +24,9 @@ if (isset($_POST['theURL'])) {
         switch ($e->getCode()) {
             case lilurl::ERR_INVALID_PROTOCOL:
                 $msg = 'Your URL must begin with <code>http://</code>, <code>https://</code> or <code>mailto:</code>.';
+                break;
+            case lilurl::ERR_INVALID_DOMAIN:
+                $msg = ' You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST);
                 break;
             default:
                 $msg = 'There was an error submitting your url. Please try again later.';
