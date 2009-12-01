@@ -23,7 +23,9 @@ $allowed_protocols = array('http://', 'https://', 'mailto:');
 	'unl.edu', 
 	'nebraska.edu', 
 	'huskers.com',
-	'huskeralum.org'
+	'huskeralum.org',
+	'www.farrp.org',
+	'ceen.unomaha.edu'
 );
 */
 // uncomment the line below to skip the protocol check
