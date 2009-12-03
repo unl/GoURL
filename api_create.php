@@ -4,7 +4,7 @@
 header('Access-Control-Allow-Origin: *');
 
 // Specify which request methods are allowed
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 
 // Additional headers which may be sent along with the CORS request
 // The X-Requested-With header allows jQuery requests to go through
@@ -30,8 +30,11 @@ $cas_client = UNL_Auth::factory('SimpleCAS');
 
 require_once 'includes/action.php'; // <- start the URL building file
 
+if (!isset($_POST['theURL'])) {
+	echo "You need a URL!";
+}
 if (isset($url)){
 	echo $url;
 } else {
-	echo "There was an error.";
+	echo "There was an error. ";
 }
