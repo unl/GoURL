@@ -4,7 +4,7 @@
 header('Access-Control-Allow-Origin: *');
 
 // Specify which request methods are allowed
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+header('Access-Control-Allow-Methods: POST, GET');
 
 // Additional headers which may be sent along with the CORS request
 // The X-Requested-With header allows jQuery requests to go through
@@ -23,6 +23,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 echo 'Your name is ' . htmlentities($_POST['name']);
 }
 */
+
+//since IE8 doesn't set the correct header, we have to do some converting
+if (isset($HTTP_RAW_POST_DATA)) { 
+    $data = explode('&', $HTTP_RAW_POST_DATA); 
+    foreach ($data as $val) { 
+        if (!empty($val)) { 
+           list($key, $value) = explode('=', $val); 
+            $_POST[$key] = urldecode($value); 
+       } 
+    } 
+} 
+
 require_once 'includes/conf.php'; // <- bring in the config
 require_once 'UNL/Auth.php';
 
