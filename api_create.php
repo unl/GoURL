@@ -3,6 +3,9 @@
 // Specify domains from which requests are allowed
 header('Access-Control-Allow-Origin: *');
 
+//Send header to allow for the XDomainRequest from IE8
+header('XDomainRequestAllowed: 1');
+
 // Specify which request methods are allowed
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 
