@@ -9,6 +9,10 @@ $lilurl->setAllowedDomains($allowed_domains);
 
 $msg = '';
 
+if ($_GET["url"] = 'referer') {
+	$_POST['theURL'] = urldecode($_SERVER["HTTP_REFERER"]);
+}
+
 if (isset($_POST['theURL'])) {
     $user = $alias = null;
     if ($cas_client->isLoggedIn()) {
