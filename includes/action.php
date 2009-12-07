@@ -10,7 +10,7 @@ $lilurl->setAllowedDomains($allowed_domains);
 $msg = '';
 
 
-if ($_GET["url"] == 'referer' && isset($_SERVER["HTTP_REFERER"])) {
+if (isset($_GET["url"]) == 'referer' && isset($_SERVER["HTTP_REFERER"])) {
 	$_POST['theURL'] = urldecode($_SERVER["HTTP_REFERER"]);
 }
 
