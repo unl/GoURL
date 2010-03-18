@@ -112,7 +112,7 @@ WDN.jQuery(document).ready(function () {
         </li>    
     </ol>
 </fieldset>
-<p class="submit"><input type="submit" id="submit" name="submit" value="Create URL" /></p>
+<p class="submit" style="float:left;"><input type="submit" id="submit" name="submit" value="Create URL" /></p>
 </form>
 </div>
 <div class="col right">

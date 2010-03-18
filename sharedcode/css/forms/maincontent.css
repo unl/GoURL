@@ -26,7 +26,6 @@ p.required, p.attention {
 	background:url(../images/forms/requiredIndicatorBG.png) no-repeat top left;
 	padding:10px 0 16px 45px;
 	margin-bottom:0px;
-	float:right;
 }
 p.attention {
 	background:url(../images/forms/alertIndicatorBG.png) no-repeat top left;

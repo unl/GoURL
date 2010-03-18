@@ -42,6 +42,7 @@ if (isset($_POST['theURL'])) {
     // if the form hasn't been submitted, look for an id to redirect to
     $explodo = explode('/', $_SERVER['REQUEST_URI']);
     $id = $explodo[count($explodo)-1];
+    echo $id;
     if (!empty($id) && $id != '?login' && $id != '?url=referer') {
         if (!$lilurl->handleRedirect($id)) {
             $msg = '<p class="error">'.htmlentities($id).' - Sorry, but that Go URL isn\'t in our database.</p>';
