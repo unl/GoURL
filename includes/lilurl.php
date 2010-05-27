@@ -66,10 +66,10 @@ class lilURL
         //http://www.unl.edu/?utm_source=source&utm_medium=medium&utm_term=term&utm_content=content&utm_campaign=name
         if (strpbrk($_POST['theURL'], '?')) {
             //if the URL already contains a '?' then add GA stuff with '&' 
-            $longurl = $_POST['theURL'].'&'.$gaTags;
+            $longurl = trim($_POST['theURL']).'&'.$gaTags;
         } else {
             // we don't have a '?', so use one in the URL
-            $longurl = $_POST['theURL'].'?'.$gaTags;
+            $longurl = trim($_POST['theURL']).'?'.$gaTags;
         }
         
         //escape bad characters from the user's url, and trim extraneous stuff
