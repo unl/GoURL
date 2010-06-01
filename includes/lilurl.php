@@ -131,7 +131,6 @@ class lilURL
         $attemptedHostName = strtolower(trim($parseUrl["host"] ? $parseUrl["host"] : array_shift(explode('/', $parseUrl["path"], 2))));
         
     	foreach ($this->allowed_domains as $ad) {
-    		echo $attemptedHostName . ":" . $ad .";<br />";
     		if (strstr($attemptedHostName, strtolower($ad)) == true) {
     			return true;
     		}
