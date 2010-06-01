@@ -24,7 +24,7 @@ UNL_Templates::$options['version'] = 3;
 $page = UNL_Templates::factory($template);
 $page->titlegraphic = "<h1>Go URL</h1>";
 $page->doctitle = '<title>UNL | Go URL, a short URL service</title>';
-$page->addStylesheet('/wdn/templates_3.0/css/content/forms.css');
+$page->addStylesheet('/wdn/templates_3.0/css/content/zenform.css');
 $page->addStylesheet('sharedcode/css/identity/serviceIndicator.css');
 
 

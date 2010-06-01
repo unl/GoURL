@@ -4,11 +4,17 @@ require_once 'includes/action.php'; // <- start the URL building file
 ?>
 <script type="text/javascript" charset="utf-8">
 WDN.jQuery(document).ready(function () {
-	WDN.jQuery('.hint').hide();
-	WDN.jQuery('input').focus(function() {
-		WDN.jQuery('.hint').hide();
-		WDN.jQuery(this).siblings('.hint').show();
-    });
+	WDN.jQuery('.moreOptions').hide(); 
+	WDN.jQuery('#moreOptions').click(function() {
+	    WDN.jQuery('.moreOptions').slideDown('fast', function() {
+	        WDN.jQuery('.moreOptions fieldset').each(function() {
+		        WDN.jQuery(this).insertBefore('.moreOptions');
+	        });
+	        WDN.jQuery('.moreOptions').hide();
+	        WDN.jQuery('#moreOptions').remove();
+	    });
+	    return false;
+	});
 	WDN.jQuery('#gaSource'|'#gaMedium'|'#gaName').change(function() {
         if (WDN.jQuery(this) != "") {
         	WDN.jQuery('#gaSource').parent('.element').parent('li').addClass('required');
@@ -40,84 +46,70 @@ WDN.jQuery(document).ready(function () {
 </div>
 <?php endif; ?>
 <div class="three_col left">
-<form action="./" method="post" class="cool">
-<p class="required">Indicates a required field.</p>
+<form action="./" method="post" class="zenform cool">
 <fieldset>
     <legend>Basic Option</legend>
     <ol>
-        <li class="required">
-            <label for="theURL" class="element">Long URL</label>
-            <div class="element"><input name="theURL" id="theURL" type="text" value="<?php echo (isset($_POST['theURL']))?htmlentities($_POST['theURL'], ENT_QUOTES):'';?>" />
-            </div>
+        <li>
+            <label for="theURL"><span class="required">*</span>Long URL</label>
+            <input name="theURL" id="theURL" type="text" value="<?php echo (isset($_POST['theURL']))?htmlentities($_POST['theURL'], ENT_QUOTES):'';?>" />
         </li>
     </ol>
 </fieldset>
-<p class="submit"><input type="submit" id="submit1" name="submit" value="Create URL" /></p>
+<p><a href="#" id="moreOptions">More Options</a></p>
+<div class="moreOptions">
 <fieldset>
     <legend>Custom Alias</legend>
-    <p>If you would like to control the URL, then enter the alias you would like to use.</p>
     <?php if ($cas_client->isLoggedIn()) : ?>
     <ol>
         <li>
-            <label for="theAlias" class="element">Alias</label>
-            <div class="element"><input name="theAlias" id="theAlias" type="text" />            
-            <span class="hint"><span class="hintPointer">&nbsp;</span>ex: <strong>admissions</strong> for go.unl.edu/admissions</span>            
-            </div>
+            <label for="theAlias">Alias <span class="helper">ex: <strong>admissions</strong> for go.unl.edu/admissions</span></label>
+            <input name="theAlias" id="theAlias" type="text" /> 
         </li>
     </ol>
     <?php else: ?>
     <ol>
         <li>
-            <label for="theAlias" class="element">Alias</label>
-            <div class="element"><input name="theAlias" id="theAlias" type="text" disabled="disabled"/>            
-            </div>
+            <label for="theAlias">Alias</label>
+            <input name="theAlias" id="theAlias" type="text" disabled="disabled"/> 
         </li>
     </ol>
-    <p class="attention"><a href="?login">Please sign in to use this feature.</a></p>
+    If you would like to control the URL, then enter the alias you would like to use. <a href="?login">Please sign in to use this feature.</a>
     <?php endif; ?>
 </fieldset>
 <fieldset>
     <legend>Google Analytics Campaign Tagging</legend>
-    <p>Add your campaign information here and it will be automatically added to your URL when redirected.</p>
     <ol>
         <li>
-            <label for="gaSource" class="element">Source</label>
-            <div class="element"><input name="gaSource" id="gaSource" type="text" />            
-                <span class="hint"><span class="hintPointer">&nbsp;</span>referrer: google, facebook, twitter</span>
-            </div>
+            <label for="gaSource">Source <span class="helper">referrer: google, facebook, twitter</span></label>
+            <input name="gaSource" id="gaSource" type="text" />
         </li>    
         <li>
-            <label for="gaMedium" class="element">Medium</label>
-            <div class="element"><input name="gaMedium" id="gaMedium" type="text" />            
-                <span class="hint"><span class="hintPointer">&nbsp;</span>marketing medium: email, web, banner</span>
-            </div>
+            <label for="gaMedium">Medium <span class="helper">marketing medium: email, web, banner</span></label>
+            <input name="gaMedium" id="gaMedium" type="text" />
         </li>
         <li>
-            <label for="gaTerm" class="element">Term</label>
-            <div class="element"><input name="gaTerm" id="gaTerm" type="text" />        
-                <span class="hint"><span class="hintPointer">&nbsp;</span>identify the keywords</span>
-            </div>
+            <label for="gaTerm">Term <span class="helper">identify the keywords</span></label>
+            <input name="gaTerm" id="gaTerm" type="text" /> 
         </li>
         <li>
-            <label for="gaContent" class="element">Content</label>
-            <div class="element"><input name="gaContent" id="gaContent" type="text" />            
-                <span class="hint"><span class="hintPointer">&nbsp;</span>use to differentiate ads (A/B testing)</span>
-                </div>
+            <label for="gaContent">Content <span class="helper">use to differentiate ads (A/B testing)</span></label>
+            <input name="gaContent" id="gaContent" type="text" />   
         </li>
         <li>
-            <label for="gaName" class="element">Name</label>
-            <div class="element"><input name="gaName" id="gaName" type="text" />            
-                <span class="hint"><span class="hintPointer">&nbsp;</span>product, promo code, or slogan</span>
-            </div>
+            <label for="gaName" class="element">Name <span class="helper">product, promo code, or slogan</span></label>
+            <input name="gaName" id="gaName" type="text" />   
         </li>    
     </ol>
+    <p>Add your campaign information here and it will be automatically added to your URL when redirected.</p>
 </fieldset>
-<p class="submit" style="float:left;"><input type="submit" id="submit" name="submit" value="Create URL" /></p>
+</div>
+<input type="submit" id="submit" name="submit" value="Create URL" />
 </form>
 </div>
 <div class="col right">
 <div class="zenbox">
 	<h4 class="sec_header">What is Go URL?</h4>
-	<p>Go URL is a URL shortening service similar to <a href="http://www.tinyurl.com" class="external">TinyURL</a>. Use this when you would like a shorter URL while retaining a unl.edu URL.</p>
+	<p>Go URL is a URL shortening service similar to <a href="http://www.tinyurl.com" class="external">TinyURL</a>. Use this when you would like a shorter URL while retaining the unl.edu domain.</p>
 </div>
 </div>
