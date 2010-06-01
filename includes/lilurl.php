@@ -125,12 +125,14 @@ class lilURL
      * 
      * 
      */
-    
     protected function urlIsAllowedDomain($url)
     {
+        $parseUrl = parse_url(trim($url)); 
+        $attemptedHostName = strtolower(trim($parseUrl["host"] ? $parseUrl["host"] : array_shift(explode('/', $parseUrl["path"], 2))));
+        
     	foreach ($this->allowed_domains as $ad) {
-    		$attemptedHostName = strtolower(parse_url($url, PHP_URL_HOST)); // returns subdomains.xxx.com
-    		if (strpos($attemptedHostName, strtolower($ad)) == true) {
+    		echo $attemptedHostName . ":" . $ad .";<br />";
+    		if (strstr($attemptedHostName, strtolower($ad)) == true) {
     			return true;
     		}
     	}
