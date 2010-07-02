@@ -8,6 +8,7 @@ class lilURL
     const ERR_UNKNOWN          = -1;
     const ERR_INVALID_PROTOCOL = -2;
     const ERR_INVALID_DOMAIN = -3;
+    const ERR_USED = -4;
     
     protected static $random_id_length = 3;
     
@@ -50,7 +51,7 @@ class lilURL
      * 
      * @return string The URL
      */
-    function handlePOST($id = null, $user = null)
+    function handlePOST($id = null, $user = null) //$id = $alias
     {
         // First, build the $longurl by combining theURL and the GA stuff
         $gaTags = '';    
@@ -170,7 +171,7 @@ class lilURL
     function getID($url)
     {
         $url = mysql_escape_string($url);
-        $q = 'SELECT urlID FROM '.URL_TABLE.' WHERE (longURL="'.$url.'")';
+        $q = 'SELECT urlID FROM '.URL_TABLE.' WHERE (longURL="'.$url.'" AND createdBy = "")';
         $result = mysql_query($q);
 
         if (mysql_num_rows($result)) {
@@ -202,6 +203,20 @@ class lilURL
         return false;
     }
     
+    function getIDandURL($id, $url)
+    {
+    	$id = mysql_escape_string($id);
+        $q = 'SELECT urlID, longURL FROM '.URL_TABLE.' WHERE (urlID="'.$id.'" AND longURL="'.$url.'")';
+        $result = mysql_query($q);
+
+        if (mysql_num_rows($result)) {
+            $row = mysql_fetch_array($result);
+            return $row['urlID'];
+        }
+        
+        return false;
+    }
+    
     /**
      * add a url to the database
      * 
@@ -211,16 +226,18 @@ class lilURL
      */
     function addURL($url, $id = null, $user = null)
     {
-        // if the url is already in here, return true
-        if ($existing_id = $this->getID($url)) {
-            // Already in the DB
-            return $existing_id;
-        }
-        
-        if ($id == null) {
-            $id = $this->getRandomID();
+        if ($id == null) { //no custom alias
+        	// if the url is already in here, return true
+            if ($existing_id = $this->getID($url)) {
+                return $existing_id; //get the id if already in here
+            } else {
+                $id = $this->getRandomID();
+            }
         } else {
-            $id = strtolower($id);
+        	if ($existing_id = $this->getIDandURL($id, $url)) { //if the combo of the alias and id is already in here
+        		return $existing_id;
+        	}
+            $id = strtolower($id); //use the alias!
         }
 
         $q = 'INSERT INTO '.URL_TABLE.' (urlID, longURL, submitDate, createdBy)
