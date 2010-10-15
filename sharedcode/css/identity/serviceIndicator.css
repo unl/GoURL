@@ -1,40 +1,68 @@
-#serviceIndicator {
-    border: 1px solid #ddd;
- 		-moz-border-radius: 5px;
- 		-webkit-border-radius: 5px;
-    padding:10px; 
-    margin-bottom:10px;
+#maincontent #wdnLoginButton {
+	background:#ECECEC url('../images/identity/lock.png') no-repeat 10px 5px;
+	display:block;
+	border: 1px solid #d5d4d4;
+	border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	margin-bottom:15px;
+	font-size:0.9em;
+	min-height:40px;
+	padding:7px 5px 5px 55px;
+	color: #494949;
+	cursor:pointer;
 }
-#serviceIndicator div.message {
-	background:url(../images/identity/key.png) no-repeat top left;
-	padding: 10px 5px 5px 68px;
-	min-height:60px;
+#maincontent #wdnLoginButton:hover {
+	background-color: #e3e3e3;
+	color: #494949;
 }
-#serviceIndicator div.message p {
-	margin-bottom:0px;	
+#maincontent #wdnLoginButton span {
+	display:block;
+	font-size:1.5em;
 }
-#serviceIndicator a strong {
+
+div.qrCode {float:right;}
+#maincontent .qrCode p {
+	float:left;
+	margin:80px 5px 0 0;
+	font-size:0.85em;
+	color:#e5fad0 !important;
+	text-shadow: 1px 1px 1px #205e01;
+	filter: dropshadow(color=#205e01, offx=1, offy=1);
+	background: #349804;
+	padding:3px 6px;
+	border-radius:3px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	font-weight:bold;
+}
+#maincontent #qrCode {width:100px; float:right; margin:0;}
+.wdn_notice.affirm {
+	margin-bottom:30px;
+}
+.wdn_notice.affirm div.message {
+	background-image:none;
+	float:left;
+	padding-left:10px;
+}
+#maincontent .wdn_notice.affirm div.message h4 {
+	font-size:2.7em;
+	color:#e5fad0 !important;
+	text-shadow: 1px 1px 1px #205e01;
+	filter: dropshadow(color=#205e01, offx=1, offy=1); 
+}
+#maincontent .wdn_notice.negate div.message h4 {
+	font-size:2.7em;
+	color:#ffeeee !important;
+	text-shadow: 1px 1px 1px #5e0101;
+	filter: dropshadow(color=#5e0101, offx=1, offy=1); 
+}
+#maincontent .wdn_notice.affirm div.message input {
 	font-size:1.2em;
+	width:500px;
+	background:#dff5e1;
 }
-#serviceIndicator div.close {
-	float:right;
-	}
-#serviceIndicator div.close a, #serviceIndicator div.close a:hover {
-	background:url(../images/identity/close.gif) no-repeat scroll top left;
-	width:22px;
-	height:20px;
-	text-indent: -2000em; 
-    display: block;
-    border: 1px solid #ddd; 
- 		-moz-border-radius: 3px;
- 		-webkit-border-radius: 3px;
-    text-decoration: none;
-    position: relative;
-
-}
-#serviceIndicator div.close a:hover {
-	border: 1px solid #999; 
-  		-moz-border-radius: 3px;
-  		-webkit-border-radius: 3px;
-
+.wdn_notice.affirm {
+	display:inline-block;
+	width:917px;
 }

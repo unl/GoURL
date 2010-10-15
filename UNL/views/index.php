@@ -28,22 +28,24 @@ WDN.jQuery(document).ready(function () {
     });
 });
 </script>
-<?php echo $msg; ?>
-<?php if (!$cas_client->isLoggedIn()) : ?>
-<div id="serviceIndicator">
-	<div class="close">
-		<a href="#">Close message</a>
+<?php if ($msg) : ?> 
+	<?php if(!$error) :?>
+	<div class="wdn_notice affirm">
+		<div class="message">
+			<?php echo $msg;?>
+		</div>
+		<div class="qrCode">
+			<p>Here's a QR Code for your Go URL &rarr;</p>
+			<?php echo '<img class="frame" id="qrCode" src="http://chart.apis.google.com/chart?chs=100x100&amp;cht=qr&amp;chl='.urlencode($url).'&amp;choe=UTF-8&amp;chld=L|0" />';?>
+		</div>
 	</div>
-	<div class="message">
-		<?php if ($cas_client->isLoggedIn()) : ?>
-		<p><strong style="font-size:1.2em">You are signed in</strong><br/>
-		Since you have signed in with your My.UNL username and password, you can use the advanced features.</p>
-		<?php else: ?>
-		<p><a href="?login"><strong>Sign in with your My.UNL Account</strong></a><br/>
-		This service has advanced features reserved for authenticated UNL users. <a href="?login">Please sign in</a> with your My.UNL username and password.</p>
-		<?php endif;?>
+	<?php else :?>
+	<div class="wdn_notice negate">
+		<div class="message">
+			<?php echo $msg;?>
+		</div>
 	</div>
-</div>
+	<?php endif;?>
 <?php endif; ?>
 <div class="three_col left">
 <form action="./" method="post" class="zenform cool">
@@ -70,11 +72,10 @@ WDN.jQuery(document).ready(function () {
     <?php else: ?>
     <ol>
         <li>
-            <label for="theAlias">Alias</label>
+            <label for="theAlias">Alias <span class="helper">If you would like to control the URL, then enter the alias you would like to use. <a href="?login">Please sign in to use this feature.</a></span></label>
             <input name="theAlias" id="theAlias" type="text" disabled="disabled"/> 
         </li>
     </ol>
-    If you would like to control the URL, then enter the alias you would like to use. <a href="?login">Please sign in to use this feature.</a>
     <?php endif; ?>
 </fieldset>
 <fieldset>
@@ -108,6 +109,9 @@ WDN.jQuery(document).ready(function () {
 </form>
 </div>
 <div class="col right">
+<?php if (!$cas_client->isLoggedIn()) : ?>
+<a id="wdnLoginButton" href="?login">Log in with your <span>My.UNL Account</span></a>
+<?php endif;?>
 <div class="zenbox">
 	<h4 class="sec_header">What is Go URL?</h4>
 	<p>Go URL is a URL shortening service similar to <a href="http://www.tinyurl.com" class="external">TinyURL</a>. Use this when you would like a shorter URL while retaining the unl.edu domain.</p>
