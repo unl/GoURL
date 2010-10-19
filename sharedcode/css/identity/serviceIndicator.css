@@ -1,3 +1,5 @@
+#maincontent form.zenform { margin: 5px 0 10px; }
+#maincontent form.zenform > fieldset > p { padding: 0 5px; }
 #maincontent #wdnLoginButton {
 	background:#ECECEC url('../images/identity/lock.png') no-repeat 10px 5px;
 	display:block;

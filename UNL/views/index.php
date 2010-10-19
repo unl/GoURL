@@ -36,7 +36,7 @@ WDN.jQuery(document).ready(function () {
 		</div>
 		<div class="qrCode">
 			<p>Here's a QR Code for your Go URL &rarr;</p>
-			<?php echo '<img class="frame" id="qrCode" src="http://chart.apis.google.com/chart?chs=100x100&amp;cht=qr&amp;chl='.urlencode($url).'&amp;choe=UTF-8&amp;chld=L|0" />';?>
+			<?php echo '<img class="frame" id="qrCode" src="qr.php?id=' . substr(strrchr($url, '/'), 1) . '" />';?>
 		</div>
 	</div>
 	<?php else :?>
@@ -65,7 +65,7 @@ WDN.jQuery(document).ready(function () {
     <?php if ($cas_client->isLoggedIn()) : ?>
     <ol>
         <li>
-            <label for="theAlias">Alias <span class="helper">ex: <strong>admissions</strong> for go.unl.edu/admissions</span></label>
+            <label for="theAlias">Alias <span class="helper">ex: <strong>admissions</strong> for go.unl.edu/admissions <em>(letters/numbers/underscores/dashes only)</em></span></label>
             <input name="theAlias" id="theAlias" type="text" /> 
         </li>
     </ol>
@@ -80,6 +80,7 @@ WDN.jQuery(document).ready(function () {
 </fieldset>
 <fieldset>
     <legend>Google Analytics Campaign Tagging</legend>
+        <p>Add your campaign information here and it will be automatically added to your URL when redirected.</p>
     <ol>
         <li>
             <label for="gaSource">Source <span class="helper">referrer: google, facebook, twitter</span></label>
@@ -102,7 +103,6 @@ WDN.jQuery(document).ready(function () {
             <input name="gaName" id="gaName" type="text" />   
         </li>    
     </ol>
-    <p>Add your campaign information here and it will be automatically added to your URL when redirected.</p>
 </fieldset>
 </div>
 <input type="submit" id="submit" name="submit" value="Create URL" />

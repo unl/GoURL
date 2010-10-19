@@ -7,8 +7,9 @@ class lilURL
 {
     const ERR_UNKNOWN          = -1;
     const ERR_INVALID_PROTOCOL = -2;
-    const ERR_INVALID_DOMAIN = -3;
-    const ERR_USED = -4;
+    const ERR_INVALID_DOMAIN   = -3;
+    const ERR_USED             = -4;
+    const ERR_INVALID_ALIAS    = -5;
     
     protected static $random_id_length = 3;
     
@@ -90,14 +91,24 @@ class lilURL
 	        }
         }
         
+        //validate the alias if specified (data integrity)
+        if (!empty($id) && !preg_match('/^[\w\-]+$/', $id)) {
+            throw new Exception('Invalid custom alias.', self::ERR_INVALID_ALIAS);
+        } 
+        
         // add the url to the database
         if ($id = $this->addURL($longurl, $id, $user)) {
-            $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']);
-            $url = trim($url, '/').'/'.$id;
-            return $url;
+            return $this->getShortURL($id);
         }
         
         throw new Exception('Unknown error', self::ERR_UNKNOWN);
+    }
+    
+    function getShortURL($id)
+    {
+        $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']);
+        $url = trim($url, '/').'/'.$id;
+        return $url;
     }
     
     function isSafeURL($url)

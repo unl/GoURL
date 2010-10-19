@@ -2,7 +2,7 @@
 
 require_once 'includes/lilurl.php'; // <- lilURL class file
 
-require_once 'includes/phpqrcode/qrlib.php'; // <- for creating QR codes.
+//require_once 'includes/phpqrcode/qrlib.php'; // <- for creating QR codes.
 
 $lilurl = new lilURL();
 $lilurl->setAllowedProtocols($allowed_protocols);
@@ -28,10 +28,7 @@ if (isset($_POST['theURL'])) {
     }
     try {
         $url = $lilurl->handlePOST($alias, $user);
-        $msg = '<h4>You have a Go URL!</h4><input type="text" onclick="this.select(); return false;" value="'.$url.'" />';
-        // $theId = strrchr($url, '/');
-        // $qrCode = QRcode::png($url, $imgPath . str_replace('/', '', $theId) . '.png', 'Q', 4, 2);
-        
+        $msg = '<h4>You have a Go URL!</h4><input type="text" onclick="this.select(); return false;" value="'.$url.'" />';        
     } catch (Exception $e) {
     	$error = true;
         switch ($e->getCode()) {
@@ -41,19 +38,28 @@ if (isset($_POST['theURL'])) {
             case lilurl::ERR_INVALID_DOMAIN:
                 $msg = '<h4>Whoops, Something Broke</h4><p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>';
                 break;
+            case lilurl::ERR_INVALID_ALIAS:
+                $msg = '<h4>Whoops, Something Broke</h4><p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>';
+                break;
             default:
                 $msg = '<h4>Whoops, Something Broke</h4><p>There was an error submitting your url. Check your steps.</p>';
         }
     }
 } else {
     // if the form hasn't been submitted, look for an id to redirect to
-    $explodo = explode('/', $_SERVER['REQUEST_URI']);
-    $id = $explodo[count($explodo)-1];
-    echo $id;
-    if (!empty($id) && $id != '?login' && $id != '?url=referer') {
+    $id = substr(strrchr($_SERVER['REQUEST_URI'], '/'), 1);
+    // does a better job of normalizing the url id
+    if (($pos = strpos($id, '#')) !== false) { 
+        $id = substr($id, 0, $pos); //ignore hash
+    }
+    if (($pos = strpos($id, '?')) !== false) {
+        $id = substr($id, 0, $pos); //ignore QS
+    }
+//    echo $id;
+    if (!empty($id)) {
         if (!$lilurl->handleRedirect($id)) {
-            $msg = '<p class="error">'.htmlentities($id).' - Sorry, but that Go URL isn\'t in our database.</p>';
+            $error = true;
+            $msg = '<p>'.htmlentities($id).' - Sorry, but that Go URL isn\'t in our database.</p>';
         }
     }
 }
-?>
