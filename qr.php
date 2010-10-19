@@ -7,10 +7,12 @@ $lilurl->setAllowedProtocols($allowed_protocols);
 
 $id = $_GET['id'];
 if ($url = $lilurl->getURL($id)) {
-    $shortURL = $lilurl->getShortURL($id);
+	// QR Codes can encode more data if URL is in all caps
+	// WARNING: Hosting in a case sensitive env my have unexpected results
+    $shortURL = strtoupper($lilurl->getShortURL($id));
     
     $pngPrefix = dirname(__FILE__) . '/includes/qr/';
-    if (strlen($shortURL) > 31) {
+    if (strlen($shortURL) > 52) {
         $params = array(
             'size' => 93,
             'x'    => 39,
