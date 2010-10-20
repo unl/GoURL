@@ -34,5 +34,3 @@ $allowed_protocols = array('http://', 'https://', 'mailto:');
 
 // uncomment the line below to skip the domain check
 $allowed_domains = array();
-
-$imgPath = 'qr/'; //Use this to set the location for the QR code image storage if using phpqrcode
