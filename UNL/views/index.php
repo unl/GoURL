@@ -36,7 +36,7 @@ WDN.jQuery(document).ready(function () {
 		</div>
 		<div class="qrCode">
 			<p>Here's a QR Code for your Go URL &rarr;</p>
-			<?php echo '<img class="frame" id="qrCode" src="qr.php?id=' . substr(strrchr($url, '/'), 1) . '" />';?>
+			<?php echo '<img class="frame" id="qrCode" src="' . substr(strrchr($url, '/'), 1) . '.qr" />';?>
 		</div>
 	</div>
 	<?php else :?>
