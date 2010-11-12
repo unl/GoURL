@@ -68,3 +68,6 @@ div.qrCode {float:right;}
 	display:inline-block;
 	width:917px;
 }
+
+/* Manager */
+#maincontent .qrImage {width:16px; height:16px; background:url('../images/qrSample.png') no-repeat;display:block;}
