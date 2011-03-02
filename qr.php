@@ -10,9 +10,9 @@ if ($url = $lilurl->getURL($id)) {
 	// QR Codes can encode more data if URL is in all caps
 	// WARNING: Hosting in a case sensitive env my have unexpected results
     $shortURL = strtoupper($lilurl->getShortURL($id));
-    
+
     $pngPrefix = dirname(__FILE__) . '/includes/qr/';
-    if (strlen($shortURL) > 52) {
+    if (strlen($shortURL) > 36) {
         $params = array(
             'size' => 93,
             'x'    => 39,
@@ -31,18 +31,18 @@ if ($url = $lilurl->getURL($id)) {
             'icon' => 'unl_qr_20.png'
         );
     }
-    $apiUrl = "http://chart.apis.google.com/chart?cht=qr&chs={$params['size']}&chld=L|1&chl=" . urlencode($shortURL);
-    
+    $apiUrl = "http://chart.apis.google.com/chart?cht=qr&chs={$params['size']}&chld=M|1&chl=" . urlencode($shortURL);
+
     $im = imagecreatefrompng($apiUrl);
     $n  = imagecreatefrompng($pngPrefix . $params['icon']);
-    
+
     imagecopy($im, $n, $params['x'], $params['y'], 0, 0, $params['w'], $params['h']);
     header('Content-Type: image/png');
     imagepng($im);
-    
+
     imagedestroy($im);
     imagedestroy($n);
-    
+
 } else {
     header('HTTP/1.1 404 Not Found');
 }
