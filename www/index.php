@@ -1,5 +1,5 @@
 <?php
-require_once 'includes/conf.php'; // <- site-specific settings
+require_once __DIR__ . '/../config.inc.php'; // <- site-specific settings
 
 require_once 'UNL/Auth.php';
 
@@ -35,7 +35,7 @@ $page->breadcrumbs = '<ul>
                         <li>Go URL</li>
                       </ul>';
 
-require_once 'includes/lilurl.php'; // <- lilURL class file
+require_once __DIR__ . '/../src/lilURL.php'; // <- lilURL class file
 $lilurl = new lilURL();
 $lilurl->setAllowedProtocols($allowed_protocols);
 
@@ -43,10 +43,10 @@ ob_start();
 if ($cas_client->isLoggedIn()
     && isset($_GET['manage'])) {
     // Show the url management screen
-    include 'UNL/views/manage.php';
+    include __DIR__ . '/templates/manage.php';
 } else {
     // Show the submission interface
-    include 'UNL/views/index.php';
+    include __DIR__ . '/templates/index.php';
 }
 $page->maincontentarea = ob_get_clean();
 $page->loadSharedcodeFiles();

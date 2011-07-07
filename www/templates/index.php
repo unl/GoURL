@@ -1,6 +1,6 @@
 <?php /* index.php ( lilURL implementation ) */
 
-require_once 'includes/action.php'; // <- start the URL building file
+require_once __DIR__ . '/../../src/action.php'; // <- start the URL building file
 ?>
 <script type="text/javascript" charset="utf-8">
 WDN.jQuery(document).ready(function () {

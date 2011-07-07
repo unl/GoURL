@@ -1,7 +1,7 @@
 <?php
-require_once 'includes/conf.php'; // <- site-specific settings
+require_once __DIR__ . '/../config.inc.php'; // <- site-specific settings
 
-require_once 'includes/lilurl.php'; // <- lilURL class file
+require_once __DIR__ . '/../src/lilURL.php'; // <- lilURL class file
 $lilurl = new lilURL();
 $lilurl->setAllowedProtocols($allowed_protocols);
 
@@ -11,7 +11,7 @@ if ($url = $lilurl->getURL($id)) {
 	// WARNING: Hosting in a case sensitive env my have unexpected results
     $shortURL = strtoupper($lilurl->getShortURL($id));
 
-    $pngPrefix = dirname(__FILE__) . '/includes/qr/';
+    $pngPrefix = dirname(__FILE__) . '/../data/qr/';
     if (strlen($shortURL) > 36) {
         $params = array(
             'size' => 93,

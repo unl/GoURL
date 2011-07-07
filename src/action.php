@@ -1,6 +1,6 @@
 <?php  //this is the actions used to start the URL building.
 
-require_once 'includes/lilurl.php'; // <- lilURL class file
+require_once __DIR__ . '/lilURL.php'; // <- lilURL class file
 
 //require_once 'includes/phpqrcode/qrlib.php'; // <- for creating QR codes.
 

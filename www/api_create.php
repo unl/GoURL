@@ -10,7 +10,7 @@ header('Access-Control-Allow-Methods: POST, GET');
 // The X-Requested-With header allows jQuery requests to go through
 header('Access-Control-Allow-Headers: X-Requested-With');
 
-// Exit early so the page isnÕt fully loaded for options requests
+// Exit early so the page isnï¿½t fully loaded for options requests
 if (strtolower($_SERVER['REQUEST_METHOD']) == 'options') {
 exit();
 }
@@ -35,12 +35,12 @@ if (isset($HTTP_RAW_POST_DATA)) {
     } 
 } 
 
-require_once 'includes/conf.php'; // <- bring in the config
+require_once __DIR__ . '/../src/lilURL.php'; // <- lilURL class file
 require_once 'UNL/Auth.php';
 
 $cas_client = UNL_Auth::factory('SimpleCAS');
 
-require_once 'includes/action.php'; // <- start the URL building file
+require_once __DIR__ . '/../src/action.php'; // <- start the URL building file
 
 if (!isset($_POST['theURL'])) {
 	echo "You need a URL!";

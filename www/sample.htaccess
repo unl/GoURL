@@ -1,0 +1,6 @@
+RewriteEngine On
+RewriteBase /workspace/UNL_Go_URL/www/
+
+RewriteRule ^([\w\-]+)\.qr$ qr.php?id=$1 [L]
+
+RewriteRule ^([\w\-]+)$ index.php
