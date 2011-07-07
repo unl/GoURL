@@ -1,5 +1,8 @@
 <?php /* conf.php ( config file ) */
 
+// Set the include path
+set_include_path(__DIR__ . '/vendor/php');
+
 // page title
 define('PAGE_TITLE', 'GO URL Generator');
 
