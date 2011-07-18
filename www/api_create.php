@@ -35,6 +35,7 @@ if (isset($HTTP_RAW_POST_DATA)) {
     } 
 } 
 
+require_once __DIR__ . '/../config.inc.php'; // <- site-specific settings
 require_once __DIR__ . '/../src/lilURL.php'; // <- lilURL class file
 require_once 'UNL/Auth.php';
 
