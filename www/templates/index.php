@@ -83,13 +83,17 @@ WDN.jQuery(document).ready(function () {
         <p>Add your campaign information here and it will be automatically added to your URL when redirected.</p>
     <ol>
         <li>
-            <label for="gaSource">Source <span class="helper">referrer: google, facebook, twitter</span></label>
-            <input name="gaSource" id="gaSource" type="text" />
-        </li>    
+            <label for="gaName" class="element">Campaign Name <span class="helper">product, promo code, or slogan</span></label>
+            <input name="gaName" id="gaName" type="text" />   
+        </li>   
         <li>
             <label for="gaMedium">Medium <span class="helper">marketing medium: email, web, banner</span></label>
             <input name="gaMedium" id="gaMedium" type="text" />
         </li>
+        <li>
+            <label for="gaSource">Source <span class="helper">referrer: google, facebook, twitter</span></label>
+            <input name="gaSource" id="gaSource" type="text" />
+        </li>  
         <li>
             <label for="gaTerm">Term <span class="helper">identify the keywords</span></label>
             <input name="gaTerm" id="gaTerm" type="text" /> 
@@ -97,11 +101,7 @@ WDN.jQuery(document).ready(function () {
         <li>
             <label for="gaContent">Content <span class="helper">use to differentiate ads (A/B testing)</span></label>
             <input name="gaContent" id="gaContent" type="text" />   
-        </li>
-        <li>
-            <label for="gaName" class="element">Name <span class="helper">product, promo code, or slogan</span></label>
-            <input name="gaName" id="gaName" type="text" />   
-        </li>    
+        </li>   
     </ol>
 </fieldset>
 </div>
