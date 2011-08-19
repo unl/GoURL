@@ -83,15 +83,15 @@ WDN.jQuery(document).ready(function () {
         <p>Add your campaign information here and it will be automatically added to your URL when redirected.</p>
     <ol>
         <li>
-            <label for="gaName" class="element">Campaign Name <span class="helper">product, promo code, or slogan</span></label>
+            <label for="gaName" class="element">Campaign Name<span class="required">*</span> <span class="helper">product, promo code, or slogan</span></label>
             <input name="gaName" id="gaName" type="text" />   
         </li>   
         <li>
-            <label for="gaMedium">Medium <span class="helper">marketing medium: email, web, banner</span></label>
+            <label for="gaMedium">Medium<span class="required">*</span> <span class="helper">marketing medium: email, web, banner</span></label>
             <input name="gaMedium" id="gaMedium" type="text" />
         </li>
         <li>
-            <label for="gaSource">Source <span class="helper">referrer: google, facebook, twitter</span></label>
+            <label for="gaSource">Source<span class="required">*</span> <span class="helper">referrer: google, facebook, twitter</span></label>
             <input name="gaSource" id="gaSource" type="text" />
         </li>  
         <li>
