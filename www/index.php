@@ -21,12 +21,15 @@ if ($cas_client->isLoggedIn()) {
 }
 
 require_once 'UNL/Templates.php';
-UNL_Templates::$options['version'] = 3;
-$page = UNL_Templates::factory($template);
-$page->titlegraphic = "<h1>Go URL</h1>";
-$page->doctitle = '<title>UNL | Go URL, a short URL service</title>';
-$page->addStylesheet('/wdn/templates_3.0/css/content/zenform.css');
-$page->addStylesheet('/wdn/templates_3.0/css/content/notice.css');
+require_once 'UNL/Templates/CachingService/Null.php';
+UNL_Templates::setCachingService(new UNL_Templates_CachingService_Null());
+UNL_Templates::$options['version'] = 3.1;
+$page = UNL_Templates::factory('Fixed');
+$page->titlegraphic = "Go URL";
+$page->pagetitle = '';
+$page->doctitle = '<title>Go URL, a short URL service | University of Nebraska-Lincoln</title>';
+$page->addStylesheet('/wdn/templates_3.1/css/content/zenform.css');
+$page->addStylesheet('/wdn/templates_3.1/css/content/notice.css');
 $page->addStylesheet('sharedcode/css/identity/serviceIndicator.css');
 
 
