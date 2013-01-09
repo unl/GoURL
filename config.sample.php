@@ -1,4 +1,4 @@
-<?php /* conf.php ( config file ) */
+<?php /* conf.inc.php ( config file ) */
 
 // Set the include path
 set_include_path(__DIR__ . '/vendor/php');
@@ -22,16 +22,17 @@ define('REWRITE', true);
 $allowed_protocols = array('http://', 'https://', 'mailto:');
 
 // allow urls from these domains for non-authenticated users.
-/* $allowed_domains = array(
-	'unl.edu', 
-	'nebraska.edu', 
-	'huskers.com',
-	'huskeralum.org',
-	'www.farrp.org',
-	'ceen.unomaha.edu',
-	'throughtheeyes.org'
+$allowed_domains = array(
+    'unl.edu',
+    'nebraska.edu',
+    'huskers.com',
+    'huskeralum.org',
+    'www.farrp.org',
+    'ceen.unomaha.edu',
+    'throughtheeyes.org',
+    'buros.org',
 );
-*/
+
 // uncomment the line below to skip the protocol check
 // $allowed_procotols = array();
 
