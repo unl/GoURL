@@ -23,7 +23,7 @@ if ($cas_client->isLoggedIn()) {
 require_once 'UNL/Templates.php';
 require_once 'UNL/Templates/CachingService/Null.php';
 UNL_Templates::setCachingService(new UNL_Templates_CachingService_Null());
-UNL_Templates::$options['version'] = 3.1;
+UNL_Templates::$options['version'] = 4.0;
 $page = UNL_Templates::factory('Fixed');
 $page->titlegraphic = "Go URL";
 $page->pagetitle = '';
