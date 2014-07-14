@@ -11,7 +11,7 @@ class lilURL
     const ERR_USED             = -4;
     const ERR_INVALID_ALIAS    = -5;
     
-    protected static $random_id_length = 3;
+    protected static $random_id_length = 4;
     
     protected $allowed_protocols = array();
     
