@@ -6,42 +6,34 @@ $lilurl = new lilURL();
 $lilurl->setAllowedProtocols($allowed_protocols);
 
 $id = $_GET['id'];
-if ($url = $lilurl->getURL($id)) {
-	// QR Codes can encode more data if URL is in all caps
-	// WARNING: Hosting in a case sensitive env my have unexpected results
-    $shortURL = strtoupper($lilurl->getShortURL($id));
+if ($lilurl->getURL($id)) {
+    $shortURL = $lilurl->getShortURL($id);
 
     $pngPrefix = dirname(__FILE__) . '/../data/qr/';
-    if (strlen($shortURL) > 36) {
-        $params = array(
-            'size' => 93,
-            'x'    => 39,
-            'y'    => 39,
-            'w'    => 18,
-            'h'    => 18,
-            'icon' => 'unl_qr_18.png'
-        );
-    } else {
-        $params = array(
-            'size' => 108,
-            'x'    => 44,
-            'y'    => 44,
-            'w'    => 20,
-            'h'    => 20,
-            'icon' => 'unl_qr_20.png'
-        );
+    
+    
+    $qrCache = $pngPrefix . 'cache/' . md5($shortURL) . '.png';
+    if (!file_exists($qrCache)) {
+        $apiUrl = "http://chart.apis.google.com/chart?cht=qr&chs=540&chld=M|1&chl=" . urlencode($shortURL);
+        file_put_contents($qrCache, file_get_contents($apiUrl));
     }
-    $apiUrl = "http://chart.apis.google.com/chart?cht=qr&chs={$params['size']}&chld=M|1&chl=" . urlencode($shortURL);
+    
 
-    $im = imagecreatefrompng($apiUrl);
-    $n  = imagecreatefrompng($pngPrefix . $params['icon']);
-
-    imagecopy($im, $n, $params['x'], $params['y'], 0, 0, $params['w'], $params['h']);
-    header('Content-Type: image/png');
-    imagepng($im);
-
+    $im = imagecreatefrompng($qrCache);
+    $n  = imagecreatefrompng($pngPrefix . 'unl_qr_235.png');
+    
+    $out = imagecreatetruecolor(1080, 1080);
+    
+    imagecopyresampled($out, $im, 0, 0, 0, 0, 1080, 1080, 540, 540);
     imagedestroy($im);
+    
+    imagecopy($out, $n, 422, 428, 0, 0, 235, 225);
     imagedestroy($n);
+    
+    header('Content-Type: image/png');
+    imagepng($out);
+
+    imagedestroy($out);
 
 } else {
     header('HTTP/1.1 404 Not Found');
