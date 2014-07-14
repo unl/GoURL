@@ -1,34 +1,46 @@
-<script type="text/javascript" charset="utf-8">
-WDN.jQuery(document).ready(function () {
-	WDN.jQuery('.qrImage').colorbox({photo:true});
+<?php if ($didDelete) : ?> 
+<div class="wdn_notice affirm">
+	<div class="message">
+		<h4>Delete Successful</h4>
+		<p>Your Go URL has been deleted</p>
+	</div>
+</div>
+<script type="text/javascript">
+WDN.initializePlugin('notice');
+</script>
+<?php endif; ?>
+<script type="text/javascript">
+require(['jquery', 'wdn'], function($, WDN) {
+    WDN.initializePlugin('modal', [function() {
+    	$('.go-url-qr').colorbox({photo:true, maxWidth: 500});
+        
+    }]);
 });
 </script>
-<?php
-if (isset($_POST, $_POST['urlID'])) {
-    $lilurl->deleteURL($_POST['urlID'], $cas_client->getUser());
-}
-$urls = $lilurl->getUserURLs($cas_client->getUser());
-if (mysql_num_rows($urls)) {
-    echo '<h3>Here you can manage the urls you\'ve submitted:</h3>';
-    echo '<table class="zentable cool">
-    <tr><th>QR Code</th><th>Short ID</th><th>Long URL</th><th>Delete</th></tr>';
-    while ($row = mysql_fetch_assoc($urls)) { ?>
-    <tr>
-    	<td><a class="qrImage" href="<?php echo $row['urlID']; ?>.qr"></a></td>
-        <td><?php echo $row['urlID']; ?></td>
-        <td><?php echo $row['longURL']; ?></td>
-        <td>
+<h1>Your Go URLs</h1>
+<p>You can manage the URLs you've created.</p>
+<div class="wdn-band"><div class="wdn-inner-wrapper">
+<?php $urls = $lilurl->getUserURLs($cas_client->getUser()); ?>
+<?php if (mysql_num_rows($urls)): ?>
+<ul class="go-urls">
+    <?php while ($row = mysql_fetch_assoc($urls)): ?>
+    <li>
+        <h2><a href="<?php echo $row['longURL']; ?>"><?php echo $row['longURL']; ?></a></h2>
+        <?php if ($row['submitDate'] !== '0000-00-00 00:00:00'): ?>
+        <p>Created on <?php echo date('M j, Y', strtotime($row['submitDate']))?></p>
+        <?php endif; ?>
         <form action="?manage" method="post">
             <input type="hidden" name="urlID" value="<?php echo $row['urlID']; ?>" />
-            <input type="submit" name="submit" value="Delete" onclick="return confirm('Are you for sure?');" />
+            <p class="actions">
+                <a href="./<?php echo $row['urlID']; ?>"><?php echo $row['urlID']; ?></a>
+                <a class="go-url-qr" href="./<?php echo $row['urlID']; ?>.qr" title="Show QR Code for <?php echo $row['urlID']; ?> Go URL"><span class="qrImage"></span> QR Code®</a>
+                <input type="submit" name="submit" value="Delete" onclick="return confirm('Are you for sure?');" />
+            </p>
         </form>
-        </td>
-    </tr>
-<?php 
-    }
-    echo '</table>';
-} else { ?>
-    <h3>You have not submitted any urls</h3>
-<?php 
-}
-?>
+    </li>
+    <?php endwhile; ?>
+</ul>
+<?php else: ?>
+<p>You haven't creating any Go URLs, yet.</p>
+<?php endif;?>
+</div></div>

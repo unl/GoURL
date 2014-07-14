@@ -1,73 +1,30 @@
-#maincontent form.zenform { margin: 5px 0 10px; }
-#maincontent form.zenform > fieldset > p { padding: 0 5px; }
-#maincontent #wdnLoginButton {
-	background:#ECECEC url('../images/identity/lock.png') no-repeat 10px 5px;
-	display:block;
-	border: 1px solid #d5d4d4;
-	border-radius:5px;
-	-webkit-border-radius:5px;
-	-moz-border-radius:5px;
-	margin-bottom:15px;
-	font-size:0.9em;
-	min-height:40px;
-	padding:7px 5px 5px 55px;
-	color: #494949;
-	cursor:pointer;
-}
-#maincontent #wdnLoginButton:hover {
-	background-color: #e3e3e3;
-	color: #494949;
-}
-#maincontent #wdnLoginButton span {
-	display:block;
-	font-size:1.5em;
-}
-
-div.qrCode {float:right;}
-#maincontent .qrCode p {
-	float:left;
-	margin:80px 5px 0 0;
-	font-size:0.85em;
-	color:#e5fad0 !important;
-	text-shadow: 1px 1px 1px #205e01;
-	filter: dropshadow(color=#205e01, offx=1, offy=1);
-	background: #349804;
-	padding:3px 6px;
-	border-radius:3px;
-	-webkit-border-radius:3px;
-	-moz-border-radius:3px;
-	font-weight:bold;
-}
-#maincontent #qrCode {width:100px; float:right; margin:0;}
-.wdn_notice.affirm {
-	margin-bottom:30px;
-}
-.wdn_notice.affirm div.message {
-	background-image:none;
-	float:left;
-	padding-left:10px;
-}
-#maincontent .wdn_notice.affirm div.message h4 {
-	font-size:2.7em;
-	color:#e5fad0 !important;
-	text-shadow: 1px 1px 1px #205e01;
-	filter: dropshadow(color=#205e01, offx=1, offy=1); 
-}
-#maincontent .wdn_notice.negate div.message h4 {
-	font-size:2.7em;
-	color:#ffeeee !important;
-	text-shadow: 1px 1px 1px #5e0101;
-	filter: dropshadow(color=#5e0101, offx=1, offy=1); 
-}
-#maincontent .wdn_notice.affirm div.message input {
-	font-size:1.2em;
-	width:500px;
-	background:#dff5e1;
-}
-.wdn_notice.affirm {
-	display:inline-block;
-	width:917px;
-}
-
 /* Manager */
-#maincontent .qrImage {width:16px; height:16px; background:url('../images/qrSample.png') no-repeat;display:block;}
+#maincontent .qrImage {width:16px; height:16px; background:url('../images/qrSample.png') no-repeat;display: inline-block;}
+.go-urls {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.go-urls li {
+	background: #fff;
+	border: 1px solid;
+	border-radius: 4px;
+	box-shadow: 0 2px;
+	margin-bottom: 1em;
+	padding: 0 1em;
+}
+
+.go-urls h2 {
+	font-family: "Gotham SSm A", "Gotham SSm B", Verdana, "Verdana Ref", Geneva, Tahoma, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", sans-serif;
+    font-weight: 400;
+    font-size: 1.2em;
+    line-height: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.go-urls .actions > * {
+	margin-right: 1em;
+}
+.wdn_notice input { color: #333; width: 100% }
