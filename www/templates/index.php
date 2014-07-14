@@ -11,7 +11,7 @@ require(['jquery'], function($) {
 		});
 		var $out = $('.wdn_notice input');
 		$out.attr('id', 'gourl_out');
-		$out.title('title', 'Your Go URL');
+		$out.attr('title', 'Your Go URL');
 	});
 });
 </script>
