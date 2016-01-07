@@ -3,3 +3,4 @@
 /.settings
 /config.inc.php
 /www/.htaccess
+/vendor/
