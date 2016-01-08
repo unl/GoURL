@@ -1,6 +1,6 @@
 RewriteEngine On
 RewriteBase /workspace/UNL_Go_URL/www/
 
-RewriteRule ^([\w\-]+)\.qr$ qr.php?id=$1 [L]
+RewriteRule ^api_create.php$ api/ [R=307,L]
 
-RewriteRule ^([\w\-]+)$ index.php
+FallbackResource /w/go/www/index.php
