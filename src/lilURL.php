@@ -125,10 +125,21 @@ class lilURL
         return $url;
     }
 
+    protected function getRootPath()
+    {
+        $root = dirname($_SERVER['PHP_SELF']);
+
+        if ('/' === $root) {
+            return '';
+        }
+
+        return $root;
+    }
+
     public function getBaseUrl($path = '')
     {
         $path = ltrim($path, '/');
-        return dirname($_SERVER['PHP_SELF']) . '/' . $path;
+        return $this->getRootPath() . '/' . $path;
     }
 
     public function getRequestPath()
@@ -139,7 +150,7 @@ class lilURL
             $requestURI = substr($requestURI, 0, -strlen($_SERVER['QUERY_STRING']) - 1);
         }
 
-        return substr($requestURI, strlen(dirname($_SERVER['PHP_SELF'])) + 1);
+        return substr($requestURI, strlen($this->getRootPath()) + 1);
     }
 
     public function isSafeURL($url)

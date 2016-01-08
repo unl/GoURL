@@ -3,6 +3,6 @@
 /.project
 /.settings
 /config.inc.php
-/www/.htaccess
+/www/.htaccess*
 /www/wdn
 /vendor/
