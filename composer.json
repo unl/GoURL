@@ -1,0 +1,12 @@
+{
+	"autoload": {
+		"classmap": [
+            "src/"
+        ]
+	},
+    "require": {
+        "unl/php-wdn-templates": "^4.1",
+        "endroid/qrcode": "^1.5",
+        "jasig/phpcas": "^1.3"
+    }
+}
