@@ -27,4 +27,4 @@
 .go-urls .actions > * {
 	margin-right: 1em;
 }
-.wdn_notice input { color: #333; width: 100% }
+.wdn_notice .message input { color: #333; width: 100% }
