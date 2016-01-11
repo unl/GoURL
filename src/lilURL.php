@@ -146,7 +146,7 @@ class lilURL
         }
 
         $attemptedHostName = strtolower(trim($parseUrl['host']));
-        $escapedDomains = [];
+        $escapedDomains = array();
 
         foreach ($this->allowed_domains as $domain) {
             $escapedDomains[] = preg_quote(strtolower($domain), '/');
