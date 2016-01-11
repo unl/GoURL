@@ -139,16 +139,20 @@ class lilURL
      */
     protected function urlIsAllowedDomain($url)
     {
-        $parseUrl = parse_url(trim($url)); 
-        $attemptedHostName = strtolower(trim($parseUrl["host"] ? $parseUrl["host"] : array_shift(explode('/', $parseUrl["path"], 2))));
-        
-    	foreach ($this->allowed_domains as $ad) {
-    		if (strstr($attemptedHostName, strtolower($ad)) == true) {
-    			return true;
-    		}
-    	}
-    	
-    	return false;
+        $parseUrl = parse_url(trim($url));
+
+        if (!$parseUrl || !$this->allowed_domains) {
+            return false;
+        }
+
+        $attemptedHostName = strtolower(trim($parseUrl['host']));
+        $escapedDomains = [];
+
+        foreach ($this->allowed_domains as $domain) {
+            $escapedDomains[] = preg_quote(strtolower($domain), '/');
+        }
+
+        return preg_match('/(?:^|\\.)(?:' . implode('|', $escapedDomains) . ')$/', $attemptedHostName);
     }
     /**
      * check to make sure that the user's url is allowed
