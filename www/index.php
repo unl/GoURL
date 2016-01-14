@@ -208,6 +208,9 @@ $page->addStyleDeclaration(<<<EOD
 .go-urls .actions > * {
     margin: .25em;
 }
+.go-urls td:nth-child(2) {
+    word-break: break-word;
+}
 .wdn_notice .message input { color: #333; width: 100% }
 EOD
 );
