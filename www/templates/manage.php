@@ -21,7 +21,7 @@
                     }
                     ?>
                     <tr>
-                        <td><a href="./<?php echo $row['urlID']; ?>"><?php echo $row['urlID']; ?></a></td>
+                        <td><a href="<?php echo $lilurl->getBaseUrl($row['urlID']); ?>"><?php echo $row['urlID']; ?></a></td>
                         <td><a href="<?php echo $row['longURL']; ?>"><?php echo $row['longURL']; ?></a></td>
                         <td<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
                             <?php if ($rowDateTime): ?>
