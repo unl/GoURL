@@ -40,7 +40,7 @@
                 </tbody>
             </table>
         <?php else: ?>
-            <p>You haven't creating any Go URLs, yet.</p>
+            <p>You haven't created any Go URLs, yet.</p>
         <?php endif;?>
     </div>
 </div>
