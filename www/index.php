@@ -49,6 +49,9 @@ if ('api/' === $pathInfo) {
 } elseif (preg_match('#^([^/]+)\.qr$#', $pathInfo, $matches)) {
     $route = 'qr';
     $id = $matches[1];
+} elseif (preg_match('#^([^/]+)\\+$#', $pathInfo, $matches)) {
+    $route = 'linkinfo';
+    $id = $matches[1];
 }
 
 
@@ -177,6 +180,16 @@ if (!$route || 'api' === $route) {
     imagepng($out);
     imagedestroy($out);
     exit;
+} elseif ('linkinfo' === $route) {
+    $viewTemplate = 'linkinfo.php';
+
+    if (!$link = $lilurl->getLinkRow($id)) {
+        header('HTTP/1.1 404 Not Found');
+        include __DIR__ . '/templates/404.php';
+        exit;
+    }
+
+    $viewParams['link'] = $link;
 }
 
 // no actions to be done, time to render a UNL page
