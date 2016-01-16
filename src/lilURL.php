@@ -16,9 +16,9 @@ class lilURL
 
     protected static $random_id_length = 4;
 
-    protected $allowed_protocols = array();
+    protected $allowed_protocols = [];
 
-    protected $allowed_domains = array();
+    protected $allowed_domains = [];
 
     /**
      * Construct a lilURL object
@@ -28,7 +28,7 @@ class lilURL
         $this->db = new PDO(sprintf('mysql:host=%s;dbname=%s', $host, $schema), $user, $pass);
     }
 
-    protected function executeQuery($sql, $params = array())
+    protected function executeQuery($sql, $params = [])
     {
         $statement = $this->db->prepare($sql);
         $statement->execute($params);
@@ -78,13 +78,13 @@ class lilURL
 
         //Start by gathering all the GA items
         if (!empty($_POST['gaSource'])) {
-            $gaTags = http_build_query(array(
+            $gaTags = http_build_query([
                 'utm_source' => $_POST['gaSource'],
                 'utm_medium' => $_POST['gaMedium'],
                 'utm_term' => $_POST['gaTerm'],
                 'utm_content' =>$_POST['gaContent'],
                 'utm_campaign' => $_POST['gaName'],
-            ));
+            ]);
 
             $longurl .=  (strpos($_POST['theURL'], '?') !== false) ? '&' : '?';
             $longurl .= $gaTags;
@@ -226,10 +226,10 @@ class lilURL
     public function getID($url)
     {
         $sql = 'SELECT urlID FROM '.$this->getUrlTable().' WHERE longURL = :longURL AND (createdBy = :createdBy OR createdBy IS NULL) ';
-        $statement = $this->executeQuery($sql, array(
+        $statement = $this->executeQuery($sql, [
             ':longURL' => $url,
             ':createdBy' => '',
-        ));
+        ]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
@@ -239,20 +239,33 @@ class lilURL
         return false;
     }
 
+    public function getLinkRow($id, $fields = [])
+    {
+        if (!$fields) {
+            $fields = ['*'];
+        }
+
+        $sql = 'SELECT ' . implode(',', $fields) . ' FROM '.$this->getUrlTable().' WHERE urlID = :urlID';
+        $statement = $this->executeQuery($sql, [
+            ':urlID' => $id,
+        ]);
+        $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if ($row) {
+            return $row;
+        }
+
+        return false;
+    }
+
     /**
-     * return the url for a given id (or -1 if the id doesn't exist)
-     *
+     * return the url for a given id
      * @param string $id The id of the URL to find.
-     *
-     * @return string
+     * @return string|false
      */
     public function getURL($id)
     {
-        $sql = 'SELECT longURL FROM '.$this->getUrlTable().' WHERE urlID = :urlID';
-        $statement = $this->executeQuery($sql, array(
-            ':urlID' => $id,
-        ));
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row = $this->getLinkRow($id, ['longURL']);
 
         if ($row) {
             return $row['longURL'];
@@ -264,10 +277,10 @@ class lilURL
     public function getIDandURL($id, $url)
     {
     	$sql = 'SELECT longURL FROM '.$this->getUrlTable().' WHERE urlID = :urlID AND longURL = :longURL';
-        $statement = $this->executeQuery($sql, array(
+        $statement = $this->executeQuery($sql, [
             ':urlID' => $id,
             ':longURL' => $url,
-        ));
+        ]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
@@ -299,11 +312,11 @@ class lilURL
         $id = strtolower($id);
 
         $sql = 'INSERT INTO '.$this->getUrlTable().' (urlID, longURL, submitDate, createdBy) VALUES (:urlID, :longURL, NOW(), :createdBy)';
-        $statement = $this->executeQuery($sql, array(
+        $statement = $this->executeQuery($sql, [
             ':urlID' => $id,
             ':longURL' => $url,
             ':createdBy' => $user,
-        ));
+        ]);
         $result = $statement->rowCount();
 
         if ($result) {
@@ -373,18 +386,18 @@ class lilURL
     public function getUserURLs($user)
     {
         $sql = 'SELECT * FROM '.$this->getUrlTable().' WHERE createdBy = :createdBy';
-        return $this->executeQuery($sql, array(
+        return $this->executeQuery($sql, [
             ':createdBy' => $user,
-        ));
+        ]);
     }
 
     public function deleteURL($urlID, $user)
     {
         $sql = 'DELETE FROM '.$this->getUrlTable().' WHERE urlID = :urlID AND createdBy = :createdBy LIMIT 1';
-        $statement = $this->executeQuery($sql, array(
+        $statement = $this->executeQuery($sql, [
             ':urlID' => $urlID,
             ':createdBy' => $user,
-        ));
+        ]);
         return $statement->rowCount();
     }
 }
