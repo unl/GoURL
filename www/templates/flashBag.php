@@ -1,6 +1,6 @@
 <?php if ($msg) : ?>
 	<div class="wdn-band">
-		<div class="wdn-inner-wrapper wdn-inner-padding-none">
+		<div class="wdn-inner-wrapper wdn-inner-padding-sm">
 			<?php if(!$error) :?>
 				<div class="wdn_notice affirm">
 					<div class="message">

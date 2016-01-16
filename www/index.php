@@ -58,6 +58,9 @@ if (!$route && $pathInfo !== '') {
 
 // dispatch
 
+$viewTemplate = 'index.php';
+$viewParams = [];
+
 if (!$route || 'api' === $route) {
     if (isset($_GET['url']) && $_GET['url'] === 'referer' && isset($_SERVER['HTTP_REFERER'])) {
         $_POST['theURL'] = urldecode($_SERVER['HTTP_REFERER']);
@@ -136,6 +139,8 @@ if (!$route || 'api' === $route) {
         exit;
     }
 } elseif ('manage' === $route) {
+    $viewTemplate = 'manage.php';
+
     if (isset($_POST, $_POST['urlID'])) {
         $lilurl->deleteURL($_POST['urlID'], phpCAS::getUser());
         $_SESSION['gourlFlashBag'] = array(
@@ -178,6 +183,7 @@ if (!$route || 'api' === $route) {
 
 $error = false;
 $msg = '';
+$url = '';
 
 if (isset($_SESSION['gourlFlashBag'])) {
     $msg = $_SESSION['gourlFlashBag']['msg'];
@@ -193,17 +199,29 @@ if (isset($_SESSION['gourlFlashBag'])) {
     unset($_SESSION['gourlFlashBag']);
 }
 
+function renderTemplate($file, $params = [])
+{
+    global $lilurl, $page;
+    extract($params);
+    unset($params);
+    $escape = function($value) {
+        return htmlentities($value, ENT_COMPAT|ENT_HTML5);
+    };
+    ob_start();
+    include __DIR__ .'/templates/' . $file;
+    return ob_get_clean();
+}
+
 $page = Templates::factory('Local', Templates::VERSION_4_1);
 
 if (file_exists(__DIR__ . '/wdn/templates_4.1')) {
     $page->setLocalIncludePath(__DIR__);
 }
 
-$page->setParam('class', 'terminal');
 $page->affiliation = '';
 $page->titlegraphic = "Go URL";
 $page->pagetitle = '';
-$page->doctitle = '<title>Go URL, a short URL service | University of Nebraska-Lincoln</title>';
+$page->doctitle = 'Go URL, a short URL service | University of Nebraska-Lincoln';
 $page->addStyleDeclaration(<<<EOD
 .go-urls .actions > * {
     margin: .25em;
@@ -223,20 +241,16 @@ require(['wdn'], function(WDN) {
 EOD
 , $lilurl->getBaseUrl('a/login'), $lilurl->getBaseUrl('a/logout')));
 
-ob_start();
-include __DIR__ . '/templates/flashBag.php';
 
-if ('manage' === $route) {
-    // Show the url management screen
-    include __DIR__ . '/templates/manage.php';
-} else {
-    // Show the submission interface
-    include __DIR__ . '/templates/index.php';
-}
-$page->maincontentarea = ob_get_clean();
+$page->navlinks = renderTemplate('static/navigation.php');
+$page->maincontentarea = renderTemplate('flashBag.php', [
+    'msg' => $msg,
+    'url' => $url,
+    'error' => $error,
+]);
+$page->maincontentarea .= renderTemplate($viewTemplate, $viewParams);
 
-ob_start();
-include __DIR__ . '/templates/static/local-footer.php';
-$page->contactinfo = ob_get_clean();
+$page->contactinfo = renderTemplate('static/local-footer.php');
+$page->doctitle = sprintf('<title>%s</title>', $page->doctitle);
 
 echo $page;

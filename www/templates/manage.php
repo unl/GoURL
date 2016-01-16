@@ -1,4 +1,12 @@
-<h1 class="clear-top">Your Go URLs</h1>
+<?php $page->doctitle = 'Your URLs - Go URL | University of Nebraska&ndash;Lincoln'; ?>
+<?php ob_start() ?>
+<ul>
+    <li><a href="http://www.unl.edu">UNL</a></li>
+    <li><a href="<?php echo $lilurl->getBaseUrl() ?>">Go URL</a></li>
+    <li>Your URLs</li>
+</ul>
+<?php $page->breadcrumbs = ob_get_clean(); ?>
+<h1>Your Go URLs</h1>
 <div class="wdn-band">
     <div class="wdn-inner-wrapper">
         <?php $urls = $lilurl->getUserURLs(phpCAS::getUser()); ?>
@@ -22,7 +30,7 @@
                     ?>
                     <tr>
                         <td><a href="<?php echo $lilurl->getBaseUrl($row['urlID']); ?>"><?php echo $row['urlID']; ?></a></td>
-                        <td><a href="<?php echo $row['longURL']; ?>"><?php echo $row['longURL']; ?></a></td>
+                        <td><a href="<?php echo $escape($row['longURL']) ?>"><?php echo $escape($row['longURL']) ?></a></td>
                         <td<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
                             <?php if ($rowDateTime): ?>
                                 <?php echo $rowDateTime->format('M j, Y') ?>

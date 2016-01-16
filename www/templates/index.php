@@ -1,8 +1,14 @@
+<?php ob_start() ?>
+<ul>
+    <li><a href="http://www.unl.edu">UNL</a></li>
+    <li><a href="<?php echo $lilurl->getBaseUrl() ?>">Go URL</a></li>
+</ul>
+<?php $page->breadcrumbs = ob_get_clean(); ?>
 <div class="wdn-band">
     <div class="wdn-inner-wrapper">
         <form action="<?php echo $lilurl->getBaseUrl() ?>" method="post" class="">
             <div class="wdn-grid-set">
-                <div class="wdn-col bp1-wdn-col-six-sevenths">
+                <div class="wdn-col bp2-wdn-col-three-fourths centered">
                 <ol>
                     <li>
                         <label for="theURL" class="wdn-text-hidden"><span class="required">*</span>Long URL</label>
@@ -60,15 +66,6 @@
                 </fieldset>
                 <input type="submit" id="submit" name="submit" value="Create URL" />
                 </div>
-                </div>
-                <div class="wdn-col bp1-wdn-col-one-seventh">
-                <p style="text-align: right">
-                <?php if (!phpCAS::isAuthenticated()) : ?>
-                <a href="<?php echo $lilurl->getBaseUrl('a/login') ?>">Log in</a>
-                <?php else: ?>
-                <a href="<?php echo $lilurl->getBaseUrl('a/links') ?>">Your URLs</a>
-                <?php endif;?>
-                </p>
                 </div>
             </div>
         </form>
