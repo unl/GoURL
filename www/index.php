@@ -15,6 +15,14 @@ phpCAS::client(CAS_VERSION_2_0, 'login.unl.edu', 443, '/cas');
 phpCAS::setCasServerCACert(CAS_CA_FILE);
 phpCAS::handleLogoutRequests();
 
+function sendCORSHeaders() {
+    if (!empty($_SERVER['HTTP_ORIGIN'])) {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, POST');
+        header('Access-Control-Allow-Headers: X-Requested-With');
+    }
+}
+
 // do predispatch actions
 
 if (isset($_GET['login']) || 'a/login' === $pathInfo) {
@@ -40,6 +48,12 @@ if (isset($_GET['manage']) || in_array($pathInfo, array('a/', 'a/links'))) {
         header('Location: ' . $lilurl->getBaseUrl('a/login'));
         exit;
     }
+}
+
+if ('api_create.php' === $pathInfo) {
+    header('Location: ' . $lilurl->getBaseUrl('api/'), true, 307);
+    sendCORSHeaders();
+    exit;
 }
 
 // route
@@ -114,6 +128,7 @@ if (!$route || 'api' === $route) {
         }
 
         if ('api' === $route) {
+            sendCORSHeaders();
             unset($_SESSION['gourlFlashBag']);
 
             if (!empty($url)) {
@@ -129,6 +144,7 @@ if (!$route || 'api' === $route) {
         header('Location: ' . $lilurl->getBaseUrl(), true, 303);
         exit;
     } elseif ('api' === $route) {
+        sendCORSHeaders();
         header('HTTP/1.1 404 Not Found');
         echo 'You need a URL!';
         exit;

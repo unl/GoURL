@@ -1,6 +1,8 @@
 RewriteEngine On
 RewriteBase /workspace/UNL_Go_URL/www/
 
-RewriteRule ^api_create.php$ api/ [R=307,L]
+RewriteRule ^api_create.php$ index.php [L]
 
-FallbackResource /w/go/www/index.php
+DirectoryIndex disabled
+DirectoryIndex index.php
+FallbackResource /workspace/UNL_Go_URL/www/index.php
