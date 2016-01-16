@@ -52,7 +52,7 @@ if ('api/' === $pathInfo) {
 }
 
 
-if (!$route && $pathInfo) {
+if (!$route && $pathInfo !== '') {
     $route = 'redirect';
 }
 
