@@ -256,7 +256,7 @@ $page->addStyleDeclaration(<<<EOD
     margin: .25em;
 }
 .go-urls td:nth-child(2) {
-    word-break: break-word;
+    word-break: break-all;
 }
 .wdn_notice .message input { color: #333; width: 100% }
 EOD
