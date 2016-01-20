@@ -11,7 +11,7 @@
                 <div class="wdn-col bp2-wdn-col-three-fourths centered">
                 <ol>
                     <li>
-                        <label for="theURL" class="wdn-text-hidden"><span class="required">*</span>Long URL</label>
+                        <label for="theURL"><span class="required">*</span>Enter the URL that you want to shorten</label>
                         <div class="wdn-input-group">
                             <input name="theURL" id="theURL" type="text" placeholder="http://www.unl.edu/" value="<?php echo (isset($_POST['theURL']))?htmlentities($_POST['theURL'], ENT_QUOTES):'';?>" />
                             <span class="wdn-input-group-btn"><button type="submit">Shorten</button></span>
