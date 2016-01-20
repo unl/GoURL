@@ -2,6 +2,7 @@
 /.buildpath
 /.project
 /.settings
+/*.sublime*
 /config.inc.php
 /www/.htaccess*
 /www/wdn
