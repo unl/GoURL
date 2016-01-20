@@ -2,7 +2,7 @@
     <div class="bp960-wdn-col-two-thirds">
         <div class="wdn-footer-module">
             <span role="heading" class="wdn-footer-heading">About Go URL</span>
-            <p>Go URL is a URL shortening service similar to <a href="http://www.tinyurl.com" class="external">TinyURL</a>. Use this when you would like a shorter URL while retaining the unl.edu domain.</p>
+            <p>Go URL is a URL shortening service similar to <a href="https://bitly.com/" class="external">Bitly</a>. Use this when you would like a shorter URL while retaining the unl.edu domain.</p>
 			<p>This application is developed and maintained by <a href="http://iim.unl.edu/">Internet and Interactive Media</a> (IIM), which is a partnership with University Communications and Information Technology Services.</p>
 		</div>
 	</div>
