@@ -54,9 +54,9 @@
 </div>
 
 <script>
-require(['jquery', 'wdn', 'https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js', 'css!https://cdn.datatables.net/1.10.10/css/jquery.dataTables.min.css'], function($, WDN) {
+require(['jquery', 'wdn', 'https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js'], function($, WDN) {
     WDN.initializePlugin('modal', [function() {
-        $('.go-url-qr').colorbox({photo:true, maxWidth: 500});
+        $('.go-url-qr').colorbox({photo:true, maxWidth: "75%"});
     }]);
 
     $(function() {
