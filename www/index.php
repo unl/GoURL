@@ -251,16 +251,7 @@ $page->affiliation = '';
 $page->titlegraphic = "Go URL";
 $page->pagetitle = '';
 $page->doctitle = 'Go URL, a short URL service | University of Nebraska-Lincoln';
-$page->addStyleDeclaration(<<<EOD
-.go-urls .actions > * {
-    margin: .25em;
-}
-.go-urls td:nth-child(2) {
-    word-break: break-all;
-}
-.wdn_notice .message input { color: #333; width: 100% }
-EOD
-);
+$page->addStyleDeclaration(file_get_contents(__DIR__ . '/css/go.css'));
 $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 $page->addScriptDeclaration(sprintf(<<<EOD
 require(['wdn'], function(WDN) {
