@@ -9,6 +9,7 @@ class lilURL
     const ERR_INVALID_DOMAIN   = -3;
     const ERR_USED             = -4;
     const ERR_INVALID_ALIAS    = -5;
+    const ERR_ALIAS_EXISTS     = -6;
 
     protected $db;
 
@@ -108,6 +109,11 @@ class lilURL
         //validate the alias if specified (data integrity)
         if (!empty($id) && !preg_match('/^[\w\-]+$/', $id)) {
             throw new Exception('Invalid custom alias.', self::ERR_INVALID_ALIAS);
+        }
+
+        //make sure alias isn't already in use
+        if (empty($this->getURL($id)) == false) {
+            throw new Exception('Alias is already in use. Please use a different alias.', self::ERR_ALIAS_EXISTS);
         }
 
         // add the url to the database
