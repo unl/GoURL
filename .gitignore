@@ -1,5 +1,9 @@
+.DS_Store
 /.buildpath
 /.project
 /.settings
+/*.sublime*
 /config.inc.php
-/www/.htaccess
+/www/.htaccess*
+/www/wdn
+/vendor/
