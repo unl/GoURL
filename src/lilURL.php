@@ -10,7 +10,6 @@ class lilURL
     const ERR_USED             = -4;
     const ERR_INVALID_ALIAS    = -5;
     const ERR_ALIAS_EXISTS     = -6;
-    const ERR_ALREADY_IN_DB    = -7;
 
     protected $db;
 
@@ -93,7 +92,7 @@ class lilURL
         }
         // Check to see if the pair already exists in db
         if ($this->getIDandURL($id, $longurl) !== false) {
-            throw new Exception('This alias/URL pair already exists.', self::ERR_ALREADY_IN_DB);
+            throw new Exception('This alias/URL pair already exists.', self::ERR_USED);
         }
 
         // Check to see if the URL is allowed

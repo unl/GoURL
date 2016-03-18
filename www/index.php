@@ -118,7 +118,7 @@ if (!$route || 'api' === $route) {
                         'msg' => '<p class="title">Whoops, Something Broke</p><p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>',
                     );
                     break;
-                case lilurl::ERR_ALREADY_IN_DB:
+                case lilurl::ERR_USED:
                     $_SESSION['gourlFlashBag'] = array(
                         'msg' => '<p class="title">Whoops, this alias/URL pair already exists.</p><p>It will not be re-added. Please try another again.</p>',
                     );
