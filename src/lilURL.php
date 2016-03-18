@@ -90,10 +90,7 @@ class lilURL
             $longurl .= (strpos($_POST['theURL'], '?') !== false) ? '&' : '?';
             $longurl .= $gaTags;
         }
-        // Check to see if the pair already exists in db
-        if ($this->getIDandURL($id, $longurl) !== false) {
-            throw new Exception('This alias/URL pair already exists.', self::ERR_USED);
-        }
+
 
         // Check to see if the URL is allowed
         if (!$this->urlIsAllowed($longurl)) {
@@ -120,6 +117,11 @@ class lilURL
         //make sure alias isn't already in use
         if (empty($this->getURL($id)) == false) {
             throw new Exception('Alias is already in use. Please use a different alias.', self::ERR_ALIAS_EXISTS);
+        }
+
+        // Check to see if the pair already exists in db
+        if ($this->getIDandURL($id, $longurl) !== false) {
+            throw new Exception('This alias/URL pair already exists.', self::ERR_USED);
         }
 
         // add the url to the database
