@@ -120,9 +120,7 @@ if (!$route || 'api' === $route) {
                     break;
                 case lilurl::ERR_USED:
                     $_SESSION['gourlFlashBag'] = array(
-                        'msg' => '<p class="title">Whoops, this alias/URL pair already exists.</p><p>The existing Go URL for this pair is: </p><input type="text" onclick="this.select(); return false;" value="'.$url.'" />',
-                        'type' => 'success',
-                        'url' => $url,
+                        'msg' => '<p class="title">Whoops, this alias/URL pair already exists.</p><p>The existing Go URL for this pair is: </p>',
                     );
                     break;
                 case lilurl::ERR_ALIAS_EXISTS:
