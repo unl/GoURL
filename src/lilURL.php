@@ -10,6 +10,7 @@ class lilURL
     const ERR_USED             = -4;
     const ERR_INVALID_ALIAS    = -5;
     const ERR_ALIAS_EXISTS     = -6;
+    const ERR_ALREADY_IN_DB    = -7;
 
     protected $db;
 
@@ -83,27 +84,33 @@ class lilURL
                 'utm_source' => $_POST['gaSource'],
                 'utm_medium' => $_POST['gaMedium'],
                 'utm_term' => $_POST['gaTerm'],
-                'utm_content' =>$_POST['gaContent'],
+                'utm_content' => $_POST['gaContent'],
                 'utm_campaign' => $_POST['gaName'],
             ]);
 
-            $longurl .=  (strpos($_POST['theURL'], '?') !== false) ? '&' : '?';
+            $longurl .= (strpos($_POST['theURL'], '?') !== false) ? '&' : '?';
             $longurl .= $gaTags;
         }
+        // Check to see if the pair already exists in db
+        if ($this->getIDandURL($id, $longurl) !== false) {
+            throw new Exception('This alias/URL pair already exists.', self::ERR_ALREADY_IN_DB);
+        }
 
-
+        // Check to see if the URL is allowed
         if (!$this->urlIsAllowed($longurl)) {
             throw new Exception('Invalid Protocol', self::ERR_INVALID_PROTOCOL);
         }
 
+        // Check to see if the URL is valid
         if (!$this->isSafeURL($longurl)) {
             throw new Exception('Invalid URL.');
         }
 
+        // Check to see if user domain is valid
         if (!$user) {
-	        if (!$this->urlIsAllowedDomain($longurl)) {
-	            throw new Exception('Invalid domain.', self::ERR_INVALID_DOMAIN);
-	        }
+            if (!$this->urlIsAllowedDomain($longurl)) {
+                throw new Exception('Invalid domain.', self::ERR_INVALID_DOMAIN);
+            }
         }
 
         //validate the alias if specified (data integrity)
@@ -120,7 +127,7 @@ class lilURL
         if ($id = $this->addURL($longurl, $id, $user)) {
             return $this->getShortURL($id);
         }
-
+        // Generic Exception
         throw new Exception('Unknown error', self::ERR_UNKNOWN);
     }
 
@@ -282,7 +289,7 @@ class lilURL
 
     public function getIDandURL($id, $url)
     {
-    	$sql = 'SELECT longURL FROM '.$this->getUrlTable().' WHERE urlID = :urlID AND longURL = :longURL';
+    	$sql = 'SELECT urlID FROM '.$this->getUrlTable().' WHERE urlID = :urlID AND longURL = :longURL';
         $statement = $this->executeQuery($sql, [
             ':urlID' => $id,
             ':longURL' => $url,
