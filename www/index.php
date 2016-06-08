@@ -200,7 +200,7 @@ if (!$route || 'api' === $route) {
     $out = imagecreatefrompng($qrCache);
     $n = imagecreatefrompng($pngPrefix . 'unl_qr_235.png');
 
-    imagecopy($out, $n, 422, 428, 0, 0, 235, 225);
+    imagecopy($out, $n, 422, 428, 0, 0, 235, 235);
     imagedestroy($n);
     header('Content-Type: image/png');
     imagepng($out);
