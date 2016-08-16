@@ -61,6 +61,7 @@ class lilURL
         if ($id != '' && $id != basename($_SERVER['PHP_SELF']) && $id != '?login') {
             $location = $this->getURL($id);
             if ($location != false) {
+                header("HTTP/1.1 301 Moved Permanently");
                 header('Location: '.$location);
                 exit();
             }
