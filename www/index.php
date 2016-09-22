@@ -37,9 +37,7 @@ if (isset($_GET['logout']) || 'a/logout' === $pathInfo) {
     exit;
 }
 
-if (!phpCAS::isAuthenticated() && isset($_COOKIE['unl_sso'])) {
-    phpCAS::checkAuthentication();
-}
+phpCAS::checkAuthentication();
 
 if (isset($_GET['manage']) || in_array($pathInfo, array('a/', 'a/links'))) {
     $route = 'manage';
