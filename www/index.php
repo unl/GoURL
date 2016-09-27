@@ -37,8 +37,6 @@ if (isset($_GET['logout']) || 'a/logout' === $pathInfo) {
     exit;
 }
 
-phpCAS::checkAuthentication();
-
 if (isset($_GET['manage']) || in_array($pathInfo, array('a/', 'a/links'))) {
     $route = 'manage';
 
@@ -218,6 +216,7 @@ if (!$route || 'api' === $route) {
 
 // no actions to be done, time to render a UNL page
 
+phpCAS::checkAuthentication();
 $error = false;
 $msg = '';
 $url = '';
