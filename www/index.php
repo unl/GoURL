@@ -1,12 +1,16 @@
 <?php
 use UNL\Templates\Templates;
 use Endroid\QrCode\QrCode;
+use Ramsey\Uuid\Uuid;
 
 require_once __DIR__ . '/../config.inc.php';
 
 $lilurl = new lilURL(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB);
 $lilurl->setAllowedProtocols($allowed_protocols);
 $lilurl->setAllowedDomains($allowed_domains);
+if (defined('GA_ACCOUNT')) {
+    $lilurl->setGaAccount(GA_ACCOUNT);
+}
 
 session_name('gourl');
 $route = '';
@@ -51,6 +55,11 @@ if ('api_create.php' === $pathInfo) {
     sendCORSHeaders();
     exit;
 }
+
+if (!isset($_SESSION['clientId'])) {
+    $_SESSION['clientId'] = (string) Uuid::uuid4();
+}
+$lilurl->setGaClientId($_SESSION['clientId']);
 
 // route
 
