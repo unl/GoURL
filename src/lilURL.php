@@ -1,4 +1,8 @@
 <?php
+
+use TheIconic\Tracking\GoogleAnalytics\Analytics;
+use Ramsey\Uuid\Uuid;
+
 /**
  * This class handles the lilURL database interactions.
  */
@@ -20,6 +24,10 @@ class lilURL
     protected $allowed_protocols = [];
 
     protected $allowed_domains = [];
+
+    protected $gaAccount;
+
+    protected $gaClientId;
 
     /**
      * Construct a lilURL object
@@ -61,11 +69,44 @@ class lilURL
         if ($id != '' && $id != basename($_SERVER['PHP_SELF']) && $id != '?login') {
             $location = $this->getURL($id);
             if ($location != false) {
+                $this->trackHit($id);
                 header('Location: '.$location);
                 exit();
             }
         }
         return false;
+    }
+
+    protected function trackHit($id)
+    {
+        $accountId = $this->getGaAccount();
+        if (!$accountId) {
+            return false;
+        }
+
+        $clientId = $this->getGaClientId() ?: (string) Uuid::uuid4();
+
+        try {
+            $analytics = new Analytics(true);
+            $analytics
+                ->setProtocolVersion('1')
+                ->setTrackingId($accountId)
+                ->setClientId($clientId)
+                ->setIpOverride($_SERVER['REMOTE_ADDR'])
+                ->setUserAgentOverride($_SERVER['HTTP_USER_AGENT'])
+                ->setDocumentHostName($_SERVER['HTTP_HOST'])
+                ->setDocumentPath('/' . $id);
+
+            if (!empty($_SERVER['HTTP_REFERER'])) {
+                $analytics->setDocumentReferrer($_SERVER['HTTP_REFERER']);
+            }
+
+            $response = $analytics->sendPageview();
+        } catch (Exception $e) {
+            // just ignore it for now
+        }
+
+        return true;
     }
 
     /**
@@ -413,5 +454,27 @@ class lilURL
             ':createdBy' => $user,
         ]);
         return $statement->rowCount();
+    }
+
+    public function getGaAccount()
+    {
+        return $this->gaAccount;
+    }
+
+    public function setGaAccount($account)
+    {
+        $this->gaAccount = $account;
+        return $this;
+    }
+
+    public function getGaClientId()
+    {
+        return $this->gaClientId;
+    }
+
+    public function setGaClientId($clientId)
+    {
+        $this->gaClientId = $clientId;
+        return $this;
     }
 }

@@ -16,7 +16,7 @@ if ($link['submitDate'] !== '0000-00-00 00:00:00') {
 <div class="wdn-band">
     <div class="wdn-inner-wrapper">
         <p><a href="<?php echo $lilurl->getBaseUrl($link['urlID']) ?>"><?php echo $link['urlID'] ?></a></p>
-        <p><a href="<?php echo $lilurl->getBaseUrl($link['urlID']) ?>"><?php echo $escape($link['longURL']) ?></a></p>
+        <p><a href="<?php echo $escape($link['longURL']) ?>"><?php echo $escape($link['longURL']) ?></a></p>
         <p>
             Created
             <?php if ($rowDateTime): ?><?php echo $rowDateTime->format('M j, Y') ?><?php endif;?>
