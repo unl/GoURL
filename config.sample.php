@@ -14,6 +14,9 @@ define('MYSQL_HOST', 'localhost');
 // allow urls that begin with these strings
 $allowed_protocols = array('http://', 'https://');
 
+//Use the https protocol for short URLS. If false or undefined, http:// will be used instead.
+define('HTTPS_SHORT_URLS', true);
+
 // allow urls from these domains for non-authenticated users.
 $allowed_domains = array(
     'unl.edu',

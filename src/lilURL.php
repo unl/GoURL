@@ -175,7 +175,11 @@ class lilURL
 
     public function getShortURL($id)
     {
-        $url = 'http://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']);
+        $protocol = 'http://';
+        if (defined('HTTPS_SHORT_URLS') && HTTPS_SHORT_URLS) {
+          $protocol = 'https://';
+        }
+        $url = $protocol.$_SERVER['SERVER_NAME'].dirname($_SERVER['PHP_SELF']);
         $url = trim($url, '/').'/'.$id;
         return $url;
     }
