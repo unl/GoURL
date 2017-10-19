@@ -42,12 +42,23 @@ function getHTTPInfo($url, $followLocation = false)
     );
 }
 
-$result = $mysqli->query("SELECT DISTINCT longURL FROM tblURLs WHERE longURL like '%admissions.unl.edu%'");
+function getRowsBylongURL($longURL, $mysqli)
+{
+  $result = $mysqli->query("SELECT * FROM tblURLs WHERE longURL = '".$mysqli->escape_string($longURL)."'");
+  if (!$result) {
+    echo "query error"; exit();
+  }
+  
+  return $result;
+}
+
+$result = $mysqli->query("SELECT DISTINCT longURL FROM tblURLs WHERE longURL REGEXP 'admissions.unl.edu|www.admissions.unl.edu|nse.unl.edu|ncpa.unl.edu|global.unl.edu|schoolcounselors.unl.edu' OR createdBy = 'ibeddes2'");
 if (!$result) {
     echo "query error"; exit();
 }
 
-$total_to_delete = 0;
+$http_404s = array();
+$http_301s = array();
 $results = array();
 
 
@@ -65,10 +76,27 @@ while ($row = $result->fetch_assoc()) {
         //Update the URL
         $results[$details['http_code']][$row['longURL']]['target'] = $details['redirect_url'];
         $mysqli->query("UPDATE tblURLs SET longURL = '".$mysqli->escape_string($details['redirect_url'])."' WHERE longURL = '".$mysqli->escape_string($row['longURL'])."'");
-        echo 'updated: ' . $row['longURL'] . PHP_EOL;
-        echo "\t => " . $details['redirect_url'] . PHP_EOL;
+        $http_301s[$row['longURL']] = $details['redirect_url'];
+    } else if ($details['http_code'] == 404) {
+        $http_404s[] = $row['longURL'];
     }
     
     //Sleep for a quarter of a second so we don't overwhelm the server
     usleep(250000);
+}
+
+echo 'updated due to redirect: ' . PHP_EOL;
+foreach ($http_301s as $old=>$new) {
+  echo 'updated: ' . $old . PHP_EOL;
+  echo "\t => " . $new . PHP_EOL;
+}
+
+echo 'these are 404s: ' . PHP_EOL;
+foreach ($http_404s as $long) {
+  echo 'deleting these longURLs: ' . $long . PHP_EOL;
+  echo "\t => " . $long . PHP_EOL;
+  
+  if (isset($argv[1]) && $argv[1] === 'delete') {
+    $mysqli->query("DELETE FROM tblURLs WHERE longURL = '".$mysqli->escape_string($long)."'");
+  }
 }
