@@ -93,10 +93,10 @@ foreach ($http_301s as $old=>$new) {
 
 echo 'these are 404s: ' . PHP_EOL;
 foreach ($http_404s as $long) {
-  echo 'deleting these longURLs: ' . $long . PHP_EOL;
-  echo "\t => " . $long . PHP_EOL;
+  echo "\t" . $long . PHP_EOL;
   
   if (isset($argv[1]) && $argv[1] === 'delete') {
     $mysqli->query("DELETE FROM tblURLs WHERE longURL = '".$mysqli->escape_string($long)."'");
+    echo "\t deleted" . PHP_EOL;
   }
 }
