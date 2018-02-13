@@ -3,9 +3,9 @@
         <div class="wdn-footer-module">
             <span role="heading" class="wdn-footer-heading">About Go URL</span>
             <p>Go URL is a URL shortening service similar to <a href="https://bitly.com/" class="external">Bitly</a>. Use this when you would like a shorter URL while retaining the unl.edu domain.</p>
-			<p>This application is developed and maintained by <a href="http://iim.unl.edu/">Internet and Interactive Media</a> (IIM), which is a partnership with University Communication and Information Technology Services.</p>
-		</div>
+	    <p>This application is a product of the <a href="https://iim.unl.edu/">Internet and Interactive Media group at Nebraska</a>. IIM is a partnership of <a href="https://ucomm.unl.edu/">University Communication</a> and <a href="https://its.unl.edu/">Information Technology Services</a>.</p>
 	</div>
+    </div>
     <div class="bp960-wdn-col-one-third">
         <div class="wdn-footer-module">
             <span role="heading" class="wdn-footer-heading">Related Links</span>
