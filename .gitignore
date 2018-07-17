@@ -1,5 +1,6 @@
 .DS_Store
 /.buildpath
+/.idea
 /.project
 /.settings
 /*.sublime*
