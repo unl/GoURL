@@ -4,20 +4,19 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "37f0a388bdc077c016a0f57de262476d",
-    "content-hash": "e36dca05be6ac815a188ab98fd5c338a",
+    "content-hash": "da98a60450ddfa3f8d366f1c1c5b5ce7",
     "packages": [
         {
             "name": "endroid/qrcode",
             "version": "1.5.7",
             "source": {
                 "type": "git",
-                "url": "https://github.com/endroid/QrCode.git",
+                "url": "https://github.com/endroid/qr-code.git",
                 "reference": "7b32cc5e4bd2f5e5191382926b18001b7cd78695"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/endroid/QrCode/zipball/7b32cc5e4bd2f5e5191382926b18001b7cd78695",
+                "url": "https://api.github.com/repos/endroid/qr-code/zipball/7b32cc5e4bd2f5e5191382926b18001b7cd78695",
                 "reference": "7b32cc5e4bd2f5e5191382926b18001b7cd78695",
                 "shasum": ""
             },
@@ -55,7 +54,8 @@
                 "qr",
                 "qrcode"
             ],
-            "time": "2016-01-01 19:08:49"
+            "abandoned": "endroid/qr-code",
+            "time": "2016-01-01T19:08:49+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -117,7 +117,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-07-15 17:22:37"
+            "time": "2016-07-15T17:22:37+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -168,7 +168,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-05-18 16:56:05"
+            "time": "2016-05-18T16:56:05+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -226,25 +226,25 @@
                 "stream",
                 "uri"
             ],
-            "time": "2016-06-24 23:00:38"
+            "time": "2016-06-24T23:00:38+00:00"
         },
         {
             "name": "jasig/phpcas",
-            "version": "1.3.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Jasig/phpCAS.git",
-                "reference": "8c74d21630f74278270830fdbdb0c1317bce3f0a"
+                "url": "https://github.com/apereo/phpCAS.git",
+                "reference": "7a949dee79aaadc16161d7d4863b5c0871546222"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Jasig/phpCAS/zipball/8c74d21630f74278270830fdbdb0c1317bce3f0a",
-                "reference": "8c74d21630f74278270830fdbdb0c1317bce3f0a",
+                "url": "https://api.github.com/repos/apereo/phpCAS/zipball/7a949dee79aaadc16161d7d4863b5c0871546222",
+                "reference": "7a949dee79aaadc16161d7d4863b5c0871546222",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
-                "php": ">=5.0.0"
+                "php": ">=5.4.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~3.7.10"
@@ -277,10 +277,11 @@
             "description": "Provides a simple API for authenticating users against a CAS server",
             "homepage": "https://wiki.jasig.org/display/CASC/phpCAS",
             "keywords": [
+                "apereo",
                 "cas",
                 "jasig"
             ],
-            "time": "2015-11-16 20:44:36"
+            "time": "2018-03-15T13:17:25+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -328,7 +329,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-04-03 06:00:07"
+            "time": "2016-04-03T06:00:07+00:00"
         },
         {
             "name": "psr/http-message",
@@ -378,7 +379,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "ramsey/uuid",
@@ -458,7 +459,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2016-08-02 18:39:32"
+            "time": "2016-08-02T18:39:32+00:00"
         },
         {
             "name": "theiconic/php-ga-measurement-protocol",
@@ -499,7 +500,7 @@
                 }
             ],
             "description": "Send data to Google Analytics from the server using PHP. This library fully implements GA measurement protocol.",
-            "time": "2016-08-20 11:26:09"
+            "time": "2016-08-20T11:26:09+00:00"
         },
         {
             "name": "unl/php-dwt-parser",
@@ -550,7 +551,7 @@
             ],
             "description": "A PHP library for parsing DWT files and turning them into PHP classes",
             "homepage": "http://wdn.unl.edu/",
-            "time": "2016-01-05 21:35:46"
+            "time": "2016-01-05T21:35:46+00:00"
         },
         {
             "name": "unl/php-wdn-templates",
@@ -603,7 +604,7 @@
             ],
             "description": "A PHP library for rendering the UNL templates",
             "homepage": "http://wdn.unl.edu/",
-            "time": "2015-12-15 00:14:04"
+            "time": "2015-12-15T00:14:04+00:00"
         },
         {
             "name": "zaininnari/html-minifier",
@@ -654,7 +655,7 @@
                 "HTML minify",
                 "php"
             ],
-            "time": "2015-08-18 14:10:55"
+            "time": "2015-08-18T14:10:55+00:00"
         },
         {
             "name": "zendframework/zend-code",
@@ -706,7 +707,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2016-01-05 05:58:37"
+            "time": "2016-01-05T05:58:37+00:00"
         },
         {
             "name": "zendframework/zend-eventmanager",
@@ -752,7 +753,7 @@
                 "eventmanager",
                 "zf2"
             ],
-            "time": "2015-10-06 11:53:40"
+            "time": "2015-10-06T11:53:40+00:00"
         },
         {
             "name": "zendframework/zend-hydrator",
@@ -808,7 +809,7 @@
                 "hydrator",
                 "zf2"
             ],
-            "time": "2015-09-17 14:06:43"
+            "time": "2015-09-17T14:06:43+00:00"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -866,13 +867,15 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2015-10-15 15:57:32"
+            "time": "2015-10-15T15:57:32+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "jasig/phpcas": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
