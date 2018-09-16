@@ -15,7 +15,7 @@ if (defined('GA_ACCOUNT')) {
 session_name('gourl');
 $route = '';
 $pathInfo = $lilurl->getRequestPath();
-phpCAS::client(CAS_VERSION_2_0, 'login.unl.edu', 443, '/cas');
+phpCAS::client(CAS_VERSION_2_0, 'shib.unl.edu', 443, '/idp/profile/cas');
 phpCAS::setCasServerCACert(CAS_CA_FILE);
 phpCAS::handleLogoutRequests();
 
