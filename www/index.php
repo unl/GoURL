@@ -257,18 +257,36 @@ function renderTemplate($file, $params = [])
     return ob_get_clean();
 }
 
-$page = Templates::factory('Local', Templates::VERSION_4_1);
+$page = Templates::factory('App', Templates::VERSION_5);
 
-if (file_exists(__DIR__ . '/wdn/templates_4.1')) {
+if (file_exists(__DIR__ . '/wdn/templates_5.0')) {
     $page->setLocalIncludePath(__DIR__);
 }
 
 $page->affiliation = '';
-$page->titlegraphic = "Go URL";
-$page->pagetitle = '';
+$page->titlegraphic = '<a href="/" class="dcf-txt-h5">Go URL</a>';
 $page->doctitle = 'Go URL, a short URL service | University of Nebraska-Lincoln';
 $page->addStyleDeclaration(file_get_contents(__DIR__ . '/css/go.css'));
 $page->addHeadLink($lilurl->getBaseUrl(), 'home');
+
+$page->addScriptDeclaration("
+require(['jquery'], function($) {
+    $(function() {
+        $('.moreOptions').hide();
+        $('#moreOptions').click(function() {
+            var self = this;
+            $('.moreOptions').slideDown('fast', function() {
+                $(self).remove();
+            });
+            return false;
+        });
+        var \$out = $('.wdn_notice input');
+        \$out.attr('id', 'gourl_out');
+        \$out.attr('title', 'Your Go URL');
+    });
+});
+");
+
 $page->addScriptDeclaration(sprintf(<<<EOD
 require(['wdn'], function(WDN) {
     WDN.setPluginParam('idm', 'login', '%s');
@@ -278,7 +296,7 @@ EOD
 , $lilurl->getBaseUrl('a/login'), $lilurl->getBaseUrl('a/logout')));
 
 
-$page->navlinks = renderTemplate('static/navigation.php');
+$page->appcontrols = renderTemplate('static/navigation.php');
 $page->maincontentarea = renderTemplate('flashBag.php', [
     'msg' => $msg,
     'url' => $url,

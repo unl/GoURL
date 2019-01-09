@@ -1,13 +1,13 @@
 <?php if ($msg) : ?>
-	<div class="wdn-band">
-		<div class="wdn-inner-wrapper wdn-inner-padding-sm">
+	<div class="dcf-bleed">
+		<div class="dcf-wrapper dcf-pt-4">
 			<?php if(!$error) :?>
 				<div class="wdn_notice affirm">
 					<div class="message">
 						<?php if (isset($url)): ?>
-						    <div class="wdn-grid-set">
-								<div class="bp1-wdn-col-three-fourths"><?php echo $msg;?></div>
-					    		<div class="qrCode bp1-wdn-col-one-fourth">
+						    <div class="dcf-grid dcf-col-gap-vw">
+								<div class="dcf-col-100% dcf-col-75%-start@sm"><?php echo $msg;?></div>
+					    		<div class="qrCode dcf-col-100% dcf-col-25%-end@sm">
 						    		<img alt="QR Code for your Go URL" class="frame" id="qrCode" src="<?php echo $lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.qr') ?>" />
 					    		</div>
 				    		</div>
@@ -23,9 +23,9 @@
 					</div>
 				</div>
 			<?php endif;?>
-			<script>
-			WDN.initializePlugin('notice');
-			</script>
+			<?php
+			  $page->addScriptDeclaration("WDN.initializePlugin('notice');");
+			?>
 		</div>
 	</div>
 <?php endif; ?>
