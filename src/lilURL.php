@@ -79,6 +79,9 @@ class lilURL
 
     protected function trackHit($id)
     {
+        // track system redirect
+        $this->incrementRedirectCount($id);
+
         $accountId = $this->getGaAccount();
         if (!$accountId) {
             return false;
@@ -298,6 +301,8 @@ class lilURL
         return false;
     }
 
+
+
     public function getLinkRow($id, $fields = [])
     {
         if (!$fields) {
@@ -480,5 +485,13 @@ class lilURL
     {
         $this->gaClientId = $clientId;
         return $this;
+    }
+
+    private function incrementRedirectCount($id) {
+        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = redirects + 1 where urlID = :urlID';
+        $statement = $this->executeQuery($sql, [
+            ':urlID' => $id,
+        ]);
+        $result = $statement->rowCount();
     }
 }
