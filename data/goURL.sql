@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
   `longURL` varchar(1000) NOT NULL,
   `submitDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createdBy` varchar(25) DEFAULT NULL,
+  `redirects` int(11) unsigned NOT NULL,
   PRIMARY KEY (`urlID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
