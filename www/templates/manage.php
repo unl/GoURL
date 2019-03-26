@@ -4,12 +4,13 @@
       <h2>Your Go URLs</h2>
         <?php $urls = $lilurl->getUserURLs(phpCAS::getUser()); ?>
         <?php if ($urls->columnCount()): ?>
-            <table class="go-urls wdn_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 2, &quot;desc&quot; ]]">
+            <table class="go-urls wdn_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
                 <thead class="unl-bg-lighter-gray">
                     <tr>
                         <th>Short URL</th>
                         <th>Long URL</th>
-                        <th>Created on</th>
+                        <th>Redirects</th>
+                        <th>Created&nbsp;on</th>
                         <th data-searchable="false" data-orderable="false">Actions</th>
                     </tr>
                 </thead>
@@ -24,6 +25,7 @@
                     <tr class="unl-bg-cream">
                         <td data-header="Short URL"><a href="<?php echo $lilurl->getBaseUrl($row['urlID']); ?>"><?php echo $row['urlID']; ?></a></td>
                         <td data-header="Long URL"><a href="<?php echo $escape($row['longURL']) ?>"><?php echo $escape($row['longURL']) ?></a></td>
+                        <td data-header="Redirects"><?php echo $escape($row['redirects']) ?></td>
                         <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
                             <?php if ($rowDateTime): ?>
                                 <?php echo $rowDateTime->format('M j, Y') ?>
@@ -55,7 +57,7 @@ require(['jquery', 'wdn', 'https://cdn.datatables.net/1.10.10/js/jquery.dataTabl
 
     $(function() {
         $('.go-urls').DataTable();
-        $('select').addClass('dcf-input-select dcf-d-inline-block');
+        $('select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10');
     });
 });");
 ?>
