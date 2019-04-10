@@ -301,8 +301,6 @@ class lilURL
         return false;
     }
 
-
-
     public function getLinkRow($id, $fields = [])
     {
         if (!$fields) {
@@ -333,6 +331,22 @@ class lilURL
 
         if ($row) {
             return $row['longURL'];
+        }
+
+        return false;
+    }
+
+    /**
+     * return the URL owner/creator for a given id
+     * @param string $id The id of the URL owner/creator to find.
+     * @return string|false
+     */
+    public function getCreator($id)
+    {
+        $row = $this->getLinkRow($id, ['createdBy']);
+
+        if ($row) {
+            return $row['createdBy'];
         }
 
         return false;
@@ -465,6 +479,14 @@ class lilURL
         return $statement->rowCount();
     }
 
+    public function resetRedirectCount($id) {
+        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = 0 where urlID = :urlID';
+        $statement = $this->executeQuery($sql, [
+            ':urlID' => $id,
+        ]);
+        return $statement->rowCount();
+    }
+
     public function getGaAccount()
     {
         return $this->gaAccount;
@@ -492,6 +514,6 @@ class lilURL
         $statement = $this->executeQuery($sql, [
             ':urlID' => $id,
         ]);
-        $result = $statement->rowCount();
+        return $statement->rowCount();
     }
 }

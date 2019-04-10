@@ -68,6 +68,9 @@ if ('api/' === $pathInfo) {
 } elseif (preg_match('#^([^/]+)\.qr$#', $pathInfo, $matches)) {
     $route = 'qr';
     $id = $matches[1];
+} elseif (preg_match('#^([^/]+)\/reset$#', $pathInfo, $matches)) {
+    $route = 'reset';
+    $id = $matches[1];
 } elseif (preg_match('#^([^/]+)\\+$#', $pathInfo, $matches)) {
     $route = 'linkinfo';
     $id = $matches[1];
@@ -184,6 +187,29 @@ if (!$route || 'api' === $route) {
         header('Location: ' . $lilurl->getBaseUrl('a/links'));
         exit;
     }
+} elseif ('reset' === $route) {
+    if (!phpCAS::checkAuthentication() || !$creator = $lilurl->getCreator($id)) {
+        header('HTTP/1.1 404 Not Found');
+        include __DIR__ . '/templates/404.php';
+        exit;
+    }
+    $user = phpCAS::getUser();
+    if ($creator == phpCAS::getUser()) {
+        $lilurl->resetRedirectCount($id);
+        $_SESSION['gourlFlashBag'] = array(
+            'msg' => '<p class="title">Reset Successful</p><p>Your Go URL redirect count has been reset.</p>',
+            'type' => 'success',
+        );
+    } else {
+        $error = true;
+        $_SESSION['gourlFlashBag'] = array(
+            'msg' => '<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>',
+            'type' => 'error',
+        );
+    }
+
+    header('Location: ' . $lilurl->getBaseUrl() . 'a/links', true, 303);
+    exit;
 } elseif ('qr' === $route) {
     if (!$lilurl->getURL($id)) {
         header('HTTP/1.1 404 Not Found');
