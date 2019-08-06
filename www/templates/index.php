@@ -13,7 +13,7 @@
           <p><a href="#" id="moreOptions">More Options</a></p>
           <div class="moreOptions">
             <fieldset>
-              <legend class="dcf-legend dcf-pt-2 dcf-txt-lg dcf-bb-solid dcf-bb-1">Custom Alias</legend>
+              <legend class="dcf-legend dcf-pt-2 dcf-txt-lg">Custom Alias</legend>
                <?php if (phpCAS::isAuthenticated()) : ?>
                  <ol>
                    <li>
@@ -31,7 +31,7 @@
                <?php endif; ?>
             </fieldset>
             <fieldset>
-              <legend class="dcf-legend dcf-pt-4 dcf-txt-lg dcf-bb-solid dcf-bb-1">Google Analytics Campaign Tagging</legend>
+              <legend class="dcf-legend dcf-pt-4 dcf-txt-lg">Google Analytics Campaign Tagging</legend>
               <p class=" dcf-txt-sm">Add your campaign information here and it will be automatically added to your URL when redirected.</p>
               <ol>
                 <li>
@@ -56,7 +56,7 @@
                 </li>
               </ol>
             </fieldset>
-            <input type="submit" id="submit" name="submit" value="Create URL" />
+            <input class="dcf-mt-6" type="submit" id="submit" name="submit" value="Create URL" />
           </div>
         </form>
     </div>
