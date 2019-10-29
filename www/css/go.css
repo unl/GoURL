@@ -1,3 +1,10 @@
+/* TODO remove once date is made to DCF */
+.dcf-nav-menu-child ul {
+	list-style: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E");
+	margin-bottom: 0;
+	padding-left: 0;
+}
+
 table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc {
 	cursor:pointer;
 }
