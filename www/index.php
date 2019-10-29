@@ -292,6 +292,10 @@ if (file_exists(__DIR__ . '/wdn/templates_5.0')) {
 $page->affiliation = '';
 $page->titlegraphic = '<a href="/" class="dcf-txt-h5">Go URL</a>';
 $page->doctitle = 'Go URL, a short URL service | University of Nebraska-Lincoln';
+
+// Add WDN Deprecated Styles
+$page->head .= '<link rel="preload" href="https://unlcms.unl.edu/wdn/templates_5.0/css/deprecated.css" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"> <noscript><link rel="stylesheet" href="https://unlcms.unl.edu/wdn/templates_5.0/css/deprecated.css"></noscript>';
+
 $page->addStyleDeclaration(file_get_contents(__DIR__ . '/css/go.css'));
 $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 

@@ -4,7 +4,7 @@
       <h2>Your Go URLs</h2>
         <?php $urls = $lilurl->getUserURLs(phpCAS::getUser()); ?>
         <?php if ($urls->columnCount()): ?>
-            <table class="go-urls wdn_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
+            <table class="go-urls dcf-w-100% wdn_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
                 <thead class="unl-bg-lighter-gray">
                     <tr>
                         <th>Short URL</th>
