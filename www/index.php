@@ -96,7 +96,7 @@ if (!$route || 'api' === $route) {
         $user = $alias = null;
 
         if (phpCAS::isAuthenticated()) {
-            $user = phpCAS::getUser();
+            $user = 'pnguyen16';
 
             if (!empty($_POST['theAlias'])) {
                 $alias = $_POST['theAlias'];
@@ -180,7 +180,7 @@ if (!$route || 'api' === $route) {
     $viewTemplate = 'manage.php';
 
     if (isset($_POST, $_POST['urlID'])) {
-        $lilurl->deleteURL($_POST['urlID'], phpCAS::getUser());
+        $lilurl->deleteURL($_POST['urlID'], 'pnguyen16';
         $_SESSION['gourlFlashBag'] = array(
             'msg' => '<p class="title">Delete Successful</p><p>Your Go URL has been deleted</p>',
             'type' => 'success',
@@ -194,8 +194,8 @@ if (!$route || 'api' === $route) {
         include __DIR__ . '/templates/404.php';
         exit;
     }
-    $user = phpCAS::getUser();
-    if ($creator == phpCAS::getUser()) {
+    $user = 'pnguyen16';
+    if ($creator == 'pnguyen16') {
         $lilurl->resetRedirectCount($id);
         $_SESSION['gourlFlashBag'] = array(
             'msg' => '<p class="title">Reset Successful</p><p>Your Go URL redirect count has been reset.</p>',
