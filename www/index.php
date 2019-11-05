@@ -189,7 +189,7 @@ if (!$route || 'api' === $route) {
         exit;
     }
 } elseif ('reset' === $route) {
-    if (!phpCAS::checkAuthentication() || !$creator = $lilurl->getCreator($id)) {
+    if (false|| !$creator = $lilurl->getCreator($id)) {
         header('HTTP/1.1 404 Not Found');
         include __DIR__ . '/templates/404.php';
         exit;
@@ -252,7 +252,7 @@ if (!$route || 'api' === $route) {
 
 // no actions to be done, time to render a UNL page
 
-phpCAS::checkAuthentication();
+// phpCAS::checkAuthentication();
 $error = false;
 $msg = '';
 $url = '';
