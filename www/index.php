@@ -180,7 +180,7 @@ if (!$route || 'api' === $route) {
     $viewTemplate = 'manage.php';
 
     if (isset($_POST, $_POST['urlID'])) {
-        $lilurl->deleteURL($_POST['urlID'], 'pnguyen16';
+        $lilurl->deleteURL($_POST['urlID'], 'pnguyen16');
         $_SESSION['gourlFlashBag'] = array(
             'msg' => '<p class="title">Delete Successful</p><p>Your Go URL has been deleted</p>',
             'type' => 'success',
