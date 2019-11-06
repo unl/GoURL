@@ -17,7 +17,7 @@
                 <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
                 <?php if (phpCAS::isAuthenticated()) : ?>
                 <div class="dcf-form-group">
-                    <label id="theAliasLabel" class="dcf-label" for="theAlias">Alias</label>
+                    <label id="theAliasLabel" for="theAlias">Alias</label>
                     <span>
                         <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" disabled>
                         <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <i>go.unl.edu/admissions</i> <strong>(letters, numbers, underscores and dashes only)</strong></span>
@@ -25,7 +25,7 @@
                 </div>
                 <?php else: ?>
                 <div class="dcf-form-group">
-                    <label id="theAliasLabel" class="dcf-label" for="theAlias">Alias</label>
+                    <label id="theAliasLabel" for="theAlias">Alias</label>
                     <span>
                         <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" disabled>
                         <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">If you would like to control the <abbr class="dcf-txt-sm" title="Uniform Resource Locator">URL</abbr>, then enter the alias you would like to use. Please <a href="./?login">log in</a> to use this feature.</span>
@@ -37,7 +37,7 @@
                 <legend class="dcf-bold dcf-txt-lg">Google Analytics Campaign Tagging</legend>
                 <p class="dcf-txt-sm">Add your campaign information here and it will be automatically added to your URL when redirected.</p>
                 <div class="dcf-form-group">
-                    <label id="gaNameLabel" for="gaName" class="element">Campaign Name <small class="dcf-required">Required</small></label>
+                    <label id="gaNameLabel" for="gaName">Campaign Name <small class="dcf-required">Required</small></label>
                     <span>
                         <input id="gaName" name="gaName" type="text" aria-labelledby="gaNameLabel" aria-describedby="gaNameDesc" required>
                         <span class="dcf-form-help" id="gaNameDesc" tabindex="-1">Product, promo code or slogan</span>
