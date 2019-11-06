@@ -4,7 +4,7 @@
 /.project
 /.settings
 /*.sublime*
-/config.inc.php
-/www/.htaccess*
+# /config.inc.php
+# /www/.htaccess*
 /www/wdn
 /vendor/
