@@ -305,7 +305,7 @@ require(['jquery'], function($) {
         $('#moreOptions').hide();
         $('#showMoreOptions').click(function() {
             var self = this;
-            $('.moreOptions').slideDown('fast', function() {
+            $('#moreOptions').slideDown('fast', function() {
                 $(self).remove();
             });
             return false;
