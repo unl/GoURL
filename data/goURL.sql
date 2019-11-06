@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
   `submitDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createdBy` varchar(25) DEFAULT NULL,
   `redirects` int(11) unsigned NOT NULL,
+  `lastRedirectDate` timestamp NOT NULL,
   PRIMARY KEY (`urlID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -33,5 +34,5 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
 -- Dumping data for table `tblURLs`
 --
 
-INSERT INTO `tblURLs` (`urlID`, `longURL`, `submitDate`, `createdBy`) VALUES
-('0', 'http://admissions.unl.edu/consider', '2009-04-02 11:01:08', NULL);
+INSERT INTO `tblURLs` (`urlID`, `longURL`, `submitDate`, `createdBy`, `lastRedirectDate`) VALUES
+('0', 'http://admissions.unl.edu/consider', '2009-04-02 11:01:08', NULL, '2019-04-02 12:01:012');
