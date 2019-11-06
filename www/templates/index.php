@@ -19,7 +19,7 @@
                 <div class="dcf-form-group">
                     <label id="theAliasLabel" for="theAlias">Alias</label>
                     <span>
-                        <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" disabled>
+                        <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc">
                         <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <i>go.unl.edu/admissions</i> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                     </span>
                 </div>
