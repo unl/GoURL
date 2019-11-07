@@ -15,6 +15,7 @@ if (defined('GA_ACCOUNT')) {
 session_name('gourl');
 $route = '';
 $pathInfo = $lilurl->getRequestPath();
+// var_dump($pathInfo); die();
 phpCAS::client(CAS_VERSION_2_0, 'shib.unl.edu', 443, '/idp/profile/cas');
 //phpCAS::setCasServerCACert(CAS_CA_FILE);
 phpCAS::setNoCasServerValidation();
@@ -42,8 +43,8 @@ if (isset($_GET['logout']) || 'a/logout' === $pathInfo) {
     exit;
 }
 
-//if (isset($_GET['manage']) || in_array($pathInfo, array('a/', 'a/links'))) {
-if (isset($_GET['manage']) || in_array($pathInfo, array('templates/', 'templates/manage'))) {
+if (isset($_GET['manage']) || in_array($pathInfo, array('a/', 'a/links'))) {
+// if (isset($_GET['manage']) || in_array($pathInfo, array('templates/', 'templates/manage.php'))) {
     $route = 'manage';
 
     if (false) {
