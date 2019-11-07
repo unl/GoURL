@@ -12,6 +12,7 @@
                         <th>Redirects</th>
                         <th>Created&nbsp;on</th>
                         <th data-searchable="false" data-orderable="false">Actions</th>
+                        <th>Last Redirect</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,6 +39,12 @@
                                 <input type="hidden" name="urlID" value="<?php echo $row['urlID']; ?>" />
                                 <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure?');">Delete</button>
                             </form>
+                        </td>
+                        <!-- IMPLEMENT THIS -->
+                        <td data-header="Last Redirect"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
+                            <?php if ($rowDateTime): ?>
+                                <?php echo $rowDateTime->format('M j, Y') ?>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endwhile; ?>
