@@ -82,6 +82,9 @@ class lilURL
         // track system redirect
         $this->incrementRedirectCount($id);
 
+        //Updates the time of last redirect
+        $this->updateRedirectTime($id);
+
         $accountId = $this->getGaAccount();
         if (!$accountId) {
             return false;
@@ -516,4 +519,8 @@ class lilURL
         ]);
         return $statement->rowCount();
     }
+    // IMPLEMENT THIS
+    // private function updateRedirectTime($id, $redirectDate){
+    //     $sql = 'UPDATE '.$this->getUrlTable().'
+    // }
 }
