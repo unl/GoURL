@@ -39,21 +39,21 @@
                 <div class="dcf-form-group">
                     <label id="gaNameLabel" for="gaName">Campaign Name <small class="dcf-required">Required</small></label>
                     <span>
-                        <input id="gaName" name="gaName" type="text" aria-labelledby="gaNameLabel" aria-describedby="gaNameDesc" required>
+                        <input id="gaName" name="gaName" type="text" aria-labelledby="gaNameLabel" aria-describedby="gaNameDesc">
                         <span class="dcf-form-help" id="gaNameDesc" tabindex="-1">Product, promo code or slogan</span>
                     </span>
                 </div>
                 <div class="dcf-form-group">
                     <label id="gaMediumLabel" for="gaMedium">Medium <small class="dcf-required">Required</small></label>
                     <span>
-                        <input id="gaMedium" name="gaMedium" type="text" aria-labelledby="gaMediumLabel" aria-describedby="gaMediumDesc" required>
+                        <input id="gaMedium" name="gaMedium" type="text" aria-labelledby="gaMediumLabel" aria-describedby="gaMediumDesc">
                         <span class="dcf-form-help" id="gaMediumDesc" tabindex="-1">Marketing medium: email, web, banner</span>
                     </span>
                 </div>
                 <div class="dcf-form-group">
                     <label id="gaSourceLabel" for="gaSource">Source <small class="dcf-required">Required</small></label>
                     <span>
-                        <input id="gaSource" name="gaSource" type="text" aria-labelledby="gaSourceLabel" aria-describedby="gaSourceDesc" required>
+                        <input id="gaSource" name="gaSource" type="text" aria-labelledby="gaSourceLabel" aria-describedby="gaSourceDesc">
                         <span class="dcf-form-help" id="gaSourceDesc" tabindex="-1">Referrer: Google, Facebook, Twitter</span>
                     </span>
                 </div>
