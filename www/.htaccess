@@ -1,8 +1,8 @@
 RewriteEngine On
-RewriteBase /opt/lampp/htdocs/GoURL/www/
+RewriteBase /GoURL/www/
 
 RewriteRule ^api_create.php$ index.php [L]
 
 DirectoryIndex disabled
 DirectoryIndex index.php
-FallbackResource /opt/htdocs/GoURL/www/index.php
+FallbackResource /GoURL/www/index.php
