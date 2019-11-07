@@ -302,10 +302,10 @@ $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 $page->addScriptDeclaration("
 require(['jquery'], function($) {
     $(function() {
-        $('.moreOptions').hide();
-        $('#moreOptions').click(function() {
+        $('#moreOptions').hide();
+        $('#showMoreOptions').click(function() {
             var self = this;
-            $('.moreOptions').slideDown('fast', function() {
+            $('#moreOptions').slideDown('fast', function() {
                 $(self).remove();
             });
             return false;

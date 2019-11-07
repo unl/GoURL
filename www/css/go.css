@@ -190,11 +190,3 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
 #dcf-main {
 	background-color: #f6f6f5!important;;
 }
-form#shorten-form {
-	width: 75%;
-}
-@media screen and (max-width: 640px) {
-	form#shorten-form {
-		width: 100%;
-	}
-}
