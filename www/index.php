@@ -32,7 +32,7 @@ function sendCORSHeaders() {
 
 if (isset($_GET['login']) || 'a/login' === $pathInfo) {
     phpCAS::forceAuthentication();
-    header('Location: ' . $lilurl->getBaseUrl('a/links'));
+    header('Location: ' . $lilurl->getBaseUrl('templates/manage.php'));
     exit;
 }
 
@@ -42,7 +42,8 @@ if (isset($_GET['logout']) || 'a/logout' === $pathInfo) {
     exit;
 }
 
-if (isset($_GET['manage']) || in_array($pathInfo, array('a/', 'a/links'))) {
+//if (isset($_GET['manage']) || in_array($pathInfo, array('a/', 'a/links'))) {
+if (isset($_GET['manage']) || in_array($pathInfo, array('templates/', 'templates/manage'))) {
     $route = 'manage';
 
     if (false) {
@@ -185,7 +186,8 @@ if (!$route || 'api' === $route) {
             'msg' => '<p class="title">Delete Successful</p><p>Your Go URL has been deleted</p>',
             'type' => 'success',
         );
-        header('Location: ' . $lilurl->getBaseUrl('a/links'));
+        // header('Location: ' . $lilurl->getBaseUrl('a/links'));
+        header('Location: ' . $lilurl->getBaseUrl('templates/manage.php'));
         exit;
     }
 } elseif ('reset' === $route) {
@@ -209,7 +211,7 @@ if (!$route || 'api' === $route) {
         );
     }
 
-    header('Location: ' . $lilurl->getBaseUrl() . 'a/links', true, 303);
+    header('Location: ' . $lilurl->getBaseUrl() . 'templates/manage.php', true, 303);
     exit;
 } elseif ('qr' === $route) {
     if (!$lilurl->getURL($id)) {

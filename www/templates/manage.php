@@ -2,7 +2,7 @@
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
       <h2>Your Go URLs</h2>
-        <?php $urls = $lilurl->getUserURLs(phpCAS::getUser()); ?>
+        <?php $urls = $lilurl->getUserURLs("pnguyen16"); ?>
         <?php if ($urls->columnCount()): ?>
             <table class="go-urls dcf-w-100% wdn_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
                 <thead class="unl-bg-lighter-gray">
@@ -34,7 +34,7 @@
                         <td class="actions">
                             <a class="dcf-btn dcf-btn-secondary go-url-qr" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '.qr') ?>" title="QR Code for <?php echo $row['urlID']; ?> Go URL"><span class="qrImage"></span> QR Code®</a>
                             <a class="dcf-btn dcf-btn-secondary" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '/reset') ?>" title="Reset redirect count for <?php echo $row['urlID']; ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $row['urlID']; ?>\'?');">Reset Redirect Count</a>
-                            <form action="<?php echo $lilurl->getBaseUrl('a/links') ?>" method="post">
+                            <form action="<?php echo $lilurl->getBaseUrl('templates/manage.php') ?>" method="post">
                                 <input type="hidden" name="urlID" value="<?php echo $row['urlID']; ?>" />
                                 <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure?');">Delete</button>
                             </form>

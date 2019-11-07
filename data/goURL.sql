@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
   `urlID` varchar(255) NOT NULL,
   `longURL` varchar(1000) NOT NULL,
   `submitDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `createdBy` varchar(25) DEFAULT NULL,
+  `createdBy` varchar(25) NOT NULL,
   `redirects` int(11) unsigned NOT NULL,
   `lastRedirectDate` timestamp NOT NULL,
   PRIMARY KEY (`urlID`)
@@ -35,4 +35,4 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
 --
 
 INSERT INTO `tblURLs` (`urlID`, `longURL`, `submitDate`, `createdBy`, `lastRedirectDate`) VALUES
-('0', 'http://admissions.unl.edu/consider', '2009-04-02 11:01:08', NULL, '2019-04-02 12:01:012');
+('0', 'http://admissions.unl.edu/consider', '2009-04-02 11:01:08', 'pnguyen16', '2019-04-02 12:01:012');
