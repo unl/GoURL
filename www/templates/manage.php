@@ -10,9 +10,10 @@
                         <th>Short URL</th>
                         <th>Long URL</th>
                         <th>Redirects</th>
+                        <th>Last Redirect</th>
                         <th>Created&nbsp;on</th>
                         <th data-searchable="false" data-orderable="false">Actions</th>
-                        <th>Last Redirect</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,8 @@
                         <td data-header="Short URL"><a href="<?php echo $lilurl->getBaseUrl($row['urlID']); ?>"><?php echo $row['urlID']; ?></a></td>
                         <td data-header="Long URL"><a href="<?php echo $escape($row['longURL']) ?>"><?php echo $escape($row['longURL']) ?></a></td>
                         <td data-header="Redirects"><?php echo $escape($row['redirects']) ?></td>
+                        <!-- IMPLEMENT THIS -->
+                        <td data-header="Last Redirect"><?php echo $escape($row['lastRedirectDate']) ?></td>
                         <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
                             <?php if ($rowDateTime): ?>
                                 <?php echo $rowDateTime->format('M j, Y') ?>
@@ -40,8 +43,7 @@
                                 <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure?');">Delete</button>
                             </form>
                         </td>
-                        <!-- IMPLEMENT THIS -->
-                        <td data-header="Last Redirect"><?php echo $escape($row['lastRedirectDate']) ?></td>
+                        
 
                         </td>
                     </tr>
