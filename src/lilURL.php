@@ -513,14 +513,24 @@ class lilURL
     }
 
     private function incrementRedirectCount($id) {
-        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = redirects + 1 where urlID = :urlID';
+        $sql = 'UPDATE '.$this->getUrlTable().' SET redirects = redirects + 1 WHERE urlID = :urlID';
         $statement = $this->executeQuery($sql, [
             ':urlID' => $id,
         ]);
         return $statement->rowCount();
     }
     // IMPLEMENT THIS
-    // private function updateRedirectTime($id, $redirectDate){
-    //     $sql = 'UPDATE '.$this->getUrlTable().'
-    // }
+    private function updateRedirectTime($id){
+        // date_default_timezone_set('America/Chicago');
+        // $date = date('Y-m-d H:i:s a',time());
+
+        $sql = 'UPDATE '.$this->getUrlTable().' SET lastRedirectDate = now() WHERE urlID = :urlID';
+        $statement = $this->executeQuery($sql, [
+            // ':date' => $date,
+            ':urlID' => $id,
+            
+        ]);
+
+        return $statement->rowCount();
+    }
 }
