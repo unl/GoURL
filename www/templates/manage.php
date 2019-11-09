@@ -20,8 +20,12 @@
                 <?php while ($row = $urls->fetch(PDO::FETCH_ASSOC)): ?>
                     <?php
                     $rowDateTime = null;
+                    $rowLastRedirectDate = null;
                     if ($row['submitDate'] !== '0000-00-00 00:00:00') {
                         $rowDateTime = new DateTime($row['submitDate']);
+                    }
+                    if($row['lastRedirectDate'] !== '0000-00-00 00:00:00'){
+                        $rowLastRedirectDate = new DateTime($row['lastRedirectDate']);
                     }
                     ?>
                     <tr class="unl-bg-cream">
@@ -29,7 +33,11 @@
                         <td data-header="Long URL"><a href="<?php echo $escape($row['longURL']) ?>"><?php echo $escape($row['longURL']) ?></a></td>
                         <td data-header="Redirects"><?php echo $escape($row['redirects']) ?></td>
                         <!-- IMPLEMENT THIS -->
-                        <td data-header="Last Redirect"><?php echo $escape($row['lastRedirectDate']) ?></td>
+                        <td data-header="Last Redirect"<?php if ($rowLastRedirectDate): ?> data-search="<?php echo $rowLastRedirectDate->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowLastRedirectDate->format('U') ?>"<?php endif; ?>>
+                            <?php if ($rowLastRedirectDate): ?>
+                                <?php echo $rowLastRedirectDate->format('M j, Y') ?>
+                            <?php endif; ?>
+                        </td>
                         <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
                             <?php if ($rowDateTime): ?>
                                 <?php echo $rowDateTime->format('M j, Y') ?>
