@@ -44,7 +44,7 @@ while ($row = $result->fetch_assoc()) {
     $total_to_delete++;
     echo "(" . $total_to_delete . ") deleted: " . $row['longURL'] . PHP_EOL;
   }
-  //Impletement deletion of any short URLS which have not been visited in two years
+  //Implement deletion of any short URLS which have not been visited in two years
   $mysqli->query("DELETE FROM tblURLs WHERE DATE_ADD(lastRedirectDate, INTERVAL 2 YEAR) < CURRENT_TIMESTAMP()");
   
 }
