@@ -46,13 +46,10 @@
                         <td class="actions">
                             <a class="dcf-btn dcf-btn-secondary go-url-qr" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '.qr') ?>" title="QR Code for <?php echo $row['urlID']; ?> Go URL"><span class="qrImage"></span> QR Code®</a>
                             <a class="dcf-btn dcf-btn-secondary" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '/reset') ?>" title="Reset redirect count for <?php echo $row['urlID']; ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $row['urlID']; ?>\'?');">Reset Redirect Count</a>
-                            <form action="<?php echo $lilurl->getBaseUrl('templates/manage.php') ?>" method="post">
+                            <form action="<?php echo $lilurl->getBaseUrl('a/links') ?>" method="post">
                                 <input type="hidden" name="urlID" value="<?php echo $row['urlID']; ?>" />
                                 <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure?');">Delete</button>
                             </form>
-                        </td>
-                        
-
                         </td>
                     </tr>
                 <?php endwhile; ?>

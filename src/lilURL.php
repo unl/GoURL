@@ -519,14 +519,10 @@ class lilURL
         ]);
         return $statement->rowCount();
     }
-    // IMPLEMENT THIS
-    private function updateRedirectTime($id){
-        // date_default_timezone_set('America/Chicago');
-        // $date = date('Y-m-d H:i:s a',time());
 
+    private function updateRedirectTime($id){
         $sql = 'UPDATE '.$this->getUrlTable().' SET lastRedirectDate = now() WHERE urlID = :urlID';
         $statement = $this->executeQuery($sql, [
-            // ':date' => $date,
             ':urlID' => $id,
             
         ]);

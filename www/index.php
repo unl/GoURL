@@ -33,7 +33,7 @@ function sendCORSHeaders() {
 
 if (isset($_GET['login']) || 'a/login' === $pathInfo) {
     phpCAS::forceAuthentication();
-    header('Location: ' . $lilurl->getBaseUrl('templates/manage.php'));
+    header('Location: ' . $lilurl->getBaseUrl('a/links'));
     exit;
 }
 
@@ -44,7 +44,6 @@ if (isset($_GET['logout']) || 'a/logout' === $pathInfo) {
 }
 
 if (isset($_GET['manage']) || in_array($pathInfo, array('a/', 'a/links'))) {
-// if (isset($_GET['manage']) || in_array($pathInfo, array('templates/', 'templates/manage.php'))) {
     $route = 'manage';
 
     if (false) {
