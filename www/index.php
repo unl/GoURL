@@ -211,7 +211,7 @@ if (!$route || 'api' === $route) {
         );
     }
 
-    header('Location: ' . $lilurl->getBaseUrl() . 'templates/manage.php', true, 303);
+    header('Location: ' . $lilurl->getBaseUrl() . 'a/links', true, 303);
     exit;
 } elseif ('qr' === $route) {
     if (!$lilurl->getURL($id)) {
