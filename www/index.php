@@ -15,7 +15,6 @@ if (defined('GA_ACCOUNT')) {
 session_name('gourl');
 $route = '';
 $pathInfo = $lilurl->getRequestPath();
-// var_dump($pathInfo); die();
 phpCAS::client(CAS_VERSION_2_0, 'shib.unl.edu', 443, '/idp/profile/cas');
 //phpCAS::setCasServerCACert(CAS_CA_FILE);
 phpCAS::setNoCasServerValidation();
@@ -186,8 +185,7 @@ if (!$route || 'api' === $route) {
             'msg' => '<p class="title">Delete Successful</p><p>Your Go URL has been deleted</p>',
             'type' => 'success',
         );
-        // header('Location: ' . $lilurl->getBaseUrl('a/links'));
-        header('Location: ' . $lilurl->getBaseUrl('templates/manage.php'));
+        header('Location: ' . $lilurl->getBaseUrl('a/links'));
         exit;
     }
 } elseif ('reset' === $route) {
