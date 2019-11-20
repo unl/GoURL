@@ -24,8 +24,10 @@
                     if ($row['submitDate'] !== '0000-00-00 00:00:00') {
                         $rowDateTime = new DateTime($row['submitDate']);
                     }
-                    if($row['lastRedirectDate'] !== '0000-00-00 00:00:00'){
+                    if($row['lastRedirectDate'] !== NULL){
                         $rowLastRedirectDate = new DateTime($row['lastRedirectDate']);
+                    }elseif($row['lastRedirectDate'] === NULL){
+                        $rowLastRedirectDate = NULL;
                     }
                     ?>
                     <tr class="unl-bg-cream">
@@ -36,6 +38,8 @@
                         <td data-header="Last Redirect"<?php if ($rowLastRedirectDate): ?> data-search="<?php echo $rowLastRedirectDate->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowLastRedirectDate->format('U') ?>"<?php endif; ?>>
                             <?php if ($rowLastRedirectDate): ?>
                                 <?php echo $rowLastRedirectDate->format('M j, Y') ?>
+                            <?php elseif ($rowLastRedirectDate === NULL): ?>
+                                <?php echo "N/A"?>
                             <?php endif; ?>
                         </td>
                         <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
