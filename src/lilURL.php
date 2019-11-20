@@ -487,6 +487,12 @@ class lilURL
         $statement = $this->executeQuery($sql, [
             ':urlID' => $id,
         ]);
+
+        $sql = 'UPDATE '.$this->getUrlTable().' set lastRedirectDate = NULL where urlID = :urlID';
+        $statement = $this->executeQuery($sql, [
+            ':urlID' => $id,
+        ]);
+         
         return $statement->rowCount();
     }
 
