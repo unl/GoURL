@@ -11,8 +11,7 @@
                 <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
                 <?php if (phpCAS::isAuthenticated()) : ?>
                 <div class="dcf-form-group">
-                    <label id="theAliasLabel" for="theAlias">Alias</label>
-                    <span>
+                    <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>                    <span>
                         <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc">
                         <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <i>go.unl.edu/admissions</i> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                     </span>
@@ -31,7 +30,7 @@
                 <legend class="dcf-bold dcf-txt-lg">Google Analytics Campaign Tagging</legend>
                 <div class = "dcf-input-checkbox">
                     <input id="with-ga-campaign" name="with-ga-campaign" type="checkbox" value="0" aria-labelledby="with-ga-campaign-label">
-                    <label for="with-ga-campaign" id="with-ga-campaign-label">Use Google Analytics Campaign with URL</label>
+                    <label for="with-ga-campaign" id="with-ga-campaign-label">Use Google Analytics Campaign with URL <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
                 </div>
                 <div id="ga-tagging" style="display:none">
                     <p class="dcf-txt-sm">Add your campaign information here and it will be automatically added to your URL when redirected.</p>
@@ -111,7 +110,10 @@
                 gaRequiredVars[i].disabled = true;
                 gaRequiredVars[i].removeAttribute('oninvalid');
                 gaRequiredVars[i].removeAttribute('oninput');
+                gaRequiredVars[i].value = '';
             }
+            document.getElementById('gaTerm').value = '';
+            document.getElementById('gaContent').value = '';
         }
     });
 </script>
