@@ -304,29 +304,6 @@ $page->head .= '<link rel="preload" href="https://unlcms.unl.edu/wdn/templates_5
 $page->addStyleDeclaration(file_get_contents(__DIR__ . '/css/go.css'));
 $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 
-$page->addScriptDeclaration("
-require(['jquery'], function($) {
-    $(function() {
-        $('#moreOptions').hide();
-        $('#showMoreOptions').click(function() {
-//          $('.with-ga-campaign').prop('checked', false);
-            var self = this;
-            $('#moreOptions').slideToggle('fast', function() {
-                if ($('#moreOptions').is(':visible')) {
-                    $(self).find('span').text('Show Less Options');
-                } else {
-                    $(self).find('span').text('Show More Options');
-                }
-            });
-            return false;
-        });
-        var \$out = $('.wdn_notice input');
-        \$out.attr('id', 'gourl_out');
-        \$out.attr('title', 'Your Go URL');
-    });
-});
-");
-
 $page->addScriptDeclaration(sprintf(<<<EOD
 require(['wdn'], function(WDN) {
     WDN.setPluginParam('idm', 'login', '%s');

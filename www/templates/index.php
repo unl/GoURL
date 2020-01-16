@@ -4,15 +4,9 @@
             <label for="theURL">Enter the <abbr class="dcf-txt-sm" title="Uniform Resource Locator">URL</abbr> that you want to shorten <small class="dcf-required">Required</small></label>
             <div class="dcf-input-group">
               <input id="theURL" name="theURL" type="text" value="<?php echo (isset($_POST['theURL']))?htmlentities($_POST['theURL'], ENT_QUOTES):'';?>" required oninvalid="this.setCustomValidity('Please provide a URL to redirect to.')" oninput="this.setCustomValidity('')">
-              <button class="dcf-btn dcf-btn-primary" type="submit">Shorten</button>
             </div>
         </div>
-        <button class="dcf-btn dcf-btn-secondary dcf-mb-6" id="showMoreOptions"><span>Show More Options</span>
-            <svg class="dcf-ml-1 dcf-h-3 dcf-w-3 dcf-fill-current" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 24 24">
-                <path d="M23.9 2.3c-.1-.2-.2-.3-.4-.3H.5c-.2 0-.3.1-.4.3-.1.1-.1.3 0 .5l11.5 19c.1.1.3.2.4.2s.3-.1.4-.2l11.5-19c.1-.2.1-.4 0-.5z"></path>
-            </svg>
-        </button>
-        <div id="moreOptions" style="display: none;">
+        <div id="moreOptions" style="display:block;">
             <fieldset>
                 <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
                 <?php if (phpCAS::isAuthenticated()) : ?>
@@ -110,7 +104,7 @@
                     gaRequiredVars[i].setAttribute('oninput', 'this.setCustomValidity(\'\')');
                 }
             }
-        } else {
+        } else{
             gaSection.style.display = 'none';
             for (var i=0; i<gaRequiredVars.length; i++) {
                 gaRequiredVars[i].required = false;
