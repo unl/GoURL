@@ -6,7 +6,7 @@
               <input id="theURL" name="theURL" type="text" value="<?php echo (isset($_POST['theURL']))?htmlentities($_POST['theURL'], ENT_QUOTES):'';?>" required oninvalid="this.setCustomValidity('Please provide a URL to redirect to.')" oninput="this.setCustomValidity('')">
             </div>
         </div>
-        <div id="moreOptions" style="display:block;">
+        <div>
             <fieldset>
                 <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
                 <?php if (phpCAS::isAuthenticated()) : ?>
@@ -28,7 +28,7 @@
             </fieldset>
             <fieldset>
                 <legend class="dcf-bold dcf-txt-lg">Google Analytics Campaign Tagging</legend>
-                <div class = "dcf-input-checkbox">
+                <div class="dcf-input-checkbox">
                     <input id="with-ga-campaign" name="with-ga-campaign" type="checkbox" value="0" aria-labelledby="with-ga-campaign-label">
                     <label for="with-ga-campaign" id="with-ga-campaign-label">Use Google Analytics Campaign with URL <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
                 </div>
@@ -82,7 +82,7 @@
     var gaSection = document.getElementById('ga-tagging');
     var gaRequiredVars = document.getElementsByClassName('ga-required');
 
-    withGACheckbox.addEventListener('click', function(){
+    withGACheckbox.addEventListener('click', function() {
         if (this.checked) {
             gaSection.style.display = 'block';
             for (var i=0; i<gaRequiredVars.length; i++) {

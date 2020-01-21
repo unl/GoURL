@@ -246,7 +246,7 @@ class lilURL
         return true;
     }
 
-    protected function validateGAData($utmData){
+    protected function validateGAData($utmData) {
         return(!empty($utmData['utm_source']) && !empty($utmData['utm_campaign']) && !empty($utmData['utm_medium']));
     }
 
