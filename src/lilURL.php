@@ -135,7 +135,7 @@ class lilURL
             /*
              * Verify GA data
              */
-            if(!$this->validateGAData($utmData)){
+            if (!$this->validateGAData($utmData)) {
                 throw new Exception('Invalid Google Campaign Data', self::ERR_INVALID_GA_CAMPAIGN);
             }
 
