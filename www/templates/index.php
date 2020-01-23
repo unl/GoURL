@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </fieldset>
-            <input class="dcf-mt-6" id="submit" name="submit" type="submit" value="Create URL">
+            <input class="dcf-mt-6 dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit" value="Create URL">
         </div>
     </form>
 </div>
