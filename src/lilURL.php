@@ -14,6 +14,7 @@ class lilURL
     const ERR_USED             = -4;
     const ERR_INVALID_ALIAS    = -5;
     const ERR_ALIAS_EXISTS     = -6;
+    const ERR_INVALID_GA_CAMPAIGN = -7;
 
     protected $db;
 
@@ -122,14 +123,23 @@ class lilURL
         $longurl = trim($_POST['theURL']);
 
         //Start by gathering all the GA items
-        if (!empty($_POST['gaSource'])) {
-            $gaTags = http_build_query([
+        if (isset($_POST['with-ga-campaign'])) {
+            $utmData =[
                 'utm_source' => $_POST['gaSource'],
                 'utm_medium' => $_POST['gaMedium'],
                 'utm_term' => $_POST['gaTerm'],
                 'utm_content' => $_POST['gaContent'],
                 'utm_campaign' => $_POST['gaName'],
-            ]);
+            ];
+
+            /*
+             * Verify GA data
+             */
+            if (!$this->validateGAData($utmData)) {
+                throw new Exception('Invalid Google Campaign Data', self::ERR_INVALID_GA_CAMPAIGN);
+            }
+
+            $gaTags = http_build_query($utmData);
 
             $longurl .= (strpos($_POST['theURL'], '?') !== false) ? '&' : '?';
             $longurl .= $gaTags;
@@ -234,6 +244,10 @@ class lilURL
         }
 
         return true;
+    }
+
+    protected function validateGAData($utmData) {
+        return(!empty($utmData['utm_source']) && !empty($utmData['utm_campaign']) && !empty($utmData['utm_medium']));
     }
 
     /**

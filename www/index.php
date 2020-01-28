@@ -136,6 +136,11 @@ if (!$route || 'api' === $route) {
                         'msg' => '<p class="title">Whoops, This alias is already in use.</p><p>Please use a different alias.</p>',
                     );
                     break;
+                case lilurl::ERR_INVALID_GA_CAMPAIGN:
+                    $_SESSION['gourlFlashBag'] = array(
+                        'msg' => '<p class="title">Whoops, Invalid Google Campaign.</p><p>Please provide all required campaign information.</p>',
+                    );
+                    break;
                 default:
                     $_SESSION['gourlFlashBag'] = array(
                         'msg' => '<p class="title">Whoops, Something Broke</p><p>There was an error submitting your url. Check your steps.</p>',
@@ -301,21 +306,14 @@ $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 
 $page->addScriptDeclaration("
 require(['jquery'], function($) {
-    $(function() {
-        $('#moreOptions').hide();
-        $('#showMoreOptions').click(function() {
-            var self = this;
-            $('#moreOptions').slideDown('fast', function() {
-                $(self).remove();
-            });
-            return false;
-        });
         var \$out = $('.wdn_notice input');
         \$out.attr('id', 'gourl_out');
         \$out.attr('title', 'Your Go URL');
     });
 });
 ");
+
+
 
 $page->addScriptDeclaration(sprintf(<<<EOD
 require(['wdn'], function(WDN) {
