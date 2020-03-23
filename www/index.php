@@ -288,9 +288,9 @@ function renderTemplate($file, $params = [])
     return ob_get_clean();
 }
 
-$page = Templates::factory('App', Templates::VERSION_5);
+$page = Templates::factory('AppLocal', Templates::VERSION_5_1);
 
-if (file_exists(__DIR__ . '/wdn/templates_5.0')) {
+if (file_exists(__DIR__ . '/wdn/templates_5.1')) {
     $page->setLocalIncludePath(__DIR__);
 }
 
@@ -299,7 +299,7 @@ $page->titlegraphic = '<a href="/" class="dcf-txt-h5">Go URL</a>';
 $page->doctitle = 'Go URL, a short URL service | University of Nebraska-Lincoln';
 
 // Add WDN Deprecated Styles
-$page->head .= '<link rel="preload" href="https://unlcms.unl.edu/wdn/templates_5.0/css/deprecated.css" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"> <noscript><link rel="stylesheet" href="https://unlcms.unl.edu/wdn/templates_5.0/css/deprecated.css"></noscript>';
+$page->head .= '<link rel="preload" href="/wdn/templates_5.1/css/deprecated.css" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"> <noscript><link rel="stylesheet" href="/wdn/templates_5.1/css/deprecated.css"></noscript>';
 
 $page->addStyleDeclaration(file_get_contents(__DIR__ . '/css/go.css'));
 $page->addHeadLink($lilurl->getBaseUrl(), 'home');
@@ -312,8 +312,6 @@ require(['jquery'], function($) {
     });
 });
 ");
-
-
 
 $page->addScriptDeclaration(sprintf(<<<EOD
 require(['wdn'], function(WDN) {

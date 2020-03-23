@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c3dc638a78e152bd702f99644afc27e",
+    "content-hash": "3b7c3792192836572c1df7de88e7237e",
     "packages": [
         {
             "name": "endroid/qrcode",
@@ -728,16 +728,16 @@
         },
         {
             "name": "unl/php-wdn-templates",
-            "version": "v5.0.0",
+            "version": "v5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/unl/phpunltemplates.git",
-                "reference": "2928e588f409c2628bfeccb5293ab0dd34a506c5"
+                "reference": "44e42acb1252e41569810660998adb00d108aa06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/unl/phpunltemplates/zipball/2928e588f409c2628bfeccb5293ab0dd34a506c5",
-                "reference": "2928e588f409c2628bfeccb5293ab0dd34a506c5",
+                "url": "https://api.github.com/repos/unl/phpunltemplates/zipball/44e42acb1252e41569810660998adb00d108aa06",
+                "reference": "44e42acb1252e41569810660998adb00d108aa06",
                 "shasum": ""
             },
             "require": {
@@ -745,8 +745,7 @@
                 "unl/php-dwt-parser": "1.0.*"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "satooshi/php-coveralls": "^0.7.0"
+                "phpunit/phpunit": "~5.0"
             },
             "type": "library",
             "autoload": {
@@ -760,9 +759,14 @@
             ],
             "authors": [
                 {
+                    "name": "Jeff Sturek (jsturek)",
+                    "email": "jsturek8@unl.edu",
+                    "role": "Developer"
+                },
+                {
                     "name": "Kevin Abel (kabel)",
                     "email": "kabel2@unl.edu",
-                    "role": "Developer"
+                    "role": "Retired Developer"
                 },
                 {
                     "name": "Brett Bieber (saltybeagle)",
@@ -777,7 +781,7 @@
             ],
             "description": "A PHP library for rendering the UNL templates",
             "homepage": "http://wdn.unl.edu/",
-            "time": "2018-12-12T16:32:30+00:00"
+            "time": "2020-03-11T16:55:17+00:00"
         },
         {
             "name": "zaininnari/html-minifier",
@@ -880,6 +884,7 @@
                 "code",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-code",
             "time": "2016-04-20T17:26:42+00:00"
         },
         {
@@ -934,6 +939,7 @@
                 "events",
                 "zf2"
             ],
+            "abandoned": "laminas/laminas-eventmanager",
             "time": "2018-04-25T15:33:34+00:00"
         }
     ],
