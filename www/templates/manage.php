@@ -1,4 +1,8 @@
-<?php $page->doctitle = 'Your URLs - Go URL | University of Nebraska&ndash;Lincoln'; ?>
+<?php
+    $page->doctitle = 'Your URLs - Go URL | University of Nebraska&ndash;Lincoln';
+    $qrModals = '';
+?>
+
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
       <h2>Your Go URLs</h2>
@@ -21,9 +25,11 @@
                     if ($row['submitDate'] !== '0000-00-00 00:00:00') {
                         $rowDateTime = new DateTime($row['submitDate']);
                     }
+                    // Generate QR modal for each GoURL
+                    $qrModals .= generateQRModal($row['urlID'], $lilurl->getBaseUrl($row['urlID']). '.qr');
                     ?>
                     <tr class="unl-bg-cream">
-                        <td data-header="Short URL"><a href="<?php echo $lilurl->getBaseUrl($row['urlID']); ?>"><?php echo $row['urlID']; ?></a></td>
+                        <td data-header="Short URL"><a href="<?php echo $row['urlID']; ?>"><?php echo $row['urlID']; ?></a></td>
                         <td data-header="Long URL"><a href="<?php echo $escape($row['longURL']) ?>"><?php echo $escape($row['longURL']) ?></a></td>
                         <td data-header="Redirects"><?php echo $escape($row['redirects']) ?></td>
                         <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
@@ -32,7 +38,7 @@
                             <?php endif; ?>
                         </td>
                         <td class="actions">
-                            <a class="dcf-btn dcf-btn-secondary go-url-qr" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '.qr') ?>" title="QR Code for <?php echo $row['urlID']; ?> Go URL"><span class="qrImage"></span> QR Code®</a>
+                            <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal" data-toggles-modal="qr-modal-<?php echo $row['urlID']; ?>" type="button" title="QR Code for <?php echo $row['urlID']; ?> Go URL"><span class="qrImage"></span> QR Code®</button>
                             <a class="dcf-btn dcf-btn-secondary" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '/reset') ?>" title="Reset redirect count for <?php echo $row['urlID']; ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $row['urlID']; ?>\'?');">Reset Redirect Count</a>
                             <form action="<?php echo $lilurl->getBaseUrl('a/links') ?>" method="post">
                                 <input type="hidden" name="urlID" value="<?php echo $row['urlID']; ?>" />
@@ -50,15 +56,29 @@
 </div>
 
 <?php
-$page->addScriptDeclaration("
-require(['jquery', 'wdn', 'https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js'], function($, WDN) {
-    WDN.initializePlugin('modal', [function() {
-        $('.go-url-qr').colorbox({photo:true, maxWidth: \"75%\"});
-    }]);
+// Display QR Modal Markup
+echo $qrModals;
 
+$page->addScriptDeclaration("
+require(['jquery', 'https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js'], function($) {
     $(function() {
         $('.go-urls').DataTable();
         $('select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10');
     });
 });");
+
+function generateQRModal($id, $src) {
+    $modalId = "qr-modal-" . $id;
+    return "<div class=\"dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
+    <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
+        <div class=\"dcf-modal-header dcf-wrapper dcf-pt-8 dcf-sticky dcf-pin-top\">
+            <h3 id=\"" . $modalId . "-heading\">QR Code for " . $id . " Go URL</h3>
+            <button class=\"dcf-btn-close-modal dcf-btn dcf-btn-tertiary dcf-absolute dcf-pin-top dcf-pin-right dcf-z-1\" type=\"button\" aria-label=\"Close\">Close</button>
+        </div>
+        <div class=\"dcf-modal-content dcf-wrapper dcf-pb-8\">
+            <img style=\"max-height: 60vh;\" src=\"" . $src . "\" alt=\"QR Code for " . $id ." Go URL\">
+        </div>
+    </div>
+</div>";
+}
 ?>
