@@ -30,8 +30,8 @@
                     ?>
                     <tr class="unl-bg-cream">
                         <td data-header="Short URL"><a href="<?php echo $row['urlID']; ?>"><?php echo $row['urlID']; ?></a></td>
-                        <td data-header="Long URL"><a href="<?php echo $escape($row['longURL']) ?>"><?php echo $escape($row['longURL']) ?></a></td>
-                        <td data-header="Redirects"><?php echo $escape($row['redirects']) ?></td>
+                        <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($row['longURL']) ?>"><?php echo $lilurl->escapeURL($row['longURL']) ?></a></td>
+                        <td data-header="Redirects"><?php echo $row['redirects'] ?></td>
                         <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
                             <?php if ($rowDateTime): ?>
                                 <?php echo $rowDateTime->format('M j, Y') ?>

@@ -214,6 +214,10 @@ class lilURL
         return $this->getRootPath() . '/' . $path;
     }
 
+    public function escapeURL($url) {
+        return htmlentities($url, ENT_COMPAT|ENT_HTML5);
+    }
+
     public function getRequestPath()
     {
         $requestURI = $_SERVER['REQUEST_URI'];

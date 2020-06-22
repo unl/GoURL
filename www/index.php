@@ -280,9 +280,6 @@ function renderTemplate($file, $params = [])
     global $lilurl, $page;
     extract($params);
     unset($params);
-    $escape = function($value) {
-        return htmlentities($value, ENT_COMPAT|ENT_HTML5);
-    };
     ob_start();
     include __DIR__ .'/templates/' . $file;
     return ob_get_clean();
