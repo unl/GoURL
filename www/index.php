@@ -298,9 +298,6 @@ $page->doctitle = 'Go URL, a short URL service | University of Nebraska-Lincoln'
 // Add Jquery to head
 $page->addScript($lilurl->getBaseUrl('js/jquery-3.5.1.min.js'), NULL, TRUE);
 
-// Add WDN Deprecated Styles
-$page->head .= '<link rel="preload" href="/wdn/templates_5.1/css/deprecated.css" as="style" onload="this.onload=null;this.rel=\'stylesheet\'"> <noscript><link rel="stylesheet" href="/wdn/templates_5.1/css/deprecated.css"></noscript>';
-
 $page->addStyleDeclaration(file_get_contents(__DIR__ . '/css/go.css'));
 $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 
