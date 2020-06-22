@@ -306,10 +306,9 @@ $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 
 $page->addScriptDeclaration("
 require(['jquery'], function($) {
-        var \$out = $('.wdn_notice input');
-        \$out.attr('id', 'gourl_out');
-        \$out.attr('title', 'Your Go URL');
-    });
+    var \$out = $('.wdn_notice input');
+    \$out.attr('id', 'gourl_out');
+    \$out.attr('title', 'Your Go URL');
 });
 ");
 
