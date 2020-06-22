@@ -1,14 +1,17 @@
 <?php
-    $page->doctitle = 'Your URLs - Go URL | University of Nebraska&ndash;Lincoln';
     $qrModals = '';
+    // Load JQuery dataTables for filtering GoURLs
+    $page->addScript('https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js', NULL, TRUE);
+    //$page->addStyleSheet('https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css');
+    $page->doctitle = 'Your URLs - Go URL | University of Nebraska&ndash;Lincoln';
 ?>
 
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
-      <h2>Your Go URLs</h2>
+      <h2 class="dcf-txt-h3">Your Go URLs</h2>
         <?php $urls = $lilurl->getUserURLs(phpCAS::getUser()); ?>
         <?php if ($urls->columnCount()): ?>
-            <table class="go-urls dcf-w-100% wdn_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
+            <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
                 <thead class="unl-bg-lighter-gray">
                     <tr>
                         <th>Short URL</th>
@@ -38,11 +41,11 @@
                             <?php endif; ?>
                         </td>
                         <td class="actions">
-                            <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal" data-toggles-modal="qr-modal-<?php echo $row['urlID']; ?>" type="button" title="QR Code for <?php echo $row['urlID']; ?> Go URL"><span class="qrImage"></span> QR Code®</button>
-                            <a class="dcf-btn dcf-btn-secondary" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '/reset') ?>" title="Reset redirect count for <?php echo $row['urlID']; ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $row['urlID']; ?>\'?');">Reset Redirect Count</a>
+                            <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal dcf-mt-1" data-toggles-modal="qr-modal-<?php echo $row['urlID']; ?>" type="button" title="QR Code for <?php echo $row['urlID']; ?> Go URL"><span class="qrImage"></span> QR Code®</button>
+                            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '/reset') ?>" title="Reset redirect count for <?php echo $row['urlID']; ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $row['urlID']; ?>\'?');">Reset Redirect Count</a>
                             <form action="<?php echo $lilurl->getBaseUrl('a/links') ?>" method="post">
                                 <input type="hidden" name="urlID" value="<?php echo $row['urlID']; ?>" />
-                                <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure?');">Delete</button>
+                                <button class="dcf-btn dcf-btn-primary dcf-mt-1" type="submit" onclick="return confirm('Are you for sure?');">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -60,11 +63,10 @@
 echo $qrModals;
 
 $page->addScriptDeclaration("
-require(['jquery', 'https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js'], function($) {
-    $(function() {
-        $('.go-urls').DataTable();
-        $('select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10');
-    });
+$(function() {
+    $.noConflict();
+    $('#go-urls').DataTable();
+    $('select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
 });");
 
 function generateQRModal($id, $src) {
