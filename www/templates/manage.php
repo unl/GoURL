@@ -1,7 +1,7 @@
 <?php
     $qrModals = '';
     // Load JQuery dataTables for filtering GoURLs
-    $page->addScript('https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js', NULL, TRUE);
+    $page->addScript($lilurl->getBaseUrl('js/datatables-1.10.21.min.js'), NULL, TRUE);
     //$page->addStyleSheet('https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css');
     $page->doctitle = 'Your URLs - Go URL | University of Nebraska&ndash;Lincoln';
 ?>
