@@ -453,6 +453,16 @@ class lilURL
     }
 
     /**
+     * Get the list of allowed domains.
+     *
+     * @return void
+     */
+    public function getAllowedDomains()
+    {
+       return $this->allowed_domains;
+    }
+
+    /**
      * Returns a random ID
      *
      * @return string

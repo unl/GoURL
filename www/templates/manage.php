@@ -8,7 +8,7 @@
 
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
-      <h2 class="dcf-txt-h3">Your Go URLs</h2>
+      <h2 class="dcf-txt-h4">Your Go URLs</h2>
         <?php $urls = $lilurl->getUserURLs(phpCAS::getUser()); ?>
         <?php if ($urls->columnCount()): ?>
             <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
@@ -55,6 +55,9 @@
         <?php else: ?>
             <p>You haven't created any Go URLs, yet.</p>
         <?php endif;?>
+        <div class="dcf-mt-6 dcf-mb-6">
+            <a class="dcf-btn dcf-btn-primary" href="<?php echo $lilurl->getBaseUrl(); ?>">Add URL</a>
+        </div>
     </div>
 </div>
 
