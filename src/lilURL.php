@@ -15,6 +15,7 @@ class lilURL
     const ERR_INVALID_ALIAS    = -5;
     const ERR_ALIAS_EXISTS     = -6;
     const ERR_INVALID_GA_CAMPAIGN = -7;
+    const ERR_INVALID_URL = -8;
 
     protected $db;
 
@@ -153,7 +154,7 @@ class lilURL
 
         // Check to see if the URL is valid
         if (!$this->isSafeURL($longurl)) {
-            throw new Exception('Invalid URL.');
+            throw new Exception('Invalid URL.', self::ERR_INVALID_URL);
         }
 
         // Check to see if user domain is valid

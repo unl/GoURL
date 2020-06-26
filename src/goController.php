@@ -145,6 +145,11 @@ class GoController
                                 'msg' => '<p class="title">Whoops, Invalid Google Campaign.</p><p>Please provide all required campaign information.</p>',
                             );
                             break;
+                        case lilurl::ERR_INVALID_URL:
+                            $_SESSION['gourlFlashBag'] = array(
+                                'msg' => '<p class="title">Whoops, Invalid URL.</p><p>Please verify the URL is correct.</p>',
+                            );
+                            break;
                         default:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, Something Broke</p><p>There was an error submitting your url. Check your steps.</p>',
