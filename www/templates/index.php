@@ -13,7 +13,7 @@
                     <div class="dcf-form-group">
                         <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label><span>
                             <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc">
-                            <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <i>go.unl.edu/admissions</i> <strong>(letters, numbers, underscores and dashes only)</strong></span>
+                            <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <i><?php echo $_SERVER['HTTP_HOST']; ?>/admissions</i> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                         </span>
                     </div>
                 </fieldset>

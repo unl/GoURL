@@ -243,7 +243,7 @@ class lilURL
             return false;
         }
 
-        if (strpos($url,'http://go.unl.edu/') !== false) {
+        if (strpos($url, $_SERVER['HTTP_HOST']) !== false) {
             return false;
         }
 
