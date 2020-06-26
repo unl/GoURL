@@ -69,7 +69,11 @@ $page->addScriptDeclaration("
 $(function() {
     $.noConflict();
     $('#go-urls').DataTable();
-    $('select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
+    $('.dataTables_length label').addClass('dcf-label');
+    $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
+    $('.dataTables_filter label').addClass('dcf-label');
+    $('.dataTables_filter label input').addClass('dcf-d-inline dcf-input-text dcf-txt-sm');
+    $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
 });");
 
 function generateQRModal($id, $src) {
