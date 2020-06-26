@@ -18,6 +18,9 @@ require_once 'goAuthCAS.php';
 $useWDNLogin = TRUE;
 $auth = new GoAuthCAS('2.0', 'shib.unl.edu', 443, '/idp/profile/cas', CAS_CA_FILE);
 
+// Set QR icon for center of QR code (expects 235x235 png), defaults to blank icon
+$qrIconPng = __DIR__ . '/data/qr/icons/unl_qr_235.png';
+
 // allow urls that begin with these strings
 $allowed_protocols = array('http://', 'https://');
 

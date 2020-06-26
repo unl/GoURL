@@ -11,7 +11,12 @@ if (defined('GA_ACCOUNT')) {
     $lilurl->setGaAccount(GA_ACCOUNT);
 }
 
-$controller = new GoController($lilurl, $auth);
+// Use QR Code Icon PNG set, otherwise null it
+if (!isset($qrIconPng) || empty($qrIconPng)) {
+    $qrIconPng = NULL;
+}
+
+$controller = new GoController($lilurl, $auth, $qrIconPng);
 
 // do predispatch actions
 $controller->preDispatch();

@@ -4,6 +4,7 @@ use Ramsey\Uuid\Uuid;
 
 class GoController
 {
+    CONST DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
     private $auth;
     private $lilurl;
     private $route;
@@ -11,10 +12,12 @@ class GoController
     private $pathInfo;
     private $viewTemplate;
     private $viewParams;
+    private $qrIconPNG;
 
-    public function __construct($lilurl, $auth) {
+    public function __construct($lilurl, $auth, $qrIconPNG) {
         $this->lilurl = $lilurl;
         $this->auth = $auth;
+        $this->qrIconPNG = $qrIconPNG;
     }
 
     public function getViewTemplate() {
@@ -234,7 +237,8 @@ class GoController
             }
 
             $out = imagecreatefrompng($qrCache);
-            $n = imagecreatefrompng($pngPrefix . 'unl_qr_235.png');
+            $qrIcon = !empty($this->qrIconPNG) && file_exists($this->qrIconPNG) ? $this->qrIconPNG : $pngPrefix . static::DEFAULT_QR_ICON_NAME;
+            $n = imagecreatefrompng($qrIcon);
 
             imagecopy($out, $n, 422, 428, 0, 0, 235, 235);
             imagedestroy($n);
