@@ -4,7 +4,9 @@ use Ramsey\Uuid\Uuid;
 
 class GoController
 {
-    CONST DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
+    const MODE_CREATE = 'create';
+    const MODE_EDIT = 'edit';
+    const DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
     private $auth;
     private $lilurl;
     private $route;
@@ -73,6 +75,9 @@ class GoController
         } elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
             $this->route = 'qr';
             $this->goId = $matches[1];
+        } elseif (preg_match('#^([^/]+)\/edit$#', $this->pathInfo, $matches)) {
+            $this->route = 'edit';
+            $this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\/reset$#', $this->pathInfo, $matches)) {
             $this->route = 'reset';
             $this->goId = $matches[1];
@@ -96,23 +101,36 @@ class GoController
             }
 
             if (isset($_POST['theURL'])) {
+                $mode = $_POST['mode'] === static::MODE_EDIT ? $_POST['mode'] : static::MODE_CREATE;
                 $userId = $alias = null;
 
                 if ($this->auth->isAuthenticated()) {
                     $userId = $this->auth->getUserId();
 
-                    if (!empty($_POST['theAlias'])) {
-                        $alias = $_POST['theAlias'];
+                    if ($mode == static::MODE_EDIT) {
+                        if (!empty($_POST['id'])) {
+                            $alias = $_POST['id'];
+                        }
+                    } else {
+                        if (!empty($_POST['theAlias'])) {
+                            $alias = $_POST['theAlias'];
+                        }
                     }
                 }
 
                 try {
-                    $url = $this->lilurl->handlePOST($alias, $userId);
+                    $url = $this->lilurl->handlePOST($mode, $alias, $userId);
+                    $msg = $mode === static::MODE_EDIT ? 'Your Go URL is updated!' : 'You have a Go URL!';
+
                     $_SESSION['gourlFlashBag'] = array(
-                        'msg' => '<p class="title">You have a Go URL!</p><input type="text" onclick="this.select(); return false;" value="'.$url.'" />',
+                        'msg' => '<p class="title">' . $msg . '</p><input type="text" onclick="this.select(); return false;" value="'.$url.'" />',
                         'type' => 'success',
                         'url' => $url,
                     );
+                    if ($mode === static::MODE_EDIT) {
+                        header('Location: ' . $this->lilurl->getBaseUrl('a/links'));
+                        exit;
+                    }
                 } catch (Exception $e) {
                     switch ($e->getCode()) {
                         case lilurl::ERR_INVALID_PROTOCOL:
@@ -201,6 +219,25 @@ class GoController
                 header('Location: ' . $this->lilurl->getBaseUrl('a/links'));
                 exit;
             }
+        }  elseif ('edit' === $this->route) {
+            if (!$this->auth->isAuthenticated() || !$creator = $this->lilurl->getCreator($this->goId)) {
+                header('HTTP/1.1 404 Not Found');
+                include __DIR__ . '/../www/templates/404.php';
+                exit;
+            }
+            if ($creator == $this->auth->getUserId()) {
+                $this->viewTemplate = 'index.php';
+                $this->viewParams['goURL'] =  $this->lilurl->getLinkRow($this->goId);
+            } else {
+                $error = true;
+                $_SESSION['gourlFlashBag'] = array(
+                    'msg' => '<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>',
+                    'type' => 'error',
+                );
+
+                header('Location: ' . $this->lilurl->getBaseUrl() . 'a/links', true, 303);
+                exit;
+            }
         } elseif ('reset' === $this->route) {
             if (!$this->auth->isAuthenticated() || !$creator = $this->lilurl->getCreator($this->goId)) {
                 header('HTTP/1.1 404 Not Found');
@@ -208,7 +245,7 @@ class GoController
                 exit;
             }
             if ($creator == $this->auth->getUserId()) {
-                $this->lilurl->resetRedirectCount($this->goId);
+                $this->lilurl->resetRedirectCount($this->goId, $this->auth->getUserId());
                 $_SESSION['gourlFlashBag'] = array(
                     'msg' => '<p class="title">Reset Successful</p><p>Your Go URL redirect count has been reset.</p>',
                     'type' => 'success',

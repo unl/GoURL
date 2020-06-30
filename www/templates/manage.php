@@ -30,10 +30,11 @@
                     }
                     // Generate QR modal for each GoURL
                     $qrModals .= generateQRModal($row['urlID'], $lilurl->getBaseUrl($row['urlID']). '.qr');
+                    $longURLDisplay = strlen($row['longURL']) > 50 ? substr($row['longURL'],0,50)."..." : $row['longURL'];
                     ?>
                     <tr class="unl-bg-cream">
                         <td data-header="Short URL"><a href="<?php echo $lilurl->getBaseUrl($row['urlID']); ?>" target="_blank"><?php echo $row['urlID']; ?></a></td>
-                        <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($row['longURL']) ?>"><?php echo $lilurl->escapeURL($row['longURL']) ?></a></td>
+                        <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($row['longURL']); ?>"><?php echo $longURLDisplay; ?></a></td>
                         <td data-header="Redirects"><?php echo $row['redirects'] ?></td>
                         <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
                             <?php if ($rowDateTime): ?>
@@ -42,10 +43,11 @@
                         </td>
                         <td class="dcf-txt-sm">
                             <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal dcf-mt-1" data-toggles-modal="qr-modal-<?php echo $row['urlID']; ?>" type="button" title="QR Code for <?php echo $row['urlID']; ?> Go URL"><span class="qrImage"></span> QR Code®</button>
+                            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '/edit') ?>" title="Edit <?php echo $row['urlID']; ?> Go URL" >Edit</a>
                             <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '/reset') ?>" title="Reset redirect count for <?php echo $row['urlID']; ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $row['urlID']; ?>\'?');">Reset Redirects</a>
                             <form class="dcf-form dcf-d-inline" action="<?php echo $lilurl->getBaseUrl('a/links') ?>" method="post">
                                 <input type="hidden" name="urlID" value="<?php echo $row['urlID']; ?>" />
-                                <button class="dcf-btn dcf-btn-primary dcf-mt-1" type="submit" onclick="return confirm('Are you for sure?');">Delete</button>
+                                <button class="dcf-btn dcf-btn-primary dcf-mt-1" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo $row['urlID']; ?>\'?');">Delete</button>
                             </form>
                         </td>
                     </tr>

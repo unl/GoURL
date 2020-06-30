@@ -119,7 +119,7 @@ class lilURL
      *
      * @return string The URL
      */
-    public function handlePOST($id = null, $user = null)
+    public function handlePOST($mode, $id = null, $user = null)
     {
         $longurl = trim($_POST['theURL']);
 
@@ -169,19 +169,26 @@ class lilURL
             throw new Exception('Invalid custom alias.', self::ERR_INVALID_ALIAS);
         }
 
-        //make sure alias isn't already in use
-        if (empty($this->getURL($id)) == false) {
-            throw new Exception('Alias is already in use. Please use a different alias.', self::ERR_ALIAS_EXISTS);
-        }
+        if ($mode !== 'edit') {
+            //make sure alias isn't already in use
+            if (empty($this->getURL($id)) == false) {
+                throw new Exception('Alias is already in use. Please use a different alias.', self::ERR_ALIAS_EXISTS);
+            }
 
-        // Check to see if the pair already exists in db
-        if ($this->getIDandURL($id, $longurl) !== false) {
-            throw new Exception('This alias/URL pair already exists.', self::ERR_USED);
+            // Check to see if the pair already exists in db
+            if ($this->getIDandURL($id, $longurl) !== false) {
+                throw new Exception('This alias/URL pair already exists.', self::ERR_USED);
+            }
         }
 
         // add the url to the database
-        if ($id = $this->addURL($longurl, $id, $user)) {
+        if ($mode === 'edit') {
+            $this->updateURL($longurl, $id, $user);
             return $this->getShortURL($id);
+        } else {
+            if ($id = $this->addURL($longurl, $id, $user)) {
+                return $this->getShortURL($id);
+            }
         }
         // Generic Exception
         throw new Exception('Unknown error', self::ERR_UNKNOWN);
@@ -424,6 +431,25 @@ class lilURL
     }
 
     /**
+     * update a url in the database
+     *
+     * @param string $url URL to add
+     * @return bool
+     */
+    public function updateURL($url, $id = null, $user = null)
+    {
+        $id = strtolower($id);
+
+        $sql = 'UPDATE '.$this->getUrlTable().' set longURL = :longURL WHERE urlID = :urlID AND createdBy = :createdBy';
+        $statement = $this->executeQuery($sql, [
+            ':longURL' => $url,
+            ':urlID' => $id,
+            ':createdBy' => $user,
+        ]);
+        return $id;
+    }
+
+    /**
      * Set the list of allowed protocols.
      *
      * @param array $protocols Protocols/prefixes to allow
@@ -508,10 +534,11 @@ class lilURL
         return $statement->rowCount();
     }
 
-    public function resetRedirectCount($id) {
-        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = 0 where urlID = :urlID';
+    public function resetRedirectCount($id, $user) {
+        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = 0 where urlID = :urlID AND createdBy = :createdBy ';
         $statement = $this->executeQuery($sql, [
             ':urlID' => $id,
+            ':createdBy' => $user
         ]);
         return $statement->rowCount();
     }
