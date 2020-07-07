@@ -185,8 +185,118 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
 .go-urls td:nth-child(2) {
     word-break: break-all;
 }
-.wdn_notice .message input { color: #333; width: 100% }
 
 #dcf-main {
 	background-color: #f6f6f5!important;;
+}
+
+.go_notice {
+	background-color: #007197;
+	background-image: url('https://unlcms.unl.edu/wdn/templates_5.1/js/js-css/img/information.svg');
+	background-position: 1em 50%;
+	background-repeat: no-repeat;
+	background-size: 1.78em;
+	border-radius: 2px;
+	box-shadow: 0 1px 1px 0 rgba(36,36,35,.5);
+	color: #fefdfa;
+	margin-bottom: 1em;
+	padding: 1em;
+}
+
+.go_notice.affirm {
+	background-color: #00784e;
+	background-image: url('https://unlcms.unl.edu/wdn/templates_5.1/js/js-css/img/check-circle-2.svg');
+}
+
+.go_notice.negate {
+	background-color: #b60000;
+	background-image: url('https://unlcms.unl.edu/wdn/templates_5.1/js/js-css/img/cross-bubble.svg');
+}
+
+.go_notice.alert {
+	background-color: #e72c0c;
+	background-image: url('https://unlcms.unl.edu/wdn/templates_5.1/js/js-css/img/alert-2.svg');
+}
+
+.go_notice a,
+.go_notice a:hover {
+	color: #fefdfa;
+}
+
+.go_notice .message {
+	padding-left: 3.16em;
+	padding-right: 1.33em;
+}
+
+.go_notice .message * {
+	color: inherit;
+	margin: 0;
+}
+
+.go_notice .message h4,
+.go_notice .message .title {
+	font-family: Gotham SSm A,Gotham SSm B,Verdana,sans-serif;
+	letter-spacing: .01em;
+	line-height: 1.33;
+	text-transform: uppercase;
+}
+
+.go_responsive_table thead th abbr {
+	 border-bottom: none;
+ }
+
+@media only screen and (max-width:47.99em) {
+
+	.go_responsive_table th,
+	.go_responsive_table td {
+		display: block;
+	}
+
+	.go_responsive_table thead tr {
+		display: none;
+	}
+
+	.go_responsive_table tbody tr:first-child th {
+		border-top-width: 0;
+	}
+
+	.go_responsive_table tbody tr:nth-of-type(even) {
+		background-color: transparent;
+	}
+
+	.go_responsive_table tbody td {
+		text-align: left;
+	}
+
+	.go_responsive_table tbody td::before {
+		content: attr(data-header);
+		display: block;
+		font-weight: bold;
+	}
+
+	.go_responsive_table tbody:empty {
+		display: none;
+	}
+
+	.go_responsive_table tbody:nth-of-type(even) {
+		background-color: $bg-color-table-stripe-light-mode;
+	}
+
+}
+
+@media only screen and (min-width:48em) {
+
+	.go_responsive_table thead th:not(:first-child) {
+		text-align: center;
+	}
+
+	.go_responsive_table tbody td {
+		text-align: center;
+	}
+
+	.go_responsive_table.flush-left thead th,
+	.go_responsive_table.flush-left td {
+		text-align: left;
+	}
+
 }

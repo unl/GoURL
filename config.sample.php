@@ -1,15 +1,25 @@
 <?php
-
+set_include_path(get_include_path() . PATH_SEPARATOR .  __DIR__ . '/src');
 require __DIR__ . '/vendor/autoload.php';
-
-// Path to system trusted certificates
-define('CAS_CA_FILE', '/etc/pki/tls/cert.pem');
 
 // MySQL connection info
 define('MYSQL_USER', 'myuser');
 define('MYSQL_PASS', 'mypass');
 define('MYSQL_DB',   'goURL');
 define('MYSQL_HOST', 'localhost');
+
+require_once 'goController.php';
+require_once 'goAuthInterface.php';
+
+// Define Auth
+// Path to system trusted certificates
+define('CAS_CA_FILE', '/etc/pki/tls/cert.pem');
+require_once 'goAuthCAS.php';
+$useWDNLogin = TRUE;
+$auth = new GoAuthCAS('2.0', 'shib.unl.edu', 443, '/idp/profile/cas', CAS_CA_FILE);
+
+// Set QR icon for center of QR code (expects 235x235 png), defaults to blank icon
+$qrIconPng = __DIR__ . '/data/qr/icons/unl_qr_235.png';
 
 // allow urls that begin with these strings
 $allowed_protocols = array('http://', 'https://');
