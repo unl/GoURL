@@ -8,3 +8,5 @@
 /www/.htaccess*
 /www/wdn
 /vendor/
+/www/custom/*
+!/www/custom/.gitkeep

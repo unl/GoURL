@@ -1,4 +1,5 @@
 <?php
+extract($viewParams);
 $rowDateTime = null;
 if ($link['submitDate'] !== '0000-00-00 00:00:00') {
     $rowDateTime = new DateTime($link['submitDate']);

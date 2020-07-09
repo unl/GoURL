@@ -1,4 +1,5 @@
 <?php
+    extract($viewParams);
     $mode = 'create';
     $formParams = array();
     if (isset($_POST['theURL'])) {
@@ -32,7 +33,7 @@
                             <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
                             <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <i><?php echo $_SERVER['HTTP_HOST']; ?>/admissions</i> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                             <?php if ($mode === 'edit') : ?>
-                                <span class="dcf-form-help">Note: The Custom Alias is an indentifer and can not be edited.  If you need to update the alias you must delete goURL and recreate with new alias.</span>
+                                <span class="dcf-form-help">Note: The Custom Alias is an indentifer and can not be edited.  If you need to update the alias you must delete the alias and recreate with new alias.</span>
                             <?php endif ?>
                         </span>
                     </div>

@@ -8,15 +8,28 @@ define('MYSQL_PASS', 'mypass');
 define('MYSQL_DB',   'goURL');
 define('MYSQL_HOST', 'localhost');
 
-require_once 'goController.php';
-require_once 'goAuthInterface.php';
+$useTheme = 'unl';
+if ($useTheme === '!unl') {
+    // UNL
+    GoController::$appName = 'GoURL';
+    GoController::$institution = 'University of Nebraska&ndash;Lincoln';
+    GoController::$themePath = __DIR__ . '/src/Themes/unl';
+    GoController::$template = UNL\Templates\Theme::TYPE_APP_LOCAL;
+    GoController::$templateVersion = UNL\Templates\Templates::VERSION_5_1;
+} else {
+    // default
+    GoController::$appName = 'ShortURL';
+    GoController::$institution = 'University of DCF';
+    GoController::$themePath = __DIR__ . '/src/Themes/default';
+    GoController::$template = UNL\Templates\Theme::TYPE_APP;
+    GoController::$customThemeTemplate = 'app.tpl.php';
+    GoController::$templateVersion = UNL\Templates\Theme::CUSTOM_VERSION;
+}
 
 // Define Auth
 // Path to system trusted certificates
 define('CAS_CA_FILE', '/etc/pki/tls/cert.pem');
-require_once 'goAuthCAS.php';
-$useWDNLogin = TRUE;
-$auth = new GoAuthCAS('2.0', 'shib.unl.edu', 443, '/idp/profile/cas', CAS_CA_FILE);
+$auth = new \UNL\Templates\Auth\AuthCAS('2.0', 'shib.unl.edu', 443, '/idp/profile/cas', CAS_CA_FILE);
 
 // Set QR icon for center of QR code (expects 235x235 png), defaults to blank icon
 $qrIconPng = __DIR__ . '/data/qr/icons/unl_qr_235.png';

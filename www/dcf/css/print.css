@@ -1,0 +1,10 @@
+.dcf-d-none\@print {
+  display: none !important; }
+
+.dcf-main .dcf-d-flex,
+.dcf-main .dcf-d-grid,
+.dcf-main [class*=' dcf-grid'],
+.dcf-main [class^='dcf-grid'] {
+  display: block !important; }
+
+/*# sourceMappingURL=print.css.map */

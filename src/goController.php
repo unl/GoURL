@@ -16,6 +16,14 @@ class GoController
     private $viewParams;
     private $qrIconPNG;
 
+    // Public State
+    public static $appName;
+    public static $institution;
+    public static $themePath;
+    public static $customThemeTemplate;
+    public static $template;
+    public static $templateVersion;
+
     public function __construct($lilurl, $auth, $qrIconPNG) {
         $this->lilurl = $lilurl;
         $this->auth = $auth;
@@ -94,6 +102,14 @@ class GoController
     public function dispatch() {
         $this->viewTemplate = 'index.php';
         $this->viewParams = [];
+
+        if (!empty(static::$appName)) {
+            $this->viewParams['appName'] = static::$appName;
+        }
+
+        if (!empty(static::$institution)) {
+            $this->viewParams['institution'] = static::$institution;
+        }
 
         if (!$this->route || 'api' === $this->route) {
             if (isset($_GET['url']) && $_GET['url'] === 'referer' && isset($_SERVER['HTTP_REFERER'])) {
