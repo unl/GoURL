@@ -30,8 +30,8 @@ $controller->dispatch();
 // no actions to be done, time to render a UNL page
 $auth->isAuthenticated();
 
-$page = Templates::factory('AppLocal', Templates::VERSION_5_1);
-if (file_exists(__DIR__ . '/wdn/templates_5.1')) {
+$page = Templates::factory('AppLocal', Templates::VERSION_5_2);
+if (file_exists(__DIR__ . '/wdn/templates_5.2')) {
     $page->setLocalIncludePath(__DIR__);
 }
 
