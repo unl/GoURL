@@ -184,6 +184,11 @@ class GoController
                                 'msg' => '<p class="title">Whoops, Invalid URL.</p><p>Please verify the URL is correct.</p>',
                             );
                             break;
+                        case lilurl::ERR_MAX_RANDOM_ID_ATTEMPTS:
+                            $_SESSION['gourlFlashBag'] = array(
+                                'msg' => '<p class="title">Whoops, Random Alias Error.</p><p>'. $e->getMessage() . '</p>',
+                            );
+                            break;
                         default:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, Something Broke</p><p>There was an error submitting your url. Check your steps.</p>',
