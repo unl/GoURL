@@ -16,6 +16,10 @@ class lilURL
     const ERR_ALIAS_EXISTS     = -6;
     const ERR_INVALID_GA_CAMPAIGN = -7;
     const ERR_INVALID_URL = -8;
+    const ERR_MAX_RANDOM_ID_ATTEMPTS = -9;
+    const RANDOM_ID_ATTEMPTS_THERSHOLD = 1000000;
+    const MAX_RANDOM_ID_BUMP_LENGTH = 5;
+    const MAX_RANDOM_ID_ATTEMPTS = 15000000;
 
     protected $db;
 
@@ -494,21 +498,25 @@ class lilURL
      *
      * @return string
      */
-    public function getRandomID()
+    public function getRandomID($attempts = 0, $lengthOverride = 0)
     {
-        mt_srand();
-        $possible_characters = 'abcdefghijkmnopqrstuvwxyz234567890';
-        $string = '';
-
-        while (strlen($string) < self::$random_id_length) {
-            $string .= substr($possible_characters, rand() % (strlen($possible_characters)),1);
+        $attempts++;
+        if ($attempts > self::MAX_RANDOM_ID_ATTEMPTS) {
+             throw new Exception('Failed to generate random unique alias after ' . self::MAX_RANDOM_ID_ATTEMPTS . ' attempts.  You can try again or provide custom alias.', self::ERR_MAX_RANDOM_ID_ATTEMPTS);
         }
+
+        $possibleCharacters = 'abcdefghijkmnopqrstuvwxyz234567890';
+        $length = !empty($lengthOverride) && is_int($lengthOverride) ? $lengthOverride : self::$random_id_length;
+        if ($length < self::MAX_RANDOM_ID_BUMP_LENGTH && $attempts % self::RANDOM_ID_ATTEMPTS_THERSHOLD == 0) {
+            $length++;
+        }
+        $string = substr(str_shuffle($possibleCharacters),0, $length);
 
         if (false === $this->getURL($string)) {
             return $string;
         }
 
-        return $this->getRandomID();
+        return $this->getRandomID($attempts, $length);
     }
 
     public function setRandomIDLength($length)
