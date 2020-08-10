@@ -49,7 +49,7 @@ $appName = !empty(goController::$appName) ? goController::$appName : 'Go URL';
 if (!$theme->isCustomTheme()) {
     // UNL Theme
     $theme->setWDNIncludePath(__DIR__);
-    if (file_exists($theme->getWDNIncludePath() . '/wdn/templates_5.1')) {
+    if (file_exists($theme->getWDNIncludePath() . '/wdn/templates_5.2')) {
         $page->setLocalIncludePath($theme->getWDNIncludePath());
     }
 
