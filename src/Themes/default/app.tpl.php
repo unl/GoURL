@@ -72,7 +72,7 @@
         </div>
     </nav>
 
-    <div class="dcf-bleed"
+    <div class="dcf-bleed">
     <div class="dcf-absolute dcf-d-flex dcf-ai-center dcf-h-100% dcf-w-100% dcf-overflow-hidden">
         <!-- InstanceBeginEditable name="appsearch" -->
         <!-- InstanceEndEditable -->
