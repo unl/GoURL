@@ -24,21 +24,21 @@
               <input id="theURL" name="theURL" type="text" value="<?php echo (!empty($goURLForm->getLongURL()))?htmlentities($goURLForm->getLongURL(), ENT_QUOTES):'';?>" required oninvalid="this.setCustomValidity('Please provide a URL to redirect to.')" oninput="this.setCustomValidity('')">
             </div>
         </div>
+        <div>
         <?php if ($auth->isAuthenticated()): ?>
-            <div>
-                <fieldset>
-                    <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
-                    <div class="dcf-form-group">
-                        <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label><span>
-                            <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
-                            <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <i><?php echo $_SERVER['HTTP_HOST']; ?>/admissions</i> <strong>(letters, numbers, underscores and dashes only)</strong></span>
-                            <?php if ($mode === 'edit') : ?>
-                                <span class="dcf-form-help">Note: The Custom Alias is an indentifer and can not be edited.  If you need to update the alias you must delete the alias and recreate with new alias.</span>
-                            <?php endif ?>
-                        </span>
-                    </div>
-                </fieldset>
-                <fieldset>
+            <fieldset>
+                <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
+                <div class="dcf-form-group">
+                    <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label><span>
+                        <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
+                        <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <i><?php echo $_SERVER['HTTP_HOST']; ?>/admissions</i> <strong>(letters, numbers, underscores and dashes only)</strong></span>
+                        <?php if ($mode === 'edit') : ?>
+                        <span class="dcf-form-help">Note: The Custom Alias is an indentifer and can not be edited.  If you need to update the alias you must delete goURL and recreate with new alias.</span>
+                        <?php endif ?>
+                    </span>
+                </div>
+            </fieldset>
+            <fieldset>
                     <legend class="dcf-bold dcf-txt-lg">Google Analytics Campaign Tagging</legend>
                     <div class="dcf-input-checkbox">
                         <input id="with-ga-campaign" name="with-ga-campaign" type="checkbox" value="0" aria-labelledby="with-ga-campaign-label">
@@ -83,25 +83,25 @@
                         </div>
                     </div>
                 </fieldset>
-            <?php else: ?>
-                <div class="dcf-txt-xs">
-                    <h2 class="dcf-txt-h4">Unauthenticated User Notice</h2>
-                    <ul>
-                        <li>You cannot manage the URL.</li>
-                        <li>You cannot define a Custom Alias or Google Analytics Campaign Tagging.</li>
-                        <?php if (count($lilurl->getAllowedDomains())): ?>
-                        <li>Only allowed <abbr class="dcf-txt-sm" title="Uniform Resource Locator">URL</abbr> domains
-                            are: <?php echo implode(", ", $lilurl->getAllowedDomains()); ?>.</li>
-                        <?php endif; ?>
-                    </ul>
-                    <p>Please <a href="./?login">log in</a> if you need any of the above.</p>
-                </div>
-            <?php endif ?>
-            <input class="dcf-mt-6 dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit" value="<?php echo $submitBtnLabel; ?>">
-            <?php if ($mode === 'edit') : ?>
-                <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($goURLForm->getID() . '/reset') ?>" title="Reset redirect count for <?php echo $goURLForm->getID(); ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $goURLForm->getID(); ?>\'?');">Reset Redirects</a>
-                <button class="dcf-btn dcf-btn-secondary dcf-mt-1" type="button" onclick="return confirm('Are you for sure you want to delete \'<?php echo $goURLForm->getID(); ?>\'?') && submitDelete();">Delete</button>
-            <?php endif ?>
+        <?php else: ?>
+            <div class="dcf-txt-xs">
+                <h2 class="dcf-txt-h4">Unauthenticated User Notice</h2>
+                <ul>
+                    <li>You cannot manage the URL.</li>
+                    <li>You cannot define a Custom Alias or Google Analytics Campaign Tagging.</li>
+                    <?php if (count($lilurl->getAllowedDomains())): ?>
+                    <li>Only allowed <abbr class="dcf-txt-sm" title="Uniform Resource Locator">URL</abbr> domains
+                        are: <?php echo implode(", ", $lilurl->getAllowedDomains()); ?>.</li>
+                    <?php endif; ?>
+                </ul>
+                <p>Please <a href="./?login">log in</a> if you need any of the above.</p>
+            </div>
+        <?php endif ?>
+        <input class="dcf-mt-6 dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit" value="<?php echo $submitBtnLabel; ?>">
+        <?php if ($mode === 'edit') : ?>
+            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($goURLForm->getID() . '/reset') ?>" title="Reset redirect count for <?php echo $goURLForm->getID(); ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $goURLForm->getID(); ?>\'?');">Reset Redirects</a>
+            <button class="dcf-btn dcf-btn-secondary dcf-mt-1" type="button" onclick="return confirm('Are you for sure you want to delete \'<?php echo $goURLForm->getID(); ?>\'?') && submitDelete();">Delete</button>
+        <?php endif ?>
         </div>
     </form>
     <?php if ($mode === 'edit') : ?>
