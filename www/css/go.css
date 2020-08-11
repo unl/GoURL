@@ -274,10 +274,6 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
 		display: none;
 	}
 
-	.go_responsive_table tbody:nth-of-type(even) {
-		background-color: $bg-color-table-stripe-light-mode;
-	}
-
 }
 
 @media only screen and (min-width:48em) {
