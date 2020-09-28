@@ -4,6 +4,21 @@
     $page->addScript($lilurl->getBaseUrl('js/datatables-1.10.21.min.js'), NULL, TRUE);
     //$page->addStyleSheet('https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css');
     $page->doctitle = 'Your URLs - Go URL | University of Nebraska&ndash;Lincoln';
+
+    function generateQRModal($id, $src) {
+        $modalId = "qr-modal-" . $id;
+        return "<div class=\"dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
+        <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
+            <div class=\"dcf-modal-header dcf-wrapper dcf-pt-8 dcf-sticky dcf-pin-top\">
+                <h3 id=\"" . $modalId . "-heading\">QR Code for " . $id . " Go URL</h3>
+                <button class=\"dcf-btn-close-modal dcf-btn dcf-btn-tertiary dcf-absolute dcf-pin-top dcf-pin-right dcf-z-1\" type=\"button\" aria-label=\"Close\">Close</button>
+            </div>
+            <div class=\"dcf-modal-content dcf-wrapper dcf-pb-8\">
+                <img style=\"max-height: 60vh;\" src=\"" . $src . "\" alt=\"QR Code for " . $id ." Go URL\">
+            </div>
+        </div>
+    </div>";
+    }
 ?>
 
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
@@ -78,18 +93,4 @@ $(function() {
     $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
 });");
 
-function generateQRModal($id, $src) {
-    $modalId = "qr-modal-" . $id;
-    return "<div class=\"dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
-    <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
-        <div class=\"dcf-modal-header dcf-wrapper dcf-pt-8 dcf-sticky dcf-pin-top\">
-            <h3 id=\"" . $modalId . "-heading\">QR Code for " . $id . " Go URL</h3>
-            <button class=\"dcf-btn-close-modal dcf-btn dcf-btn-tertiary dcf-absolute dcf-pin-top dcf-pin-right dcf-z-1\" type=\"button\" aria-label=\"Close\">Close</button>
-        </div>
-        <div class=\"dcf-modal-content dcf-wrapper dcf-pb-8\">
-            <img style=\"max-height: 60vh;\" src=\"" . $src . "\" alt=\"QR Code for " . $id ." Go URL\">
-        </div>
-    </div>
-</div>";
-}
 ?>
