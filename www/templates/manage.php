@@ -6,6 +6,21 @@
     $appPart = !empty($appName) ? ' - ' . $appName : '';
     $institutionPart = !empty($institution) ? ' | ' . $institution : '';
     $page->doctitle = 'Your URLs' . $appPart . $institutionPart;
+
+    function generateQRModal($id, $src) {
+        $modalId = "qr-modal-" . $id;
+        return "<div class=\"dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
+        <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
+            <div class=\"dcf-modal-header dcf-wrapper dcf-pt-8 dcf-sticky dcf-pin-top\">
+                <h3 id=\"" . $modalId . "-heading\">QR Code for " . $id . " Go URL</h3>
+                <button class=\"dcf-btn-close-modal dcf-btn dcf-btn-tertiary dcf-absolute dcf-pin-top dcf-pin-right dcf-z-1\" type=\"button\" aria-label=\"Close\">Close</button>
+            </div>
+            <div class=\"dcf-modal-content dcf-wrapper dcf-pb-8\">
+                <img style=\"max-height: 60vh;\" src=\"" . $src . "\" alt=\"QR Code for " . $id ." Go URL\">
+            </div>
+        </div>
+    </div>";
+    }
 ?>
 
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
@@ -79,18 +94,4 @@ jQuery(document).ready(function($) {
 // Display QR Modal Markup
 echo $qrModals;
 
-function generateQRModal($id, $src) {
-    $modalId = "qr-modal-" . $id;
-    return "<div class=\"dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
-    <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
-        <div class=\"dcf-modal-header dcf-wrapper dcf-pt-8 dcf-sticky dcf-pin-top\">
-            <h3 id=\"" . $modalId . "-heading\">QR Code for " . $id . " Go URL</h3>
-            <button class=\"dcf-btn-close-modal dcf-btn dcf-btn-tertiary dcf-absolute dcf-pin-top dcf-pin-right dcf-z-1\" type=\"button\" aria-label=\"Close\">Close</button>
-        </div>
-        <div class=\"dcf-modal-content dcf-wrapper dcf-pb-8\">
-            <img style=\"max-height: 60vh;\" src=\"" . $src . "\" alt=\"QR Code for " . $id ." Go URL\">
-        </div>
-    </div>
-</div>";
-}
 ?>

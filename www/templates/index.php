@@ -171,6 +171,7 @@
         private $gaSource;
         private $gaTerm;
         private $gaContent;
+        private $redirects;
 
         public function __construct(array $params) {
             if (isset($params['urlID'])) {
