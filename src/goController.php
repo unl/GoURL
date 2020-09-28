@@ -133,42 +133,42 @@ class GoController
                     }
                 } catch (Exception $e) {
                     switch ($e->getCode()) {
-                        case lilurl::ERR_INVALID_PROTOCOL:
+                        case lilURL::ERR_INVALID_PROTOCOL:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, Something Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>',
                             );
                             break;
-                        case lilurl::ERR_INVALID_DOMAIN:
+                        case lilURL::ERR_INVALID_DOMAIN:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, Something Broke</p><p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>',
                             );
                             break;
-                        case lilurl::ERR_INVALID_ALIAS:
+                        case lilURL::ERR_INVALID_ALIAS:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, Something Broke</p><p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>',
                             );
                             break;
-                        case lilurl::ERR_USED:
+                        case lilURL::ERR_USED:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, this alias/URL pair already exists.</p><p>The existing Go URL for this pair is: </p>',
                             );
                             break;
-                        case lilurl::ERR_ALIAS_EXISTS:
+                        case lilURL::ERR_ALIAS_EXISTS:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, This alias is already in use.</p><p>Please use a different alias.</p>',
                             );
                             break;
-                        case lilurl::ERR_INVALID_GA_CAMPAIGN:
+                        case lilURL::ERR_INVALID_GA_CAMPAIGN:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, Invalid Google Campaign.</p><p>Please provide all required campaign information.</p>',
                             );
                             break;
-                        case lilurl::ERR_INVALID_URL:
+                        case lilURL::ERR_INVALID_URL:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, Invalid URL.</p><p>Please verify the URL is correct.</p>',
                             );
                             break;
-                        case lilurl::ERR_MAX_RANDOM_ID_ATTEMPTS:
+                        case lilURL::ERR_MAX_RANDOM_ID_ATTEMPTS:
                             $_SESSION['gourlFlashBag'] = array(
                                 'msg' => '<p class="title">Whoops, Random Alias Error.</p><p>'. $e->getMessage() . '</p>',
                             );
@@ -183,7 +183,7 @@ class GoController
                 }
 
                 if ('api' === $this->route) {
-                    sendCORSHeaders();
+                    $this->sendCORSHeaders();
                     unset($_SESSION['gourlFlashBag']);
 
                     if (!empty($url)) {
@@ -199,7 +199,7 @@ class GoController
                 header('Location: ' . $this->lilurl->getBaseUrl(), true, 303);
                 exit;
             } elseif ('api' === $this->route) {
-                sendCORSHeaders();
+                $this->sendCORSHeaders();
                 header('HTTP/1.1 404 Not Found');
                 echo 'You need a URL!';
                 exit;
