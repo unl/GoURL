@@ -101,7 +101,7 @@ class GoController
             }
 
             if (isset($_POST['theURL'])) {
-                $mode = $_POST['mode'] === static::MODE_EDIT ? $_POST['mode'] : static::MODE_CREATE;
+                $mode = filter_var($_POST['mode']) === static::MODE_EDIT ? static::MODE_EDIT : static::MODE_CREATE;
                 $userId = $alias = null;
 
                 if ($this->auth->isAuthenticated()) {
@@ -109,11 +109,11 @@ class GoController
 
                     if ($mode == static::MODE_EDIT) {
                         if (!empty($_POST['id'])) {
-                            $alias = $_POST['id'];
+                            $alias = filter_var($_POST['id']);
                         }
                     } else {
                         if (!empty($_POST['theAlias'])) {
-                            $alias = $_POST['theAlias'];
+                            $alias = filter_var($_POST['theAlias']);
                         }
                     }
                 }
@@ -187,7 +187,7 @@ class GoController
                     unset($_SESSION['gourlFlashBag']);
 
                     if (!empty($url)) {
-                        echo $url;
+                        echo htmlspecialchars($url);
                         exit;
                     }
 
