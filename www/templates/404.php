@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 	<title>Page Not Found - Go URL | University of Nebraska&ndsh;Lincoln</title>
 </head>

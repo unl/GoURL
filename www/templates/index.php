@@ -1,9 +1,9 @@
 <?php
     $mode = 'create';
     $formParams = array();
-    if (isset($_POST['theURL'])) {
-        $formParams = $_POST;
-        $mode = !empty($_POST['mode']) ? $_POST['mode'] : 'create';
+    if (isset($_SESSION['errorPost'])) {
+        $formParams = $_SESSION['errorPost'];
+        $mode = !empty($formParams['mode']) ? $formParams['mode'] : 'create';
     } elseif (!empty($goURL) && !empty($goURL['urlID'])) {
         $formParams = $goURL;
         $mode = 'edit';
@@ -30,7 +30,7 @@
                 <div class="dcf-form-group">
                     <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label><span>
                         <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
-                        <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <i><?php echo $_SERVER['HTTP_HOST']; ?>/admissions</i> <strong>(letters, numbers, underscores and dashes only)</strong></span>
+                        <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <em><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?>/admissions</em> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                         <?php if ($mode === 'edit') : ?>
                         <span class="dcf-form-help">Note: The Custom Alias is an indentifer and can not be edited.  If you need to update the alias you must delete goURL and recreate with new alias.</span>
                         <?php endif ?>
@@ -173,6 +173,10 @@
         private $redirects;
 
         public function __construct(array $params) {
+            if ((isset($params['theURL']) && !isset($params['longURL'])) || (isset($params['theAlias']) && !isset($params['urlID']))) {
+                $this->mapFormvars($params);
+            }
+
             if (isset($params['urlID'])) {
                 $this->urlID = $params['urlID'];
             }
@@ -188,6 +192,32 @@
 
             if (isset($params['redirects'])) {
                 $this->redirects = $params['redirects'];
+            }
+        }
+
+        private function mapFormvars(&$params) {
+            $params['longURL'] = $params['theURL'];
+            $params['urlID'] = $params['theAlias'];
+
+            if (isset($params['gaSource'])) {
+                $this->hasGa = TRUE;
+                $this->gaSource = $params['gaSource'];
+            }
+            if (isset($params['gaMedium'])) {
+                $this->hasGa = TRUE;
+                $this->gaMedium = $params['gaMedium'];
+            }
+            if (isset($params['gaTerm'])) {
+                $this->hasGa = TRUE;
+                $this->gaTerm = $params['gaTerm'];
+            }
+            if (isset($params['gaContent'])) {
+                $this->hasGa = TRUE;
+                $this->gaContent = $params['gaContent'];
+            }
+            if (isset($params['gaName'])) {
+                $this->hasGa = TRUE;
+                $this->gaName = $params['gaName'];
             }
         }
 
