@@ -101,7 +101,7 @@ class GoController
             }
 
             if (isset($_POST['theURL'])) {
-                $mode = filter_var($_POST['mode']) === static::MODE_EDIT ? static::MODE_EDIT : static::MODE_CREATE;
+                $mode = filter_input(INPUT_POST, 'mode', FILTER_SANITIZE_STRING) === static::MODE_EDIT ? static::MODE_EDIT : static::MODE_CREATE;
                 $userId = $alias = null;
 
                 if ($this->auth->isAuthenticated()) {
@@ -109,14 +109,15 @@ class GoController
 
                     if ($mode == static::MODE_EDIT) {
                         if (!empty($_POST['id'])) {
-                            $alias = filter_var($_POST['id']);
+                            $alias = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_STRING);
                         }
                     } else {
                         if (!empty($_POST['theAlias'])) {
-                            $alias = filter_var($_POST['theAlias']);
+                            $alias = filter_input(INPUT_POST, 'theAlias', FILTER_SANITIZE_STRING);
                         }
                     }
                 }
+
 
                 try {
                     $url = $this->lilurl->handlePOST($mode, $alias, $userId);
@@ -135,7 +136,7 @@ class GoController
                     switch ($e->getCode()) {
                         case lilURL::ERR_INVALID_PROTOCOL:
                             $_SESSION['gourlFlashBag'] = array(
-                                'msg' => '<p class="title">Whoops, Something Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>',
+                                'msg' => '<p class="title">Whoops, Somethingddd Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>',
                             );
                             break;
                         case lilURL::ERR_INVALID_DOMAIN:

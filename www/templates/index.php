@@ -1,10 +1,9 @@
 <?php
     $mode = 'create';
     $formParams = array();
-    if (isset($_POST['theURL'])) {
-        $formParams = $_POST;
-        $postMode = filter_input(INPUT_POST, $_POST['mode']);
-        $mode = !empty($postMode) ? $postMode : 'create';
+    if (isset($_SESSION['errorPost'])) {
+        $formParams = $_SESSION['errorPost'];
+        $mode = !empty($formParams['mode']) ? $formParams['mode'] : 'create';
     } elseif (!empty($goURL) && !empty($goURL['urlID'])) {
         $formParams = $goURL;
         $mode = 'edit';
@@ -174,6 +173,34 @@
         private $redirects;
 
         public function __construct(array $params) {
+            if (isset($params['theURL']) && !isset($params['longURL'])) {
+                $params['longURL'] = $params['theURL'];
+                if (isset($params['gaSource'])) {
+                    $this->hasGa = TRUE;
+                    $this->gaSource = $params['gaSource'];
+                }
+                if (isset($params['gaMedium'])) {
+                    $this->hasGa = TRUE;
+                    $this->gaMedium = $params['gaMedium'];
+                }
+                if (isset($params['gaTerm'])) {
+                    $this->hasGa = TRUE;
+                    $this->gaTerm = $params['gaTerm'];
+                }
+                if (isset($params['gaContent'])) {
+                    $this->hasGa = TRUE;
+                    $this->gaContent = $params['gaContent'];
+                }
+                if (isset($params['gaName'])) {
+                    $this->hasGa = TRUE;
+                    $this->gaName = $params['gaName'];
+                }
+            }
+
+            if (isset($params['theAlias']) && !isset($params['urlID'])) {
+                $params['urlID'] = $params['theAlias'];
+            }
+
             if (isset($params['urlID'])) {
                 $this->urlID = $params['urlID'];
             }

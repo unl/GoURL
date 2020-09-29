@@ -125,62 +125,70 @@ class lilURL
      */
     public function handlePOST($mode, $id = null, $user = null)
     {
-        $longurl = trim($_POST['theURL']);
+        $this->clearErrorPOST();
+        $longurl = trim(filter_input(INPUT_POST,'theURL', FILTER_SANITIZE_URL));
 
         //Start by gathering all the GA items
         if (isset($_POST['with-ga-campaign'])) {
             $utmData =[
-                'utm_source' => $_POST['gaSource'],
-                'utm_medium' => $_POST['gaMedium'],
-                'utm_term' => $_POST['gaTerm'],
-                'utm_content' => $_POST['gaContent'],
-                'utm_campaign' => $_POST['gaName'],
+                'utm_source' => filter_input(INPUT_POST, 'gaSource', FILTER_SANITIZE_STRING),
+                'utm_medium' => filter_input(INPUT_POST, 'gaMedium', FILTER_SANITIZE_STRING),
+                'utm_term' => filter_input(INPUT_POST, 'gaTerm', FILTER_SANITIZE_STRING),
+                'utm_content' => filter_input(INPUT_POST, 'gaContent', FILTER_SANITIZE_STRING),
+                'utm_campaign' => filter_input(INPUT_POST, 'gaName', FILTER_SANITIZE_STRING),
             ];
 
             /*
              * Verify GA data
              */
             if (!$this->validateGAData($utmData)) {
+                $this->setErrorPOST();
                 throw new Exception('Invalid Google Campaign Data', self::ERR_INVALID_GA_CAMPAIGN);
             }
 
             $gaTags = http_build_query($utmData);
 
-            $longurl .= (strpos($_POST['theURL'], '?') !== false) ? '&' : '?';
+            $longurl .= (strpos(filter_input(INPUT_POST,'theURL', FILTER_SANITIZE_URL), '?') !== false) ? '&' : '?';
             $longurl .= $gaTags;
         }
 
 
         // Check to see if the URL is allowed
         if (!$this->urlIsAllowed($longurl)) {
+            $this->setErrorPOST();
             throw new Exception('Invalid Protocol', self::ERR_INVALID_PROTOCOL);
         }
 
         // Check to see if the URL is valid
         if (!$this->isSafeURL($longurl)) {
+            $this->setErrorPOST();
             throw new Exception('Invalid URL.', self::ERR_INVALID_URL);
         }
 
         // Check to see if user domain is valid
         if (!$user) {
             if (!$this->urlIsAllowedDomain($longurl)) {
+                $this->setErrorPOST();
                 throw new Exception('Invalid domain.', self::ERR_INVALID_DOMAIN);
             }
         }
 
         //validate the alias if specified (data integrity)
         if (!empty($id) && !preg_match('/^[\w\-]+$/', $id)) {
+            $this->setErrorPOST();
             throw new Exception('Invalid custom alias.', self::ERR_INVALID_ALIAS);
         }
 
         if ($mode !== 'edit') {
             //make sure alias isn't already in use
             if (empty($this->getURL($id)) == false) {
+                $this->setErrorPOST();
                 throw new Exception('Alias is already in use. Please use a different alias.', self::ERR_ALIAS_EXISTS);
             }
 
             // Check to see if the pair already exists in db
             if ($this->getIDandURL($id, $longurl) !== false) {
+                $this->setErrorPOST();
                 throw new Exception('This alias/URL pair already exists.', self::ERR_USED);
             }
         }
@@ -195,7 +203,27 @@ class lilURL
             }
         }
         // Generic Exception
+        $this->setErrorPOST();
         throw new Exception('Unknown error', self::ERR_UNKNOWN);
+    }
+
+    public function clearErrorPOST() {
+        $_SESSION['errorPost'] = NULL;
+    }
+
+    public function setErrorPOST() {
+        $filterArgs = array(
+            'mode' => FILTER_SANITIZE_STRING,
+            'theURL' => FILTER_SANITIZE_URL,
+            'theAlias' => FILTER_SANITIZE_STRING,
+            'with-ga-campaign' => FILTER_SANITIZE_NUMBER_INT,
+            'gaName' => FILTER_SANITIZE_STRING,
+            'gaMedium' => FILTER_SANITIZE_STRING,
+            'gaSource' => FILTER_SANITIZE_STRING,
+            'gaTerm' => FILTER_SANITIZE_STRING,
+            'gaContent'=> FILTER_SANITIZE_STRING
+        );
+        $_SESSION['errorPost'] = filter_input_array(INPUT_POST, $filterArgs);
     }
 
     public function getShortURL($id)
