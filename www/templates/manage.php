@@ -29,13 +29,14 @@
         <?php $urls = $lilurl->getUserURLs(phpCAS::getUser()); ?>
         <?php if ($urls->columnCount()): ?>
             <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
+                <caption>Your Go URLs</caption>
                 <thead class="unl-bg-lighter-gray">
                     <tr>
-                        <th>Short URL</th>
-                        <th>Long URL</th>
-                        <th>Redirects</th>
-                        <th>Created&nbsp;on</th>
-                        <th data-searchable="false" data-orderable="false">Actions</th>
+                        <th scope="col">Short URL</th>
+                        <th scope="col">Long URL</th>
+                        <th scope="col">Redirects</th>
+                        <th scope="col">Created&nbsp;on</th>
+                        <th scope="col" data-searchable="false" data-orderable="false">Actions</th>
                     </tr>
                 </thead>
                 <tbody>

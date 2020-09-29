@@ -4,7 +4,7 @@ $institutionPart = !empty(goController::$institution) ? ' | ' . goController::$i
 $appName = !empty(goController::$appName) ? goController::$appName : 'short url';
 ?>
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 	<title>Page Not Found<?php echo $institutionPart; ?></title>
 </head>
