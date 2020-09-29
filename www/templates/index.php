@@ -40,7 +40,7 @@
             <fieldset>
                     <legend class="dcf-bold dcf-txt-lg">Google Analytics Campaign Tagging</legend>
                     <div class="dcf-input-checkbox">
-                        <input id="with-ga-campaign" name="with-ga-campaign" type="checkbox" value="0" aria-labelledby="with-ga-campaign-label">
+                        <input id="with-ga-campaign" name="with-ga-campaign" type="checkbox" value="1" aria-labelledby="with-ga-campaign-label">
                         <label for="with-ga-campaign" id="with-ga-campaign-label">Use Google Analytics Campaign with URL <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
                     </div>
                     <div id="ga-tagging" style="display:none">
@@ -199,23 +199,23 @@
             $params['longURL'] = $params['theURL'];
             $params['urlID'] = $params['theAlias'];
 
-            if (isset($params['gaSource'])) {
+            if (!empty($params['gaSource'])) {
                 $this->hasGa = TRUE;
                 $this->gaSource = $params['gaSource'];
             }
-            if (isset($params['gaMedium'])) {
+            if (!empty($params['gaMedium'])) {
                 $this->hasGa = TRUE;
                 $this->gaMedium = $params['gaMedium'];
             }
-            if (isset($params['gaTerm'])) {
+            if (!empty($params['gaTerm'])) {
                 $this->hasGa = TRUE;
                 $this->gaTerm = $params['gaTerm'];
             }
-            if (isset($params['gaContent'])) {
+            if (!empty($params['gaContent'])) {
                 $this->hasGa = TRUE;
                 $this->gaContent = $params['gaContent'];
             }
-            if (isset($params['gaName'])) {
+            if (!empty($params['gaName'])) {
                 $this->hasGa = TRUE;
                 $this->gaName = $params['gaName'];
             }
