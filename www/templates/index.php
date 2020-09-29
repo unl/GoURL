@@ -173,32 +173,8 @@
         private $redirects;
 
         public function __construct(array $params) {
-            if (isset($params['theURL']) && !isset($params['longURL'])) {
-                $params['longURL'] = $params['theURL'];
-                if (isset($params['gaSource'])) {
-                    $this->hasGa = TRUE;
-                    $this->gaSource = $params['gaSource'];
-                }
-                if (isset($params['gaMedium'])) {
-                    $this->hasGa = TRUE;
-                    $this->gaMedium = $params['gaMedium'];
-                }
-                if (isset($params['gaTerm'])) {
-                    $this->hasGa = TRUE;
-                    $this->gaTerm = $params['gaTerm'];
-                }
-                if (isset($params['gaContent'])) {
-                    $this->hasGa = TRUE;
-                    $this->gaContent = $params['gaContent'];
-                }
-                if (isset($params['gaName'])) {
-                    $this->hasGa = TRUE;
-                    $this->gaName = $params['gaName'];
-                }
-            }
-
-            if (isset($params['theAlias']) && !isset($params['urlID'])) {
-                $params['urlID'] = $params['theAlias'];
+            if ((isset($params['theURL']) && !isset($params['longURL'])) || (isset($params['theAlias']) && !isset($params['urlID']))) {
+                $this->mapFormvars($params);
             }
 
             if (isset($params['urlID'])) {
@@ -216,6 +192,32 @@
 
             if (isset($params['redirects'])) {
                 $this->redirects = $params['redirects'];
+            }
+        }
+
+        private function mapFormvars(&$params) {
+            $params['longURL'] = $params['theURL'];
+            $params['urlID'] = $params['theAlias'];
+
+            if (isset($params['gaSource'])) {
+                $this->hasGa = TRUE;
+                $this->gaSource = $params['gaSource'];
+            }
+            if (isset($params['gaMedium'])) {
+                $this->hasGa = TRUE;
+                $this->gaMedium = $params['gaMedium'];
+            }
+            if (isset($params['gaTerm'])) {
+                $this->hasGa = TRUE;
+                $this->gaTerm = $params['gaTerm'];
+            }
+            if (isset($params['gaContent'])) {
+                $this->hasGa = TRUE;
+                $this->gaContent = $params['gaContent'];
+            }
+            if (isset($params['gaName'])) {
+                $this->hasGa = TRUE;
+                $this->gaName = $params['gaName'];
             }
         }
 
