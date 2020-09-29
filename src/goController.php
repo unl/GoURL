@@ -136,7 +136,7 @@ class GoController
                     switch ($e->getCode()) {
                         case lilURL::ERR_INVALID_PROTOCOL:
                             $_SESSION['gourlFlashBag'] = array(
-                                'msg' => '<p class="title">Whoops, Somethingddd Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>',
+                                'msg' => '<p class="title">Whoops, Something Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>',
                             );
                             break;
                         case lilURL::ERR_INVALID_DOMAIN:
