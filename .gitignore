@@ -10,5 +10,6 @@
 /vendor/
 /www/custom/*
 !/www/custom/.gitkeep
-/www/Themes/*
-!/www/Themes/unl
+/src/Themes/*
+!/src/Themes/.gitkeep
+!/src/Themes/unl
