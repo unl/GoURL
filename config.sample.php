@@ -9,21 +9,21 @@ define('MYSQL_DB',   'goURL');
 define('MYSQL_HOST', 'localhost');
 
 $useTheme = 'unl';
-if ($useTheme === '!unl') {
+if ($useTheme === 'dcf') {
+    // dcf
+    GoController::$appName = 'ShortURL';
+    GoController::$institution = 'University of DCF';
+    GoController::$themePath = __DIR__ . '/src/Themes/dcf';
+    GoController::$template = UNL\Templates\Theme::TYPE_APP;
+    GoController::$customThemeTemplate = 'app.tpl.php';
+    GoController::$templateVersion = UNL\Templates\Theme::CUSTOM_VERSION;
+} else {
     // UNL
     GoController::$appName = 'GoURL';
     GoController::$institution = 'University of Nebraska&ndash;Lincoln';
     GoController::$themePath = __DIR__ . '/src/Themes/unl';
     GoController::$template = UNL\Templates\Theme::TYPE_APP_LOCAL;
-    GoController::$templateVersion = UNL\Templates\Templates::VERSION_5_1;
-} else {
-    // default
-    GoController::$appName = 'ShortURL';
-    GoController::$institution = 'University of DCF';
-    GoController::$themePath = __DIR__ . '/src/Themes/default';
-    GoController::$template = UNL\Templates\Theme::TYPE_APP;
-    GoController::$customThemeTemplate = 'app.tpl.php';
-    GoController::$templateVersion = UNL\Templates\Theme::CUSTOM_VERSION;
+    GoController::$templateVersion = UNL\Templates\Templates::VERSION_5_2;
 }
 
 // Define Auth
