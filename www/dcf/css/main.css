@@ -1467,9 +1467,6 @@ button .dcf-icon {
   .theme .dcf-footer-global {
     padding-bottom: 1.78em; } }
 
-.theme .dcf-form select {
-  font-family: Lato; }
-
 @media only screen and (min-width: 56.12em) {
   .dcf-header-global-child {
     margin-left: 3.16vw; } }
@@ -1544,7 +1541,6 @@ button .dcf-icon {
             clip-path: inset(50%);
     height: 1px;
     overflow: hidden;
-    position: absolute;
     width: 1px;
     white-space: nowrap; } }
 
@@ -2608,19 +2604,16 @@ a.dcf-inverse:active {
 
 .dcf-obj-fit-contain {
   height: 100% !important;
-  font-family: "object-fit:contain" !important;
   object-fit: contain !important;
   width: 100% !important; }
 
 .dcf-obj-fit-cover {
   height: 100% !important;
-  font-family: "object-fit:cover" !important;
   object-fit: cover !important;
   width: 100% !important; }
 
 .dcf-obj-fit-none {
   height: 100% !important;
-  font-family: "object-fit:none" !important;
   object-fit: none !important;
   width: 100% !important; }
 
