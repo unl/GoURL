@@ -8,3 +8,8 @@
 /www/.htaccess*
 /www/wdn
 /vendor/
+/www/custom/*
+!/www/custom/.gitkeep
+/src/Themes/*
+!/src/Themes/.gitkeep
+!/src/Themes/unl

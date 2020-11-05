@@ -1,3 +1,4 @@
+<?php extract($flashBagParams); ?>
 <?php if ($msg) : ?>
 	<div class="dcf-bleed">
 		<div class="dcf-wrapper dcf-pt-4">

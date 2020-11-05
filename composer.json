@@ -6,6 +6,7 @@
 	},
 	"require": {
 		"unl/php-wdn-templates": "^5.2",
+		"saltybeagle/savvy": "0.8.1",
 		"endroid/qrcode": "^1.5",
 		"jasig/phpcas": "1.3.x-dev",
 		"ramsey/uuid": "^3.5",

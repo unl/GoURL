@@ -1,4 +1,5 @@
 <?php
+    extract($viewParams);
     $mode = 'create';
     $formParams = array();
     if (isset($_SESSION['errorPost'])) {

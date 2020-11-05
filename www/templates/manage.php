@@ -1,9 +1,11 @@
 <?php
+    extract($viewParams);
     $qrModals = '';
     // Load JQuery dataTables for filtering GoURLs
     $page->addScript($lilurl->getBaseUrl('js/datatables-1.10.21.min.js'), NULL, TRUE);
-    //$page->addStyleSheet('https://cdn.datatables.net/1.10.21/css/jquery.dataTables.css');
-    $page->doctitle = 'Your URLs - Go URL | University of Nebraska&ndash;Lincoln';
+    $appPart = !empty($appName) ? ' - ' . $appName : '';
+    $institutionPart = !empty($institution) ? ' | ' . $institution : '';
+    $page->doctitle = 'Your URLs' . $appPart . $institutionPart;
 
     function generateQRModal($id, $src) {
         $modalId = "qr-modal-" . $id;
@@ -23,7 +25,7 @@
 
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
-      <h2 class="dcf-txt-h4">Your Go URLs</h2>
+      <h2 class="dcf-txt-h4">Your URLs</h2>
         <?php $urls = $lilurl->getUserURLs(phpCAS::getUser()); ?>
         <?php if ($urls->columnCount()): ?>
             <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
@@ -78,20 +80,19 @@
         </div>
     </div>
 </div>
-
-<?php
-// Display QR Modal Markup
-echo $qrModals;
-
-$page->addScriptDeclaration("
-$(function() {
-    $.noConflict();
+<script>
+jQuery(document).ready(function($) {
     $('#go-urls').DataTable();
     $('.dataTables_length label').addClass('dcf-label');
     $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
     $('.dataTables_filter label').addClass('dcf-label');
     $('.dataTables_filter label input').addClass('dcf-d-inline dcf-input-text dcf-txt-sm');
     $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
-});");
+});
+</script>
+
+<?php
+// Display QR Modal Markup
+echo $qrModals;
 
 ?>
