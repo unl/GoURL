@@ -70,7 +70,7 @@
                         <div class="dcf-form-group">
                             <label id="gaTermLabel" for="gaTerm">Term</label>
                             <span>
-                                <input id="gaTerm" name="gaTerm" type="text" aria-labelledby="gaContentLabel" aria-describedby="gaTermDesc" value="<?php echo $goURLForm->getGaTerm(); ?>">
+                                <input id="gaTerm" name="gaTerm" type="text" aria-labelledby="gaTermLabel" aria-describedby="gaTermDesc" value="<?php echo $goURLForm->getGaTerm(); ?>">
                                 <span class="dcf-form-help" id="gaTermDesc" tabindex="-1">Identify the keywords</span>
                             </span>
                         </div>
@@ -122,43 +122,44 @@
     var gaSection = document.getElementById('ga-tagging');
     var gaRequiredVars = document.getElementsByClassName('ga-required');
 
-    withGACheckbox.addEventListener('click', function() {
+    if (withGACheckbox && gaSection && gaRequiredVars) {
+      withGACheckbox.addEventListener('click', function () {
         if (this.checked) {
-            gaSection.style.display = 'block';
-            for (var i=0; i<gaRequiredVars.length; i++) {
-                var currentElement = document.getElementsByClassName('ga-required')[i].id;
-                gaRequiredVars[i].required = true;
-                gaRequiredVars[i].disabled = false;
+          gaSection.style.display = 'block';
+          for (var i = 0; i < gaRequiredVars.length; i++) {
+            var currentElement = document.getElementsByClassName('ga-required')[i].id;
+            gaRequiredVars[i].required = true;
+            gaRequiredVars[i].disabled = false;
 
-                if(currentElement == 'gaName'){
-                    gaRequiredVars[i].setAttribute('oninvalid', 'this.setCustomValidity(\' Please provide a campaign name.\')');
-                    gaRequiredVars[i].setAttribute('oninput', 'this.setCustomValidity(\'\')');
-                }
-                else if(currentElement == 'gaMedium'){
-                    gaRequiredVars[i].setAttribute('oninvalid', 'this.setCustomValidity(\' Please provide a marketing medium.\')');
-                    gaRequiredVars[i].setAttribute('oninput', 'this.setCustomValidity(\'\')');
-                }
-                else if(currentElement == "gaSource"){
-                    gaRequiredVars[i].setAttribute('oninvalid', 'this.setCustomValidity(\' Please provide a source.\')');
-                    gaRequiredVars[i].setAttribute('oninput', 'this.setCustomValidity(\'\')');
-                }
+            if (currentElement == 'gaName') {
+              gaRequiredVars[i].setAttribute('oninvalid', 'this.setCustomValidity(\' Please provide a campaign name.\')');
+              gaRequiredVars[i].setAttribute('oninput', 'this.setCustomValidity(\'\')');
+            } else if (currentElement == 'gaMedium') {
+              gaRequiredVars[i].setAttribute('oninvalid', 'this.setCustomValidity(\' Please provide a marketing medium.\')');
+              gaRequiredVars[i].setAttribute('oninput', 'this.setCustomValidity(\'\')');
+            } else if (currentElement == "gaSource") {
+              gaRequiredVars[i].setAttribute('oninvalid', 'this.setCustomValidity(\' Please provide a source.\')');
+              gaRequiredVars[i].setAttribute('oninput', 'this.setCustomValidity(\'\')');
             }
-        } else{
-            gaSection.style.display = 'none';
-            for (var i=0; i<gaRequiredVars.length; i++) {
-                gaRequiredVars[i].required = false;
-                gaRequiredVars[i].disabled = true;
-                gaRequiredVars[i].removeAttribute('oninvalid');
-                gaRequiredVars[i].removeAttribute('oninput');
-                gaRequiredVars[i].value = '';
-            }
-            document.getElementById('gaTerm').value = '';
-            document.getElementById('gaContent').value = '';
+          }
+        } else {
+          gaSection.style.display = 'none';
+          for (var i = 0; i < gaRequiredVars.length; i++) {
+            gaRequiredVars[i].required = false;
+            gaRequiredVars[i].disabled = true;
+            gaRequiredVars[i].removeAttribute('oninvalid');
+            gaRequiredVars[i].removeAttribute('oninput');
+            gaRequiredVars[i].value = '';
+          }
+          document.getElementById('gaTerm').value = '';
+          document.getElementById('gaContent').value = '';
         }
-    });
-    <?php if ($goURLForm->getHasGa()) : ?>
-    withGACheckbox.click();
-    <?php endif ?>
+      });
+
+      <?php if ($goURLForm->getHasGa()) : ?>
+      withGACheckbox.click();
+      <?php endif ?>
+    }
 </script>
 
 <?php
