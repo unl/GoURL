@@ -193,6 +193,8 @@
                     if (!empty($nonGAQueryString)) {
                         $this->longURL .= '?' . substr($nonGAQueryString, 0, -1);
                     }
+                } else {
+                    $this->longURL = $params['longURL'];
                 }
             }
 
