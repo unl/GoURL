@@ -184,22 +184,26 @@
             }
 
             if (isset($params['longURL'])) {
-                $urlParts = parse_url($params['longURL']);
-                if (isset($urlParts['scheme']) && isset($urlParts['host'])) {
-                    $query = isset($urlParts['query']) ? $urlParts['query'] : null;
-                    $path = isset($urlParts['path']) ? $urlParts['path'] : '';
-                    $nonGAQueryString = $this->parseQueryString($query);
-                    $this->longURL = $urlParts['scheme'] . '://' . $urlParts['host'] . $path;
-                    if (!empty($nonGAQueryString)) {
-                        $this->longURL .= '?' . substr($nonGAQueryString, 0, -1);
-                    }
-                } else {
-                    $this->longURL = $params['longURL'];
-                }
+                $this->setLongUrl($params['longURL']);
             }
 
             if (isset($params['redirects'])) {
                 $this->redirects = $params['redirects'];
+            }
+        }
+
+        private function setLongUrl($longURL) {
+            $urlParts = parse_url($longURL);
+            if (isset($urlParts['scheme']) && isset($urlParts['host'])) {
+                $query = isset($urlParts['query']) ? $urlParts['query'] : null;
+                $path = isset($urlParts['path']) ? $urlParts['path'] : '';
+                $nonGAQueryString = $this->parseQueryString($query);
+                $this->longURL = $urlParts['scheme'] . '://' . $urlParts['host'] . $path;
+                if (!empty($nonGAQueryString)) {
+                    $this->longURL .= '?' . substr($nonGAQueryString, 0, -1);
+                }
+            } else {
+                $this->longURL = $longURL;
             }
         }
 
