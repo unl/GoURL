@@ -55,7 +55,7 @@ if ($theme->isCustomTheme()) {
 } else {
     // UNL Theme
     $theme->setWDNIncludePath(__DIR__);
-    if (file_exists($theme->getWDNIncludePath() . '/wdn/templates_5.2')) {
+    if (file_exists($theme->getWDNIncludePath() . '/wdn/templates_5.3')) {
         $page->setLocalIncludePath($theme->getWDNIncludePath());
     }
 
