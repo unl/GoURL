@@ -16,7 +16,7 @@ Originally based on lilURL: http://lilurl.sourceforge.net
 http://www.gnu.org/licenses/gpl.html
 
 ## User Auth
-Media currently supports UNL PHP CAS or Apache mod_shib by setting `$auth` in config.inc.php
+GoURL currently supports UNL PHP CAS or Apache mod_shib by setting `$auth` in config.inc.php
 
 ### UNL PHP CAS example
 ```
