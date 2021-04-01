@@ -26,7 +26,7 @@
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
       <h2 class="dcf-txt-h4">Your URLs</h2>
-        <?php $urls = $lilurl->getUserURLs(phpCAS::getUser()); ?>
+        <?php $urls = $lilurl->getUserURLs($auth->getUserId()); ?>
         <?php if ($urls->columnCount()): ?>
             <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
                 <caption>Your Go URLs</caption>

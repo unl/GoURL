@@ -43,6 +43,12 @@ class GoController
         $this->route = '';
         $this->pathInfo = $this->lilurl->getRequestPath();
 
+        // See if already logged in via PHP CAS
+        if ($this->auth->getAuthType() === $this->auth::AUTH_TYPE_CAS && array_key_exists('unl_sso', $_COOKIE) && !$this->auth->isAuthenticated()) {
+          // Run PHPCAS checkAuthentication
+          $this->auth->checkAuthentication();
+        }
+
         if (isset($_GET['login']) || 'a/login' === $this->pathInfo) {
             $this->auth->login();
             header('Location: ' . $this->lilurl->getBaseUrl('a/links'));
