@@ -130,7 +130,7 @@ class lilURL
         $longurl = trim(filter_input(INPUT_POST,'theURL', FILTER_SANITIZE_URL));
 
         // Hack to handle url passed via url=referer query string not handled by filter_input above
-        if (empty($longurl) && !empty(strtolower($_GET['url']) === 'referer') && !empty($_POST['theURL'])) {
+        if (empty($longurl) && !empty($_GET['url']) && strtolower($_GET['url']) === 'referer' && !empty($_POST['theURL'])) {
           $longurl = filter_var($_POST['theURL'], FILTER_SANITIZE_URL);
         }
 
