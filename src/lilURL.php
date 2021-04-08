@@ -63,7 +63,7 @@ class lilURL
     }
 
     /**
-     * Redirect the clien to the appropriate URL
+     * Redirect the client to the appropriate URL
      *
      * @param string $id tinyurl id
      *
@@ -158,6 +158,7 @@ class lilURL
             $longurl .= $gaTags;
         }
 
+	      $groupID = filter_input(INPUT_POST,'groupID', FILTER_SANITIZE_NUMBER_INT);
 
         // Check to see if the URL is allowed
         if (!$this->urlIsAllowed($longurl)) {
@@ -201,10 +202,10 @@ class lilURL
 
         // add the url to the database
         if ($mode === 'edit') {
-            $this->updateURL($longurl, $id, $user);
+            $this->updateURL($longurl, $id, $user, $groupID);
             return $this->getShortURL($id);
         } else {
-            if ($id = $this->addURL($longurl, $id, $user)) {
+            if ($id = $this->addURL($longurl, $id, $user, $groupID)) {
                 return $this->getShortURL($id);
             }
         }
@@ -438,7 +439,7 @@ class lilURL
      * @param string $url URL to add
      * @return bool
      */
-    public function addURL($url, $id = null, $user = null)
+    public function addURL($url, $id = null, $user = null, $groupID = null)
     {
         if (!$id) {
             // if the url is already in here, return true
@@ -453,11 +454,12 @@ class lilURL
 
         $id = strtolower($id);
 
-        $sql = 'INSERT INTO '.$this->getUrlTable().' (urlID, longURL, submitDate, createdBy) VALUES (:urlID, :longURL, NOW(), :createdBy)';
+        $sql = 'INSERT INTO '.$this->getUrlTable().' (urlID, longURL, submitDate, createdBy, groupID) VALUES (:urlID, :longURL, NOW(), :createdBy, :groupID)';
         $statement = $this->executeQuery($sql, [
             ':urlID' => $id,
             ':longURL' => $url,
             ':createdBy' => $user,
+	          ':groupID' => $groupID
         ]);
         $result = $statement->rowCount();
 
@@ -474,15 +476,15 @@ class lilURL
      * @param string $url URL to add
      * @return bool
      */
-    public function updateURL($url, $id = null, $user = null)
+    public function updateURL($url, $id = null, $user = null, $groupID = null)
     {
         $id = strtolower($id);
 
-        $sql = 'UPDATE '.$this->getUrlTable().' set longURL = :longURL WHERE urlID = :urlID AND createdBy = :createdBy';
+        $sql = 'UPDATE '.$this->getUrlTable().' set longURL = :longURL, groupID = :groupID WHERE urlID = :urlID';
         $statement = $this->executeQuery($sql, [
             ':longURL' => $url,
-            ':urlID' => $id,
-            ':createdBy' => $user,
+	          ':groupID' => $groupID,
+            ':urlID' => $id
         ]);
         return $id;
     }
@@ -558,31 +560,201 @@ class lilURL
         self::$random_id_length = (int)$length;
     }
 
-    public function getUserURLs($user)
+    public function getUserURLs($uid)
     {
-        $sql = 'SELECT * FROM '.$this->getUrlTable().' WHERE createdBy = :createdBy';
+        $sql = '(SELECT * FROM '.$this->getUrlTable().' WHERE createdBy = :createdBy ORDER BY urlID)
+          UNION
+          (SELECT u.* FROM '.$this->getUrlTable(). ' u INNER JOIN tblGroupUsers ug on u.groupID = ug.groupID WHERE ug.uid = :uid ORDER BY urlID)';
         return $this->executeQuery($sql, [
-            ':createdBy' => $user,
+            ':createdBy' => $uid,
+	          ':uid' => $uid
         ]);
     }
 
-    public function deleteURL($urlID, $user)
+    public function userHasURLAccess($urlID, $uid) {
+	    $sql = 'SELECT count(*) AS accessCount FROM '.$this->getUrlTable(). ' u INNER JOIN tblGroupUsers ug on u.groupID = ug.groupID
+	      WHERE u.urlID = :urlID AND ug.uid = :uid';
+	    $statement = $this->executeQuery($sql, [
+		    ':urlID' => $urlID,
+		    ':uid' => $uid,
+	    ]);
+	    $result = $statement->fetch();
+	    return $result['accessCount'] > 0;
+    }
+
+    public function deleteURL($urlID)
     {
-        $sql = 'DELETE FROM '.$this->getUrlTable().' WHERE urlID = :urlID AND createdBy = :createdBy LIMIT 1';
+        $sql = 'DELETE FROM '.$this->getUrlTable().' WHERE urlID = :urlID LIMIT 1';
         $statement = $this->executeQuery($sql, [
-            ':urlID' => $urlID,
-            ':createdBy' => $user,
+            ':urlID' => $urlID
         ]);
         return $statement->rowCount();
     }
 
-    public function resetRedirectCount($id, $user) {
-        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = 0 where urlID = :urlID AND createdBy = :createdBy ';
+    public function resetRedirectCount($id) {
+        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = 0 where urlID = :urlID';
         $statement = $this->executeQuery($sql, [
-            ':urlID' => $id,
-            ':createdBy' => $user
+            ':urlID' => $id
         ]);
         return $statement->rowCount();
+    }
+
+    public function getGroup($id)
+    {
+        $sql = 'SELECT * FROM tblGroups WHERE groupID = :groupID';
+        $statement = $this->executeQuery($sql, [
+          ':groupID' => $id,
+        ]);
+        $result = $statement->fetch(PDO::FETCH_OBJ);
+        return $result === FALSE ? NULL: $result;
+    }
+
+    public function getUserGroups($uid)
+    {
+        $sql = 'SELECT g.groupID, g.groupName FROM tblGroups g
+            INNER JOIN tblGroupUsers gu ON g.groupID = gu.groupID
+            WHERE gu.uid = :uid
+            ORDER BY g.groupName';
+        $statement = $this->executeQuery($sql, [
+          ':uid' => $uid,
+        ]);
+	    $result = $statement->fetchAll(PDO::FETCH_OBJ);
+	    return $result === FALSE ? NULL: $result;
+    }
+
+		public function getGroupUsers($groupID)
+		{
+			$sql = 'SELECT uid from tblGroupUsers WHERE groupID = :groupID ORDER BY uid';
+			$statement = $this->executeQuery($sql, [
+				':groupID' => $groupID
+			]);
+			$result = $statement->fetchAll(PDO::FETCH_OBJ);
+			return $result === FALSE ? NULL: $result;
+		}
+
+		public function isValidGroupUser($uid, &$error = '') {
+			if (empty(trim($uid))) {
+				$error = 'A user must have a username.';
+			} elseif (!preg_match('/^\w+$/', $uid)) {
+				$error = 'Invalid username format. Allows alphanumeric and underscore.';
+			}
+			return empty($error);
+		}
+
+		public function insertGroupUser($groupID, $uid, $adminUID)
+		{
+			if (!empty($uid) && $this->isGroupMember($groupID, $adminUID)) {
+				$sql = 'INSERT INTO tblGroupUsers (groupID, uid) VALUES (:groupID, :uid)';
+				$statement = $this->executeQuery($sql, [
+					':groupID' => $groupID,
+					':uid' => $uid
+				]);
+				return $statement->rowCount();
+			}
+			return false;
+		}
+
+		public function deleteGroupUser($groupID, $uid, $adminUID)
+		{
+			if ($this->isGroupMember($groupID, $adminUID)) {
+				$sql = 'DELETE FROM tblGroupUsers WHERE groupID = :groupID AND uid = :uid';
+				$statement = $this->executeQuery($sql, [
+					':groupID' => $groupID,
+					':uid' => $uid
+				]);
+				return $statement->rowCount();
+			}
+			return false;
+		}
+
+    public function isGroup($groupID) {
+      $sql = 'SELECT count(*) as isGroupCount from tblGroups WHERE groupID = :groupID';
+      $statement = $this->executeQuery($sql, [
+        ':groupID' => $groupID,
+      ]);
+      $result = $statement->fetch();
+      return $result['isGroupCount'] > 0;
+    }
+
+    public function isGroupMember($groupID, $uid) {
+      $sql = 'SELECT count(*) AS isMemberCount FROM tblGroupUsers WHERE groupID = :groupID AND uid = :uid';
+      $statement = $this->executeQuery($sql, [
+        ':groupID' => $groupID,
+        ':uid' => $uid,
+      ]);
+      $result = $statement->fetch();
+      return $result['isMemberCount'] > 0;
+    }
+
+    public function isValidGroupName($groupName, $groupID = 0, &$error = '') {
+      if (empty(trim($groupName))) {
+        $error = 'A group must have a name.';
+      }
+      if (empty(trim($groupID))) {
+        $groupID = 0;
+      }
+
+      $sql = 'SELECT count(*) AS isGroupCount FROM tblGroups WHERE groupID != :groupID AND groupName = :groupName';
+      $statement = $this->executeQuery($sql, [
+        ':groupID' => $groupID,
+        ':groupName' => trim($groupName)
+      ]);
+      $result = $statement->fetch();
+
+      if ($result['isGroupCount'] > 0) {
+        $error = 'A group must have an unique name.';
+      }
+
+      return empty($error);
+    }
+
+    public function insertGroup($group, $uid)
+    {
+      if (!empty($uid) && !empty(trim($group['groupName']))) {
+        $sql = 'INSERT INTO tblGroups (groupName) VALUES (:groupName)';
+        $statement = $this->executeQuery($sql, [
+          ':groupName' => trim($group['groupName'])
+        ]);
+        if ($statement->rowCount()) {
+          $groupID = $this->db->lastInsertId();
+          $sql = 'INSERT INTO tblGroupUsers (groupID, uid) VALUES (:groupID, :uid)';
+          $statement2 = $this->executeQuery($sql, [
+            ':groupID' => $groupID,
+            ':uid' => $uid
+          ]);
+        }
+        return $statement2->rowCount();
+      }
+      return false;
+    }
+
+    public function updateGroup($group, $uid)
+    {
+      if ($this->isGroupMember($group['groupID'], $uid)) {
+        $sql = 'UPDATE tblGroups SET groupName = :groupName WHERE groupID = :groupID';
+        $statement = $this->executeQuery($sql, [
+          ':groupName' => trim($group['groupName']),
+          ':groupID' => $group['groupID']
+        ]);
+        return $statement->rowCount();
+      }
+      return false;
+    }
+
+    public function deleteGroup($groupID, $uid)
+    {
+      if ($this->isGroupMember($groupID, $uid)) {
+        $sql = 'DELETE FROM tblGroupUsers WHERE groupID = :groupID';
+        $statement1 = $this->executeQuery($sql, [
+          ':groupID' => $groupID
+        ]);
+        $sql = 'DELETE FROM tblGroups WHERE groupID = :groupID';
+        $statement2 = $this->executeQuery($sql, [
+          ':groupID' => $groupID
+        ]);
+        return $statement2->rowCount();
+      }
+      return false;
     }
 
     public function getGaAccount()

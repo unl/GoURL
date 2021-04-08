@@ -29,7 +29,7 @@
         <?php $urls = $lilurl->getUserURLs($auth->getUserId()); ?>
         <?php if ($urls->columnCount()): ?>
             <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
-                <caption>Your Go URLs</caption>
+                <caption class="dcf-sr-only">Your Go URLs</caption>
                 <thead class="unl-bg-lighter-gray">
                     <tr>
                         <th scope="col">Short URL</th>

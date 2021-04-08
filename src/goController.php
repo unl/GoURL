@@ -10,6 +10,8 @@ class GoController
     private $auth;
     private $lilurl;
     private $route;
+    private $groupId;
+    private $groupMode;
     private $goId;
     private $pathInfo;
     private $viewTemplate;
@@ -71,6 +73,97 @@ class GoController
             }
         }
 
+        if (isset($_GET['groups']) || in_array($this->pathInfo, array('a/', 'a/groups'))) {
+          $this->route = 'groups';
+
+          if (!$this->auth->isAuthenticated()) {
+            header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
+            exit;
+          }
+        }
+
+        if (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
+          if (isset($matches[1]) && $this->lilurl->isGroup($matches[1])) {
+            $this->route = 'group';
+            $this->groupId = $matches[1];
+            $this->groupMode = self::MODE_EDIT;
+
+            if (!$this->auth->isAuthenticated()) {
+              header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
+              exit;
+            } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
+              $_SESSION['gourlFlashBag'] = array(
+                'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
+                'type' => 'error'
+              );
+              header('Location: ' . $this->lilurl->getBaseUrl('a/groups'));
+              exit;
+            }
+
+            if (!empty($_POST)) {
+							switch($_POST['formName']) {
+		            case 'group-form':
+			            $this->route = 'group';
+			            break;
+
+		            case 'user-form':
+			            $this->route = 'add-group-user';
+			            break;
+
+		            default:
+									// missing or unexpected form so bail
+			            header('Location: ' . $this->lilurl->getBaseUrl($this->pathInfo));
+			            exit;
+	            }
+            }
+          }
+        }
+
+        if ($this->pathInfo === 'a/group') {
+            $this->route = 'group';
+            $this->groupId = NULL;
+            $this->groupMode = self::MODE_CREATE;
+
+            if (!$this->auth->isAuthenticated()) {
+              header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
+              exit;
+            }
+        }
+
+	      if (preg_match('/^a\/removeuser\/(\d+)-(\w+)$/', $this->pathInfo, $matches)) {
+		      if (!$this->auth->isAuthenticated()) {
+			      header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
+			      exit;
+		      }
+
+		      $groupID = $matches[1];
+		      $uid = urldecode($matches[2]);
+
+		      if (isset($matches[1]) && $this->lilurl->isGroupMember($groupID, $this->auth->getUserId())) {
+
+			      if ($this->lilurl->deleteGroupUser($groupID, $uid, $this->auth->getUserId())) {
+				      $msg = '<p class="title">Delete Successful</p><p>' . $uid . ' has been removed from group.</p>';
+				      $type = 'success';
+			      } else {
+				      $msg = '<p class="title">Delete Failed</p><p>Unable to remove ' . $uid . ' from group.</p>';
+					    $type = 'error';
+			      }
+
+			      $_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
+			      header('Location: ' . $this->lilurl->getBaseUrl('a/group/' . $groupID));
+			      exit;
+		      }
+
+		      // Not authorized to delete user from group
+		      $_SESSION['gourlFlashBag'] = array(
+			      'msg' => '<p class="title">Access Denied</p><p>Unable to remove ' . $uid . ' from group.</p>',
+			      'type' => 'error'
+		      );
+		      header('Location: ' . $this->lilurl->getBaseUrl('a/groups'));
+		      exit;
+
+	      }
+
         if ('api_create.php' === $this->pathInfo) {
             header('Location: ' . $this->lilurl->getBaseUrl('api/'), true, 307);
             $this->sendCORSHeaders();
@@ -95,7 +188,7 @@ class GoController
         } elseif (preg_match('#^([^/]+)\/reset$#', $this->pathInfo, $matches)) {
             $this->route = 'reset';
             $this->goId = $matches[1];
-        } elseif (preg_match('#^([^/]+)\\+$#', $this->pathInfo, $matches)) {
+        } elseif (preg_match('#^([^/]+)\/info$#', $this->pathInfo, $matches)) {
             $this->route = 'linkinfo';
             $this->goId = $matches[1];
         }
@@ -139,7 +232,6 @@ class GoController
                         }
                     }
                 }
-
 
                 try {
                     $url = $this->lilurl->handlePOST($mode, $alias, $userId);
@@ -247,17 +339,107 @@ class GoController
                 header('Location: ' . $this->lilurl->getBaseUrl('a/links'));
                 exit;
             }
+        } elseif ('groups' === $this->route) {
+            $this->viewTemplate = 'groups.php';
+
+            if (isset($_POST, $_POST['groupID'])) {
+              $this->lilurl->deleteGroup($_POST['groupID'], $this->auth->getUserId());
+              $_SESSION['gourlFlashBag'] = array(
+                'msg' => '<p class="title">Delete Successful</p><p>Your group has been deleted</p>',
+                'type' => 'success',
+              );
+
+              header('Location: ' . $this->lilurl->getBaseUrl('a/groups'));
+              exit;
+            }
+        } elseif ('group' === $this->route) {
+	        $redirect = true;
+	        $this->viewTemplate = 'group.php';
+	        $this->viewParams['groupMode'] = $this->groupMode;
+
+	        if ($this->groupMode === self::MODE_EDIT) {
+		        $this->viewParams['group'] = $this->lilurl->getGroup($this->groupId);
+		        $this->viewParams['group']->users = $this->lilurl->getGroupUsers($this->groupId);
+	        }
+
+	        if (!empty($_POST)) {
+		        $error = '';
+		        $msg = '';
+		        $type = '';
+		        if (!$this->lilurl->isValidGroupName($_POST['groupName'], $this->groupId, $error)) {
+			        $msg = '<p class="title">Invalid Group</p><p>' . $error . '</p>';
+			        $type = 'error';
+			        $redirect = false;
+		        } else {
+			        if ($this->groupMode === self::MODE_CREATE) {
+				        if ($this->lilurl->insertGroup($_POST, $this->auth->getUserId())) {
+					        $msg = '<p class="title">Add Successful</p><p>Your group has been added.</p>';
+					        $type = 'success';
+				        } else {
+					        $msg = '<p class="title">Add Failed</p><p>Your group has not been added.</p>';
+					        $type = 'error';
+				        }
+			        } elseif ($this->groupMode === self::MODE_EDIT && $this->groupId === $_POST['groupID']) {
+				        if ($this->lilurl->updateGroup($_POST, $this->auth->getUserId())) {
+					        $msg = '<p class="title">Update Successful</p><p>Your group has been updated.</p>';
+					        $type = 'success';
+				        }
+			        } else {
+				        $msg = '<p class="title">Update Failed</p><p>Your group has not been updated.</p>';
+				        $type = 'error';
+			        }
+		        }
+
+		        if (!empty($msg) && !empty($type)) {
+			        $_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
+		        }
+
+		        if ($redirect) {
+			        header('Location: ' . $this->lilurl->getBaseUrl('a/groups'));
+			        exit;
+		        }
+	        }
+        } elseif ('add-group-user' === $this->route) {
+	        $this->viewTemplate = 'group.php';
+	        $this->viewParams['groupMode'] = $this->groupMode;
+	        $msg = '';
+	        $type = '';
+	        $uid = trim($_POST['uid']);
+					$error = '';
+
+	        if ($this->lilurl->isValidGroupUser($uid, $error)) {
+		        if ($this->lilurl->insertGroupUser($this->groupId, $uid, $this->auth->getUserId())) {
+			        $msg = '<p class="title">Add Successful</p><p>User, ' . $uid . ' added to group.</p>';
+			        $type = 'success';
+			        $_POST['uid'] = NULL;
+		        } else {
+			        $msg = '<p class="title">Add Failed</p><p>User, ' . $uid . ' not added to group.</p>';
+			        $type = 'error';
+		        }
+	        } else {
+		        $msg = '<p class="title">Add Failed</p><p>' . $error . '</p>';
+		        $type = 'error';
+	        }
+
+	        if ($this->groupMode === self::MODE_EDIT) {
+		        $this->viewParams['group'] = $this->lilurl->getGroup($this->groupId);
+		        $this->viewParams['group']->users = $this->lilurl->getGroupUsers($this->groupId);
+	        }
+
+	        if (!empty($msg) && !empty($type)) {
+		        $_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
+	        }
+
         }  elseif ('edit' === $this->route) {
-            if (!$this->auth->isAuthenticated() || !$creator = $this->lilurl->getCreator($this->goId)) {
+            if (!$this->auth->isAuthenticated() || !$this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
                 header('HTTP/1.1 404 Not Found');
                 include __DIR__ . '/../www/templates/404.php';
                 exit;
             }
-            if ($creator == $this->auth->getUserId()) {
+            if ($this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
                 $this->viewTemplate = 'index.php';
                 $this->viewParams['goURL'] =  $this->lilurl->getLinkRow($this->goId);
             } else {
-                $error = true;
                 $_SESSION['gourlFlashBag'] = array(
                     'msg' => '<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>',
                     'type' => 'error',
@@ -267,19 +449,18 @@ class GoController
                 exit;
             }
         } elseif ('reset' === $this->route) {
-            if (!$this->auth->isAuthenticated() || !$creator = $this->lilurl->getCreator($this->goId)) {
+            if (!$this->auth->isAuthenticated() || !$this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
                 header('HTTP/1.1 404 Not Found');
                 include __DIR__ . '/../www/templates/404.php';
                 exit;
             }
-            if ($creator == $this->auth->getUserId()) {
+            if ($this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
                 $this->lilurl->resetRedirectCount($this->goId, $this->auth->getUserId());
                 $_SESSION['gourlFlashBag'] = array(
                     'msg' => '<p class="title">Reset Successful</p><p>Your Go URL redirect count has been reset.</p>',
                     'type' => 'success',
                 );
             } else {
-                $error = true;
                 $_SESSION['gourlFlashBag'] = array(
                     'msg' => '<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>',
                     'type' => 'error',

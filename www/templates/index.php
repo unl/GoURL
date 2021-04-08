@@ -29,13 +29,35 @@
             <fieldset>
                 <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
                 <div class="dcf-form-group">
-                    <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label><span>
+                    <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
                         <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
                         <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <em><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?>/admissions</em> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                         <?php if ($mode === 'edit') : ?>
-                        <span class="dcf-form-help">Note: The Custom Alias is an indentifer and can not be edited.  If you need to update the alias you must delete goURL and recreate with new alias.</span>
+                        <span class="dcf-form-help">Note: The Custom Alias is an identifier and can not be edited.  If you need to update the alias you must delete url and recreate with new alias.</span>
                         <?php endif ?>
                     </span>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend class="dcf-bold dcf-txt-lg">User Admin Access</legend>
+                <div class="dcf-form-group">
+                    <label>User Group <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
+                    <select id="groupID" name="groupID">
+                        <option value="0">No user group</option>
+                        <?php
+                            $groups = $lilurl->getUserGroups($auth->getUserId());
+                            foreach ($groups as $group) {
+                                $selected = $group->groupID === $goURLForm->getGroupID() ? ' selected=selected ' : '';
+                        ?>
+                        <option value="<?php echo $group->groupID; ?>"<?php echo $selected; ?>><?php echo $group->groupName; ?></option>
+                        <?php } ?>
+                    </select>
+                    <span class="dcf-form-help">Note: The User Group allows the users of the group to have admin access to the url. Only groups which you belong to are options.</span>
+	                <?php if (!empty($goURLForm->getCreatedBy())) {
+	                    $createDate = new DateTime($goURLForm->getSubmitDate());
+	                ?>
+                      <span class="dcf-form-help dcf-mt-4">Created by <?php echo $goURLForm->getCreatedBy(); ?> on <?php echo $createDate->format('F j, Y'); ?></span>
+	                <?php } ?>
                 </div>
             </fieldset>
             <fieldset>
@@ -166,6 +188,9 @@
     class goURLForm {
         private $urlID;
         private $longURL;
+        private $groupID;
+        private $createdBy;
+        private $submitDate;
         private $hasGa = FALSE;
         private $gaName;
         private $gaMedium;
@@ -186,6 +211,18 @@
             if (isset($params['longURL'])) {
                 $this->setLongUrl($params['longURL']);
             }
+
+	        if (isset($params['groupID'])) {
+		        $this->groupID = $params['groupID'];
+	        }
+
+	        if (isset($params['createdBy'])) {
+		        $this->createdBy = $params['createdBy'];
+	        }
+
+	        if (isset($params['submitDate'])) {
+		        $this->submitDate = $params['submitDate'];
+	        }
 
             if (isset($params['redirects'])) {
                 $this->redirects = $params['redirects'];
@@ -240,6 +277,18 @@
         public function getLongURL() {
             return $this->longURL;
         }
+
+	    public function getGroupID() {
+		    return $this->groupID;
+	    }
+
+	    public function getCreatedBy() {
+		    return $this->createdBy;
+	    }
+
+	    public function getSubmitDate() {
+		    return $this->submitDate;
+	    }
 
         public function getHasGa() {
             return $this->hasGa;
