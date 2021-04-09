@@ -73,6 +73,15 @@ class GoController
             }
         }
 
+		    if (isset($_GET['lookup']) || in_array($this->pathInfo, array('a/', 'a/lookup'))) {
+			    $this->route = 'lookup';
+
+			    if (!$this->auth->isAuthenticated()) {
+				    header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
+				    exit;
+			    }
+		    }
+
         if (isset($_GET['groups']) || in_array($this->pathInfo, array('a/', 'a/groups'))) {
           $this->route = 'groups';
 
@@ -327,6 +336,26 @@ class GoController
                 include __DIR__ . '/../www/templates/404.php';
                 exit;
             }
+        } elseif ('lookup' === $this->route) {
+	        $this->viewTemplate = 'linkinfo.php';
+
+	        if (isset($_POST, $_POST['lookupTerm'])) {
+						$lookupTerm = filter_input(INPUT_POST, 'lookupTerm', FILTER_SANITIZE_STRING);
+		        $link = $this->lilurl->getLinkRow($lookupTerm, NULL, PDO::FETCH_OBJ);
+		        if (!$link) {
+			        $_SESSION['gourlFlashBag'] = array(
+				        'msg' => '<p class="title">Not Found</p><p>&apos;' . $lookupTerm . '&apos; is not in use and available.</p>',
+				        'type' => 'error',
+			        );
+		        } else {
+			        $this->viewParams['link'] = $link;
+			        $group = $this->lilurl->getGroup($link->groupID);
+			        if (!empty($group)) {
+				        $this->viewParams['group'] = $group;
+				        $this->viewParams['group']->users = $this->lilurl->getGroupUsers($link->groupID);
+			        }
+		        }
+	        }
         } elseif ('manage' === $this->route) {
             $this->viewTemplate = 'manage.php';
 
@@ -438,7 +467,7 @@ class GoController
             }
             if ($this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
                 $this->viewTemplate = 'index.php';
-                $this->viewParams['goURL'] =  $this->lilurl->getLinkRow($this->goId);
+                $this->viewParams['goURL'] =  $this->lilurl->getLinkRow($this->goId, NULL, PDO::FETCH_ASSOC);
             } else {
                 $_SESSION['gourlFlashBag'] = array(
                     'msg' => '<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>',
@@ -500,13 +529,18 @@ class GoController
         } elseif ('linkinfo' === $this->route) {
             $this->viewTemplate = 'linkinfo.php';
 
-            if (!$link = $this->lilurl->getLinkRow($this->goId)) {
+            if (!$link = $this->lilurl->getLinkRow($this->goId, NULL, PDO::FETCH_OBJ)) {
                 header('HTTP/1.1 404 Not Found');
                 include __DIR__ . '/../www/templates/404.php';
                 exit;
             }
 
             $this->viewParams['link'] = $link;
+		        $group = $this->lilurl->getGroup($link->groupID);
+		        if (!empty($group)) {
+			        $this->viewParams['group'] = $group;
+			        $this->viewParams['group']->users = $this->lilurl->getGroupUsers($link->groupID);
+		        }
         }
     }
 

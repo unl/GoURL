@@ -188,7 +188,7 @@ class lilURL
 
         if ($mode !== 'edit') {
             //make sure alias isn't already in use
-            if (empty($this->getURL($id)) == false) {
+            if (empty($this->getURL($id)) === false) {
                 $this->setErrorPOST();
                 throw new Exception('Alias is already in use. Please use a different alias.', self::ERR_ALIAS_EXISTS);
             }
@@ -357,16 +357,16 @@ class lilURL
             ':longURL' => $url,
             ':createdBy' => '',
         ]);
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row = $statement->fetch(PDO::FETCH_OBJ);
 
         if ($row) {
-            return $row['urlID'];
+            return $row->urlID;
         }
 
         return false;
     }
 
-    public function getLinkRow($id, $fields = [])
+    public function getLinkRow($id, $fields = [], $pdoFormat = PDO::FETCH_ASSOC)
     {
         if (!$fields) {
             $fields = ['*'];
@@ -376,11 +376,21 @@ class lilURL
         $statement = $this->executeQuery($sql, [
             ':urlID' => $id,
         ]);
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row = $statement->fetch($pdoFormat);
 
         if ($row) {
-            return $row;
-        }
+					if ($pdoFormat === PDO::FETCH_ASSOC) {
+						if (isset($row['submitDate']) && $row['submitDate'] !== '0000-00-00 00:00:00') {
+							$row['submitDateTime'] = new DateTime($row['submitDate']);
+						}
+					} elseif ($pdoFormat === PDO::FETCH_OBJ) {
+						if (isset($row->submitDate) && $row->submitDate !== '0000-00-00 00:00:00') {
+							$row->submitDateTime = new DateTime($row->submitDate);
+						}
+					}
+
+					return $row;
+				}
 
         return false;
     }
@@ -392,10 +402,10 @@ class lilURL
      */
     public function getURL($id)
     {
-        $row = $this->getLinkRow($id, ['longURL']);
+        $row = $this->getLinkRow($id, ['longURL'], PDO::FETCH_OBJ);
 
         if ($row) {
-            return $row['longURL'];
+            return $row->longURL;
         }
 
         return false;
@@ -408,10 +418,10 @@ class lilURL
      */
     public function getCreator($id)
     {
-        $row = $this->getLinkRow($id, ['createdBy']);
+        $row = $this->getLinkRow($id, ['createdBy'], PDO::FETCH_OBJ);
 
         if ($row) {
-            return $row['createdBy'];
+            return $row->createdBy;
         }
 
         return false;
@@ -424,10 +434,10 @@ class lilURL
             ':urlID' => $id,
             ':longURL' => $url,
         ]);
-        $row = $statement->fetch(PDO::FETCH_ASSOC);
+        $row = $statement->fetch(PDO::FETCH_OBJ);
 
         if ($row) {
-            return $row['urlID'];
+            return $row->urlID;
         }
 
         return false;
@@ -578,8 +588,8 @@ class lilURL
 		    ':urlID' => $urlID,
 		    ':uid' => $uid,
 	    ]);
-	    $result = $statement->fetch();
-	    return $result['accessCount'] > 0;
+	    $result = $statement->fetch(PDO::FETCH_OBJ);
+	    return $result->accessCount > 0;
     }
 
     public function deleteURL($urlID)
@@ -672,8 +682,8 @@ class lilURL
       $statement = $this->executeQuery($sql, [
         ':groupID' => $groupID,
       ]);
-      $result = $statement->fetch();
-      return $result['isGroupCount'] > 0;
+      $result = $statement->fetch(PDO::FETCH_OBJ);
+      return $result->isGroupCount > 0;
     }
 
     public function isGroupMember($groupID, $uid) {
@@ -682,8 +692,8 @@ class lilURL
         ':groupID' => $groupID,
         ':uid' => $uid,
       ]);
-      $result = $statement->fetch();
-      return $result['isMemberCount'] > 0;
+      $result = $statement->fetch(PDO::FETCH_OBJ);
+      return $result->isMemberCount > 0;
     }
 
     public function isValidGroupName($groupName, $groupID = 0, &$error = '') {
@@ -699,9 +709,9 @@ class lilURL
         ':groupID' => $groupID,
         ':groupName' => trim($groupName)
       ]);
-      $result = $statement->fetch();
+      $result = $statement->fetch(PDO::FETCH_OBJ);
 
-      if ($result['isGroupCount'] > 0) {
+      if ($result->isGroupCount > 0) {
         $error = 'A group must have an unique name.';
       }
 
