@@ -21,6 +21,20 @@ class lilURL
     const MAX_RANDOM_ID_BUMP_LENGTH = 5;
     const MAX_RANDOM_ID_ATTEMPTS = 15000000;
 
+    const SQL_INSERT = 'INSERT';
+    const SQL_UPDATE = 'UPDATE';
+    const SQL_DELETE = 'DELETE';
+
+    // Table Column Placeholders
+		const PDO_PLACEHOLDER_URL_ID = ':urlID';
+		const PDO_PLACEHOLDER_LONG_URL = ':longURL';
+		const PDO_PLACEHOLDER_SUBMIT_DATE = ':submitDate';
+		const PDO_PLACEHOLDER_CREATED_BY = ':createdBy';
+		const PDO_PLACEHOLDER_REDIRECTS = ':redirects';
+		const PDO_PLACEHOLDER_GROUP_ID = ':groupID';
+		const PDO_PLACEHOLDER_GROUP_NAME = ':groupName';
+		const PDO_PLACEHOLDER_UID = ':uid';
+
     protected $db;
 
     protected $urlTable = 'tblURLs';
@@ -352,10 +366,10 @@ class lilURL
      */
     public function getID($url)
     {
-        $sql = 'SELECT urlID FROM '.$this->getUrlTable().' WHERE longURL = :longURL AND (createdBy = :createdBy OR createdBy IS NULL) ';
+        $sql = 'SELECT urlID FROM '.$this->getUrlTable().' WHERE longURL = ' . self::PDO_PLACEHOLDER_LONG_URL . ' AND (createdBy = ' . self::PDO_PLACEHOLDER_CREATED_BY . ' OR createdBy IS NULL) ';
         $statement = $this->executeQuery($sql, [
-            ':longURL' => $url,
-            ':createdBy' => '',
+	          self::PDO_PLACEHOLDER_LONG_URL => $url,
+	          self::PDO_PLACEHOLDER_CREATED_BY => '',
         ]);
         $row = $statement->fetch(PDO::FETCH_OBJ);
 
@@ -372,9 +386,9 @@ class lilURL
             $fields = ['*'];
         }
 
-        $sql = 'SELECT ' . implode(',', $fields) . ' FROM '.$this->getUrlTable().' WHERE urlID = :urlID';
+        $sql = 'SELECT ' . implode(',', $fields) . ' FROM '.$this->getUrlTable().' WHERE urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
         $statement = $this->executeQuery($sql, [
-            ':urlID' => $id,
+	        self::PDO_PLACEHOLDER_URL_ID => $id,
         ]);
         $row = $statement->fetch($pdoFormat);
 
@@ -429,10 +443,10 @@ class lilURL
 
     public function getIDandURL($id, $url)
     {
-        $sql = 'SELECT urlID FROM '.$this->getUrlTable().' WHERE urlID = :urlID AND longURL = :longURL';
+        $sql = 'SELECT urlID FROM '.$this->getUrlTable().' WHERE urlID = ' . self::PDO_PLACEHOLDER_URL_ID. ' AND longURL = ' . self::PDO_PLACEHOLDER_LONG_URL;
         $statement = $this->executeQuery($sql, [
-            ':urlID' => $id,
-            ':longURL' => $url,
+	          self::PDO_PLACEHOLDER_URL_ID => $id,
+	          self::PDO_PLACEHOLDER_LONG_URL => $url,
         ]);
         $row = $statement->fetch(PDO::FETCH_OBJ);
 
@@ -490,11 +504,12 @@ class lilURL
     {
         $id = strtolower($id);
 
-        $sql = 'UPDATE '.$this->getUrlTable().' set longURL = :longURL, groupID = :groupID WHERE urlID = :urlID';
+        $sql = 'UPDATE '.$this->getUrlTable().' set longURL = ' . self::PDO_PLACEHOLDER_LONG_URL . ',
+          groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID . ' WHERE urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
         $statement = $this->executeQuery($sql, [
-            ':longURL' => $url,
-	          ':groupID' => $groupID,
-            ':urlID' => $id
+	          self::PDO_PLACEHOLDER_LONG_URL => $url,
+	          self::PDO_PLACEHOLDER_GROUP_ID => $groupID,
+	          self::PDO_PLACEHOLDER_URL_ID => $id
         ]);
         return $id;
     }
@@ -572,21 +587,21 @@ class lilURL
 
     public function getUserURLs($uid)
     {
-        $sql = '(SELECT * FROM '.$this->getUrlTable().' WHERE createdBy = :createdBy ORDER BY urlID)
+        $sql = '(SELECT * FROM '.$this->getUrlTable().' WHERE createdBy = ' . self::PDO_PLACEHOLDER_CREATED_BY . ' ORDER BY urlID)
           UNION
-          (SELECT u.* FROM '.$this->getUrlTable(). ' u INNER JOIN tblGroupUsers ug on u.groupID = ug.groupID WHERE ug.uid = :uid ORDER BY urlID)';
+          (SELECT u.* FROM '.$this->getUrlTable(). ' u INNER JOIN tblGroupUsers ug on u.groupID = ug.groupID WHERE ug.uid = ' . self::PDO_PLACEHOLDER_UID . ' ORDER BY urlID)';
         return $this->executeQuery($sql, [
-            ':createdBy' => $uid,
-	          ':uid' => $uid
+	          self::PDO_PLACEHOLDER_CREATED_BY => $uid,
+	          self::PDO_PLACEHOLDER_UID => $uid
         ]);
     }
 
     public function userHasURLAccess($urlID, $uid) {
 	    $sql = 'SELECT count(*) AS accessCount FROM '.$this->getUrlTable(). ' u INNER JOIN tblGroupUsers ug on u.groupID = ug.groupID
-	      WHERE u.urlID = :urlID AND ug.uid = :uid';
+	      WHERE u.urlID = ' . self::PDO_PLACEHOLDER_URL_ID . ' AND ug.uid = ' . self::PDO_PLACEHOLDER_UID;
 	    $statement = $this->executeQuery($sql, [
-		    ':urlID' => $urlID,
-		    ':uid' => $uid,
+		    self::PDO_PLACEHOLDER_URL_ID => $urlID,
+		    self::PDO_PLACEHOLDER_UID => $uid,
 	    ]);
 	    $result = $statement->fetch(PDO::FETCH_OBJ);
 	    return $result->accessCount > 0;
@@ -594,26 +609,26 @@ class lilURL
 
     public function deleteURL($urlID)
     {
-        $sql = 'DELETE FROM '.$this->getUrlTable().' WHERE urlID = :urlID LIMIT 1';
+        $sql = 'DELETE FROM '.$this->getUrlTable().' WHERE urlID = ' . self::PDO_PLACEHOLDER_URL_ID . ' LIMIT 1';
         $statement = $this->executeQuery($sql, [
-            ':urlID' => $urlID
+	        self::PDO_PLACEHOLDER_URL_ID => $urlID
         ]);
         return $statement->rowCount();
     }
 
     public function resetRedirectCount($id) {
-        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = 0 where urlID = :urlID';
+        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = 0 where urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
         $statement = $this->executeQuery($sql, [
-            ':urlID' => $id
+	        self::PDO_PLACEHOLDER_URL_ID => $id
         ]);
         return $statement->rowCount();
     }
 
     public function getGroup($id)
     {
-        $sql = 'SELECT * FROM tblGroups WHERE groupID = :groupID';
+        $sql = 'SELECT * FROM tblGroups WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID;
         $statement = $this->executeQuery($sql, [
-          ':groupID' => $id,
+	        self::PDO_PLACEHOLDER_GROUP_ID => $id,
         ]);
         $result = $statement->fetch(PDO::FETCH_OBJ);
         return $result === FALSE ? NULL: $result;
@@ -623,10 +638,10 @@ class lilURL
     {
         $sql = 'SELECT g.groupID, g.groupName FROM tblGroups g
             INNER JOIN tblGroupUsers gu ON g.groupID = gu.groupID
-            WHERE gu.uid = :uid
+            WHERE gu.uid = ' . self::PDO_PLACEHOLDER_UID . '
             ORDER BY g.groupName';
         $statement = $this->executeQuery($sql, [
-          ':uid' => $uid,
+	        self::PDO_PLACEHOLDER_UID => $uid,
         ]);
 	    $result = $statement->fetchAll(PDO::FETCH_OBJ);
 	    return $result === FALSE ? NULL: $result;
@@ -634,9 +649,9 @@ class lilURL
 
 		public function getGroupUsers($groupID)
 		{
-			$sql = 'SELECT uid from tblGroupUsers WHERE groupID = :groupID ORDER BY uid';
+			$sql = 'SELECT uid from tblGroupUsers WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID . ' ORDER BY uid';
 			$statement = $this->executeQuery($sql, [
-				':groupID' => $groupID
+				self::PDO_PLACEHOLDER_GROUP_ID => $groupID
 			]);
 			$result = $statement->fetchAll(PDO::FETCH_OBJ);
 			return $result === FALSE ? NULL: $result;
@@ -654,10 +669,10 @@ class lilURL
 		public function insertGroupUser($groupID, $uid, $adminUID)
 		{
 			if (!empty($uid) && $this->isGroupMember($groupID, $adminUID)) {
-				$sql = 'INSERT INTO tblGroupUsers (groupID, uid) VALUES (:groupID, :uid)';
+				$sql = 'INSERT INTO tblGroupUsers (groupID, uid) VALUES (' . self::PDO_PLACEHOLDER_GROUP_ID . ', ' . self::PDO_PLACEHOLDER_UID . ')';
 				$statement = $this->executeQuery($sql, [
-					':groupID' => $groupID,
-					':uid' => $uid
+					self::PDO_PLACEHOLDER_GROUP_ID => $groupID,
+					self::PDO_PLACEHOLDER_UID => $uid
 				]);
 				return $statement->rowCount();
 			}
@@ -667,10 +682,10 @@ class lilURL
 		public function deleteGroupUser($groupID, $uid, $adminUID)
 		{
 			if ($this->isGroupMember($groupID, $adminUID)) {
-				$sql = 'DELETE FROM tblGroupUsers WHERE groupID = :groupID AND uid = :uid';
+				$sql = 'DELETE FROM tblGroupUsers WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID . ' AND uid = ' . self::PDO_PLACEHOLDER_UID;
 				$statement = $this->executeQuery($sql, [
-					':groupID' => $groupID,
-					':uid' => $uid
+					self::PDO_PLACEHOLDER_GROUP_ID => $groupID,
+					self::PDO_PLACEHOLDER_UID => $uid
 				]);
 				return $statement->rowCount();
 			}
@@ -678,19 +693,19 @@ class lilURL
 		}
 
     public function isGroup($groupID) {
-      $sql = 'SELECT count(*) as isGroupCount from tblGroups WHERE groupID = :groupID';
+      $sql = 'SELECT count(*) as isGroupCount from tblGroups WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID;
       $statement = $this->executeQuery($sql, [
-        ':groupID' => $groupID,
+	      self::PDO_PLACEHOLDER_GROUP_ID => $groupID,
       ]);
       $result = $statement->fetch(PDO::FETCH_OBJ);
       return $result->isGroupCount > 0;
     }
 
     public function isGroupMember($groupID, $uid) {
-      $sql = 'SELECT count(*) AS isMemberCount FROM tblGroupUsers WHERE groupID = :groupID AND uid = :uid';
+      $sql = 'SELECT count(*) AS isMemberCount FROM tblGroupUsers WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID . ' AND uid = ' . self::PDO_PLACEHOLDER_UID;
       $statement = $this->executeQuery($sql, [
-        ':groupID' => $groupID,
-        ':uid' => $uid,
+	      self::PDO_PLACEHOLDER_GROUP_ID => $groupID,
+	      self::PDO_PLACEHOLDER_UID => $uid,
       ]);
       $result = $statement->fetch(PDO::FETCH_OBJ);
       return $result->isMemberCount > 0;
@@ -704,10 +719,10 @@ class lilURL
         $groupID = 0;
       }
 
-      $sql = 'SELECT count(*) AS isGroupCount FROM tblGroups WHERE groupID != :groupID AND groupName = :groupName';
+      $sql = 'SELECT count(*) AS isGroupCount FROM tblGroups WHERE groupID != ' . self::PDO_PLACEHOLDER_GROUP_ID . ' AND groupName = ' . self::PDO_PLACEHOLDER_GROUP_NAME;
       $statement = $this->executeQuery($sql, [
-        ':groupID' => $groupID,
-        ':groupName' => trim($groupName)
+	      self::PDO_PLACEHOLDER_GROUP_ID => $groupID,
+	      self::PDO_PLACEHOLDER_GROUP_NAME => trim($groupName)
       ]);
       $result = $statement->fetch(PDO::FETCH_OBJ);
 
@@ -721,16 +736,16 @@ class lilURL
     public function insertGroup($group, $uid)
     {
       if (!empty($uid) && !empty(trim($group['groupName']))) {
-        $sql = 'INSERT INTO tblGroups (groupName) VALUES (:groupName)';
+        $sql = 'INSERT INTO tblGroups (groupName) VALUES (' . self::PDO_PLACEHOLDER_GROUP_NAME . ')';
         $statement = $this->executeQuery($sql, [
-          ':groupName' => trim($group['groupName'])
+	        self::PDO_PLACEHOLDER_GROUP_NAME => trim($group['groupName'])
         ]);
         if ($statement->rowCount()) {
           $groupID = $this->db->lastInsertId();
-          $sql = 'INSERT INTO tblGroupUsers (groupID, uid) VALUES (:groupID, :uid)';
+          $sql = 'INSERT INTO tblGroupUsers (groupID, uid) VALUES (' . self::PDO_PLACEHOLDER_GROUP_ID . ', ' . self::PDO_PLACEHOLDER_UID . ')';
           $statement2 = $this->executeQuery($sql, [
-            ':groupID' => $groupID,
-            ':uid' => $uid
+	          self::PDO_PLACEHOLDER_GROUP_ID => $groupID,
+            self::PDO_PLACEHOLDER_UID => $uid
           ]);
         }
         return $statement2->rowCount();
@@ -741,10 +756,10 @@ class lilURL
     public function updateGroup($group, $uid)
     {
       if ($this->isGroupMember($group['groupID'], $uid)) {
-        $sql = 'UPDATE tblGroups SET groupName = :groupName WHERE groupID = :groupID';
+        $sql = 'UPDATE tblGroups SET groupName = ' . self::PDO_PLACEHOLDER_GROUP_NAME . ' WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID;
         $statement = $this->executeQuery($sql, [
-          ':groupName' => trim($group['groupName']),
-          ':groupID' => $group['groupID']
+	        self::PDO_PLACEHOLDER_GROUP_NAME => trim($group['groupName']),
+	        self::PDO_PLACEHOLDER_GROUP_ID => $group['groupID']
         ]);
         return $statement->rowCount();
       }
@@ -754,13 +769,13 @@ class lilURL
     public function deleteGroup($groupID, $uid)
     {
       if ($this->isGroupMember($groupID, $uid)) {
-        $sql = 'DELETE FROM tblGroupUsers WHERE groupID = :groupID';
-        $statement1 = $this->executeQuery($sql, [
-          ':groupID' => $groupID
+        $sql = 'DELETE FROM tblGroupUsers WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID;
+        $this->executeQuery($sql, [
+	        self::PDO_PLACEHOLDER_GROUP_ID => $groupID
         ]);
-        $sql = 'DELETE FROM tblGroups WHERE groupID = :groupID';
+        $sql = 'DELETE FROM tblGroups WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID;
         $statement2 = $this->executeQuery($sql, [
-          ':groupID' => $groupID
+	        self::PDO_PLACEHOLDER_GROUP_ID => $groupID
         ]);
         return $statement2->rowCount();
       }
@@ -790,9 +805,9 @@ class lilURL
     }
 
     private function incrementRedirectCount($id) {
-        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = redirects + 1 where urlID = :urlID';
+        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = redirects + 1 where urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
         $statement = $this->executeQuery($sql, [
-            ':urlID' => $id,
+	        self::PDO_PLACEHOLDER_URL_ID => $id,
         ]);
         return $statement->rowCount();
     }
