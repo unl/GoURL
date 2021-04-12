@@ -500,11 +500,15 @@ class lilURL
      * @param string $url URL to add
      * @return bool
      */
-    public function updateURL($url, $id = null, $user = null, $groupID = null)
+    public function updateURL($url, $id = null, $uid = null, $groupID = null)
     {
+	      if (!$this->userHasURLAccess($id, $uid)) {
+		      throw new Exception('Edit Access Denied.');
+	      }
+
         $id = strtolower($id);
 
-        $sql = 'UPDATE '.$this->getUrlTable().' set longURL = ' . self::PDO_PLACEHOLDER_LONG_URL . ',
+        $sql = self::SQL_UPDATE . ' ' . $this->getUrlTable() . ' set longURL = ' . self::PDO_PLACEHOLDER_LONG_URL . ',
           groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID . ' WHERE urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
         $statement = $this->executeQuery($sql, [
 	          self::PDO_PLACEHOLDER_LONG_URL => $url,
@@ -617,7 +621,7 @@ class lilURL
     }
 
     public function resetRedirectCount($id) {
-        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = 0 where urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
+        $sql = self::SQL_UPDATE . ' ' . $this->getUrlTable().' set redirects = 0 where urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
         $statement = $this->executeQuery($sql, [
 	        self::PDO_PLACEHOLDER_URL_ID => $id
         ]);
@@ -805,7 +809,7 @@ class lilURL
     }
 
     private function incrementRedirectCount($id) {
-        $sql = 'UPDATE '.$this->getUrlTable().' set redirects = redirects + 1 where urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
+        $sql = self::SQL_UPDATE . ' ' . $this->getUrlTable().' set redirects = redirects + 1 where urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
         $statement = $this->executeQuery($sql, [
 	        self::PDO_PLACEHOLDER_URL_ID => $id,
         ]);
