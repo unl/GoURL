@@ -33,7 +33,7 @@ class GoController
     }
 
     private function redirect($location, $code = 303, $sendCORSHeaders = FALSE) {
-	    header("LOCATION: ". $location, TRUE, $code);
+	    header("LOCATION: ". htmlspecialchars($location), TRUE, $code);
 	    if ($sendCORSHeaders) {
 		    $this->sendCORSHeaders();
 	    }
