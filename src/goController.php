@@ -7,6 +7,15 @@ class GoController
     const MODE_CREATE = 'create';
     const MODE_EDIT = 'edit';
     const DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
+
+    // route destinations
+		const ROUTE_GROUP = 'a/group';
+		const ROUTE_GROUPS = 'a/groups';
+		const ROUTE_LINKS = 'a/links';
+		const ROUTE_LOGIN = 'a/login';
+		const ROUTE_LOGOUT = 'a/logout';
+		const ROUTE_LOOKUP = 'a/lookup';
+
     private $auth;
     private $lilurl;
     private $route;
@@ -61,7 +70,7 @@ class GoController
 
         if (isset($_GET['login']) || 'a/login' === $this->pathInfo) {
             $this->auth->login();
-	          $this->redirect($this->lilurl->getBaseUrl('a/links'));
+	          $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LINKS));
         }
 
         if (isset($_GET['logout']) || 'a/logout' === $this->pathInfo) {
@@ -70,27 +79,27 @@ class GoController
 	          $this->redirect($this->lilurl->getBaseUrl());
         }
 
-        if (isset($_GET['manage']) || in_array($this->pathInfo, array('a/', 'a/links'))) {
+        if (isset($_GET['manage']) || in_array($this->pathInfo, array('a/', self::ROUTE_LINKS))) {
             $this->route = 'manage';
 
             if (!$this->auth->isAuthenticated()) {
-	              $this->redirect($this->lilurl->getBaseUrl('a/login'));
+	              $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
             }
         }
 
-		    if (isset($_GET['lookup']) || in_array($this->pathInfo, array('a/', 'a/lookup'))) {
+		    if (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_LOOKUP) {
 			    $this->route = 'lookup';
 
 			    if (!$this->auth->isAuthenticated()) {
-				    $this->redirect($this->lilurl->getBaseUrl('a/login'));
+				    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
 			    }
 		    }
 
-        if (isset($_GET['groups']) || in_array($this->pathInfo, array('a/', 'a/groups'))) {
+        if (isset($_GET['groups']) || $this->pathInfo === self::ROUTE_GROUPS) {
           $this->route = 'groups';
 
           if (!$this->auth->isAuthenticated()) {
-	          $this->redirect($this->lilurl->getBaseUrl('a/login'));
+	          $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
           }
         }
 
@@ -101,13 +110,13 @@ class GoController
             $this->groupMode = self::MODE_EDIT;
 
             if (!$this->auth->isAuthenticated()) {
-	            $this->redirect($this->lilurl->getBaseUrl('a/login'));
+	            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
             } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
               $_SESSION['gourlFlashBag'] = array(
                 'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
                 'type' => 'error'
               );
-	            $this->redirect($this->lilurl->getBaseUrl('a/groups'));
+	            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
             }
 
             if (!empty($_POST)) {
@@ -134,13 +143,13 @@ class GoController
             $this->groupMode = self::MODE_CREATE;
 
             if (!$this->auth->isAuthenticated()) {
-	            $this->redirect($this->lilurl->getBaseUrl('a/login'));
+	            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
             }
         }
 
 	      if (preg_match('/^a\/removeuser\/(\d+)-(\w+)$/', $this->pathInfo, $matches)) {
 		      if (!$this->auth->isAuthenticated()) {
-			      $this->redirect($this->lilurl->getBaseUrl('a/login'));
+			      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
 		      }
 
 		      $groupID = $matches[1];
@@ -164,7 +173,7 @@ class GoController
 			      'msg' => '<p class="title">Access Denied</p><p>Unable to remove ' . $uid . ' from group.</p>',
 			      'type' => 'error'
 		      );
-		      $this->redirect($this->lilurl->getBaseUrl('a/groups'));
+		      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
 	      }
 
         if ('api_create.php' === $this->pathInfo) {
@@ -244,7 +253,7 @@ class GoController
                         'url' => $url,
                     );
                     if ($mode === static::MODE_EDIT) {
-	                      $this->redirect($this->lilurl->getBaseUrl('a/links'));
+	                      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LINKS));
                     }
                 } catch (Exception $e) {
                     switch ($e->getCode()) {
@@ -368,7 +377,7 @@ class GoController
                 'type' => 'success',
               );
 
-	            $this->redirect($this->lilurl->getBaseUrl('a/groups'));
+	            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
             }
         } elseif ('group' === $this->route) {
 	        $redirect = true;
@@ -413,7 +422,7 @@ class GoController
 		        }
 
 		        if ($redirect) {
-			        $this->redirect($this->lilurl->getBaseUrl('a/groups'));
+			        $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
 		        }
 	        }
         } elseif ('add-group-user' === $this->route) {
@@ -462,7 +471,7 @@ class GoController
                     'type' => 'error',
                 );
 
-	              $this->redirect($this->lilurl->getBaseUrl() . 'a/links');
+	              $this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_LINKS);
             }
         } elseif ('reset' === $this->route) {
             if (!$this->auth->isAuthenticated() || !$this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
@@ -483,7 +492,7 @@ class GoController
                 );
             }
 
-	          $this->redirect($this->lilurl->getBaseUrl() . 'a/links');
+	          $this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_LINKS);
         } elseif ('qr' === $this->route) {
             if (!$this->lilurl->getURL($this->goId)) {
                 header('HTTP/1.1 404 Not Found');
