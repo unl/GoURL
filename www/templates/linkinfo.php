@@ -13,7 +13,7 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
         <div class="dcf-grid-full dcf-grid-halves@md dcf-col-gap-8 dcf-row-gap-8">
             <div>
                 <h2 class="dcf-txt-h4"><?php echo $appName; ?> Lookup</h2>
-                <form class="dcf-form" id="lookup-form" method="post" action="<?php echo $lilurl->getBaseUrl('a/lookup') ?>">
+                <form class="dcf-form" id="lookup-form" method="post" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/lookup')) ?>">
                     <div class="dcf-input-group">
                         <input id="lookupTerm" name="lookupTerm" type="text" value="<?php echo trim($lookupTerm); ?>" required >
                         <button class="dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit">Search</button>
@@ -29,10 +29,10 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
                 <h2 class="dcf-txt-h4">Details for &apos;<?php echo $link->urlID ?>&apos;</h2>
                 <dl class="dcf-txt-sm">
                     <dt><?php echo $appName; ?></dt>
-                    <dd class="dcf-pl-6"><a href="<?php echo $shorURL; ?>" target="_blank"><?php echo $shorURL; ?></a></dd>
+                    <dd class="dcf-pl-6"><a href="<?php echo htmlspecialchars($shorURL); ?>" target="_blank"><?php echo htmlspecialchars($shorURL); ?></a></dd>
 
                     <dt>Long URL</dt>
-                    <dd class="dcf-pl-6"><a href="<?php echo $lilurl->escapeURL($link->longURL) ?>" target="_blank"><?php echo $lilurl->escapeURL($link->longURL) ?></a></dd>
+                    <dd class="dcf-pl-6"><a href="<?php echo htmlspecialchars($lilurl->escapeURL($link->longURL)) ?>" target="_blank"><?php echo $lilurl->escapeURL($link->longURL) ?></a></dd>
 
                     <dt>Redirect Count</dt>
                     <dd class="dcf-pl-6"><?php echo $link->redirects ?></dd>

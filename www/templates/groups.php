@@ -29,8 +29,8 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
           <tr class="unl-bg-cream">
             <td data-header="Group"><?php echo $group->groupName; ?></td>
             <td class="dcf-txt-sm">
-              <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl('a/group/' . $group->groupID) ?>" title="Edit <?php echo $group->groupID; ?> Go URL" >Edit</a>
-              <form class="dcf-form dcf-d-inline" action="<?php echo $lilurl->getBaseUrl('a/groups') ?>" method="post">
+              <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/group/' . $group->groupID)) ?>" title="Edit <?php echo $group->groupID; ?> Go URL" >Edit</a>
+              <form class="dcf-form dcf-d-inline" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/groups')) ?>" method="post">
                 <input type="hidden" name="groupID" value="<?php echo $group->groupID; ?>" />
                 <button class="dcf-btn dcf-btn-primary dcf-mt-1" type="submit" onclick="return confirm('Are you for sure you want to delete group, \'<?php echo $group->groupName; ?>\'?');">Delete</button>
               </form>
@@ -43,7 +43,7 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
       <p>You don't have any groups yet.</p>
     <?php endif;?>
     <div class="dcf-mt-6 dcf-mb-6">
-      <a class="dcf-btn dcf-btn-primary" href="<?php echo $lilurl->getBaseUrl('a/group'); ?>">Add Group</a>
+      <a class="dcf-btn dcf-btn-primary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/group')); ?>">Add Group</a>
     </div>
   </div>
 </div>
