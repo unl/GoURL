@@ -29,10 +29,10 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
                 <h2 class="dcf-txt-h4">Details for &apos;<?php echo $link->urlID ?>&apos;</h2>
                 <dl class="dcf-txt-sm">
                     <dt><?php echo $appName; ?></dt>
-                    <dd class="dcf-pl-6"><a href="<?php echo htmlspecialchars($shorURL); ?>" target="_blank"><?php echo htmlspecialchars($shorURL); ?></a></dd>
+                    <dd class="dcf-pl-6"><a href="<?php echo htmlspecialchars($shorURL); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($shorURL); ?></a></dd>
 
                     <dt>Long URL</dt>
-                    <dd class="dcf-pl-6"><a href="<?php echo htmlspecialchars($lilurl->escapeURL($link->longURL)) ?>" target="_blank"><?php echo $lilurl->escapeURL($link->longURL) ?></a></dd>
+                    <dd class="dcf-pl-6"><a href="<?php echo htmlspecialchars($lilurl->escapeURL($link->longURL)) ?>" target="_blank" rel="noopener"><?php echo $lilurl->escapeURL($link->longURL) ?></a></dd>
 
                     <dt>Redirect Count</dt>
                     <dd class="dcf-pl-6"><?php echo $link->redirects ?></dd>
