@@ -40,7 +40,7 @@
             </form>
             <ul class="dcf-list-inline dcf-mt-6 dcf-p-0">
             <?php foreach($group->users as $index => $user) { ?>
-                <li class="dcf-p-2"><?php echo $user->uid; ?>&nbsp;<a class="dcf-btn dcf-btn-secondary dcf-txt-3xs" href="<?php echo $lilurl->getBaseUrl('a/removeuser/' . $groupID . '-' . urlencode($user->uid)) ?>" title="Remove <?php echo $user->uid;?> from <?php echo $group->groupName; ?>" >&times;</a></li>
+                <li class="dcf-p-2"><?php echo $user->uid; ?>&nbsp;<a class="dcf-btn dcf-btn-secondary dcf-txt-3xs" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/removeuser/' . $groupID . '-'. urlencode($user->uid))) ?>" title="Remove <?php echo $user->uid;?> from <?php echo $group->groupName; ?>" >&times;</a></li>
             <?php } ?>
             </ul>
         <?php } ?>

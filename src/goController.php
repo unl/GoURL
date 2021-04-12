@@ -33,11 +33,11 @@ class GoController
     }
 
     private function redirect($location, $code = 303, $sendCORSHeaders = FALSE) {
-	    header($location, TRUE, $code);
+	    header("LOCATION: ". $location, TRUE, $code);
 	    if ($sendCORSHeaders) {
 		    $this->sendCORSHeaders();
 	    }
-	    exit;
+	    exit();
     }
 
     public function getViewTemplate() {
@@ -135,7 +135,6 @@ class GoController
 
             if (!$this->auth->isAuthenticated()) {
 	            $this->redirect($this->lilurl->getBaseUrl('a/login'));
-              exit;
             }
         }
 
@@ -148,7 +147,6 @@ class GoController
 		      $uid = urldecode($matches[2]);
 
 		      if (isset($matches[1]) && $this->lilurl->isGroupMember($groupID, $this->auth->getUserId())) {
-
 			      if ($this->lilurl->deleteGroupUser($groupID, $uid, $this->auth->getUserId())) {
 				      $msg = '<p class="title">Delete Successful</p><p>' . $uid . ' has been removed from group.</p>';
 				      $type = 'success';
