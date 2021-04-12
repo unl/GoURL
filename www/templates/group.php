@@ -38,7 +38,7 @@
                     <button class="dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit">Add User</button>
                 </div>
             </form>
-            <ul class="dcf-list-inline dcf-p-1">
+            <ul class="dcf-list-inline dcf-mt-6 dcf-p-0">
             <?php foreach($group->users as $index => $user) { ?>
                 <li class="dcf-p-2"><?php echo $user->uid; ?>&nbsp;<a class="dcf-btn dcf-btn-secondary dcf-txt-3xs" href="<?php echo $lilurl->getBaseUrl('a/removeuser/' . $groupID . '-' . urlencode($user->uid)) ?>" title="Remove <?php echo $user->uid;?> from <?php echo $group->groupName; ?>" >&times;</a></li>
             <?php } ?>

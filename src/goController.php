@@ -32,6 +32,14 @@ class GoController
         $this->qrIconPNG = $qrIconPNG;
     }
 
+    private function redirect($location, $code = 303, $sendCORSHeaders = FALSE) {
+	    header($location, TRUE, $code);
+	    if ($sendCORSHeaders) {
+		    $this->sendCORSHeaders();
+	    }
+	    exit;
+    }
+
     public function getViewTemplate() {
         return $this->viewTemplate;
     }
@@ -53,23 +61,20 @@ class GoController
 
         if (isset($_GET['login']) || 'a/login' === $this->pathInfo) {
             $this->auth->login();
-            header('Location: ' . $this->lilurl->getBaseUrl('a/links'));
-            exit;
+	          $this->redirect($this->lilurl->getBaseUrl('a/links'));
         }
 
         if (isset($_GET['logout']) || 'a/logout' === $this->pathInfo) {
             session_destroy();
             $this->auth->logout();
-            header('Location: ' . $this->lilurl->getBaseUrl());
-            exit;
+	          $this->redirect($this->lilurl->getBaseUrl());
         }
 
         if (isset($_GET['manage']) || in_array($this->pathInfo, array('a/', 'a/links'))) {
             $this->route = 'manage';
 
             if (!$this->auth->isAuthenticated()) {
-                header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
-                exit;
+	              $this->redirect($this->lilurl->getBaseUrl('a/login'));
             }
         }
 
@@ -77,8 +82,7 @@ class GoController
 			    $this->route = 'lookup';
 
 			    if (!$this->auth->isAuthenticated()) {
-				    header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
-				    exit;
+				    $this->redirect($this->lilurl->getBaseUrl('a/login'));
 			    }
 		    }
 
@@ -86,8 +90,7 @@ class GoController
           $this->route = 'groups';
 
           if (!$this->auth->isAuthenticated()) {
-            header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
-            exit;
+	          $this->redirect($this->lilurl->getBaseUrl('a/login'));
           }
         }
 
@@ -98,15 +101,13 @@ class GoController
             $this->groupMode = self::MODE_EDIT;
 
             if (!$this->auth->isAuthenticated()) {
-              header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
-              exit;
+	            $this->redirect($this->lilurl->getBaseUrl('a/login'));
             } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
               $_SESSION['gourlFlashBag'] = array(
                 'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
                 'type' => 'error'
               );
-              header('Location: ' . $this->lilurl->getBaseUrl('a/groups'));
-              exit;
+	            $this->redirect($this->lilurl->getBaseUrl('a/groups'));
             }
 
             if (!empty($_POST)) {
@@ -121,8 +122,7 @@ class GoController
 
 		            default:
 									// missing or unexpected form so bail
-			            header('Location: ' . $this->lilurl->getBaseUrl($this->pathInfo));
-			            exit;
+			            $this->redirect($this->lilurl->getBaseUrl($this->pathInfo));
 	            }
             }
           }
@@ -134,15 +134,14 @@ class GoController
             $this->groupMode = self::MODE_CREATE;
 
             if (!$this->auth->isAuthenticated()) {
-              header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
+	            $this->redirect($this->lilurl->getBaseUrl('a/login'));
               exit;
             }
         }
 
 	      if (preg_match('/^a\/removeuser\/(\d+)-(\w+)$/', $this->pathInfo, $matches)) {
 		      if (!$this->auth->isAuthenticated()) {
-			      header('Location: ' . $this->lilurl->getBaseUrl('a/login'));
-			      exit;
+			      $this->redirect($this->lilurl->getBaseUrl('a/login'));
 		      }
 
 		      $groupID = $matches[1];
@@ -159,8 +158,7 @@ class GoController
 			      }
 
 			      $_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
-			      header('Location: ' . $this->lilurl->getBaseUrl('a/group/' . $groupID));
-			      exit;
+			      $this->redirect($this->lilurl->getBaseUrl('a/group/' . $groupID));
 		      }
 
 		      // Not authorized to delete user from group
@@ -168,15 +166,11 @@ class GoController
 			      'msg' => '<p class="title">Access Denied</p><p>Unable to remove ' . $uid . ' from group.</p>',
 			      'type' => 'error'
 		      );
-		      header('Location: ' . $this->lilurl->getBaseUrl('a/groups'));
-		      exit;
-
+		      $this->redirect($this->lilurl->getBaseUrl('a/groups'));
 	      }
 
         if ('api_create.php' === $this->pathInfo) {
-            header('Location: ' . $this->lilurl->getBaseUrl('api/'), true, 307);
-            $this->sendCORSHeaders();
-            exit;
+	          $this->redirect($this->lilurl->getBaseUrl('api/'), 307, TRUE);
         }
 
         if (!isset($_SESSION['clientId'])) {
@@ -252,8 +246,7 @@ class GoController
                         'url' => $url,
                     );
                     if ($mode === static::MODE_EDIT) {
-                        header('Location: ' . $this->lilurl->getBaseUrl('a/links'));
-                        exit;
+	                      $this->redirect($this->lilurl->getBaseUrl('a/links'));
                     }
                 } catch (Exception $e) {
                     switch ($e->getCode()) {
@@ -320,8 +313,8 @@ class GoController
                     exit;
                 }
 
-                header('Location: ' . $this->lilurl->getBaseUrl(), true, 303);
-                exit;
+	              $this->redirect($this->lilurl->getBaseUrl());
+
             } elseif ('api' === $this->route) {
                 $this->sendCORSHeaders();
                 header('HTTP/1.1 404 Not Found');
@@ -365,8 +358,7 @@ class GoController
                     'msg' => '<p class="title">Delete Successful</p><p>Your Go URL has been deleted</p>',
                     'type' => 'success',
                 );
-                header('Location: ' . $this->lilurl->getBaseUrl('a/links'));
-                exit;
+	              $this->redirect($this->lilurl->getBaseUrl('a/links'));
             }
         } elseif ('groups' === $this->route) {
             $this->viewTemplate = 'groups.php';
@@ -378,8 +370,7 @@ class GoController
                 'type' => 'success',
               );
 
-              header('Location: ' . $this->lilurl->getBaseUrl('a/groups'));
-              exit;
+	            $this->redirect($this->lilurl->getBaseUrl('a/groups'));
             }
         } elseif ('group' === $this->route) {
 	        $redirect = true;
@@ -424,8 +415,7 @@ class GoController
 		        }
 
 		        if ($redirect) {
-			        header('Location: ' . $this->lilurl->getBaseUrl('a/groups'));
-			        exit;
+			        $this->redirect($this->lilurl->getBaseUrl('a/groups'));
 		        }
 	        }
         } elseif ('add-group-user' === $this->route) {
@@ -474,8 +464,7 @@ class GoController
                     'type' => 'error',
                 );
 
-                header('Location: ' . $this->lilurl->getBaseUrl() . 'a/links', true, 303);
-                exit;
+	              $this->redirect($this->lilurl->getBaseUrl() . 'a/links');
             }
         } elseif ('reset' === $this->route) {
             if (!$this->auth->isAuthenticated() || !$this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
@@ -496,8 +485,7 @@ class GoController
                 );
             }
 
-            header('Location: ' . $this->lilurl->getBaseUrl() . 'a/links', true, 303);
-            exit;
+	          $this->redirect($this->lilurl->getBaseUrl() . 'a/links');
         } elseif ('qr' === $this->route) {
             if (!$this->lilurl->getURL($this->goId)) {
                 header('HTTP/1.1 404 Not Found');
