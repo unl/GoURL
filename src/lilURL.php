@@ -467,15 +467,8 @@ class lilURL
      */
     public function addURL($url, $id = null, $user = null, $groupID = null)
     {
-        if (!$id) {
-            // if the url is already in here, return true
-            if ($existing_id = $this->getID($url)) {
-                return $existing_id;
-            }
-
-            $id = $this->getRandomID();
-        } elseif ($existing_id = $this->getIDandURL($id, $url)) {
-            return $existing_id;
+        if ($existingID = $this->getExistingID($id, $url)) {
+					return $existingID;
         }
 
         $id = strtolower($id);
@@ -496,6 +489,19 @@ class lilURL
         return false;
     }
 
+    public function getExistingID($id, $url) {
+	    if (!$id) {
+		    // if the url is already in here, return true
+		    if ($existingID = $this->getID($url)) {
+			    return $existingID;
+		    }
+
+		    $id = $this->getRandomID();
+	    } elseif ($existingID = $this->getIDandURL($id, $url)) {
+		    return $existingID;
+	    }
+    }
+
     /**
      * update a url in the database
      *
@@ -505,7 +511,7 @@ class lilURL
     public function updateURL($url, $id = null, $uid = null, $groupID = null)
     {
 	      if (!$this->userHasURLAccess($id, $uid)) {
-		      throw new Exception('Edit Access Denied.', self::ERR_ACCESS_DENIED);
+		      return false;
 	      }
 
         $id = strtolower($id);
