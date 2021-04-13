@@ -103,36 +103,34 @@ class GoController
           }
         }
 
-        if (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
-          if (isset($matches[1]) && $this->lilurl->isGroup($matches[1])) {
-            $this->route = 'group';
-            $this->groupId = $matches[1];
-            $this->groupMode = self::MODE_EDIT;
+        if (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches) && isset($matches[1]) && $this->lilurl->isGroup($matches[1])) {
+					$this->route = 'group';
+          $this->groupId = $matches[1];
+          $this->groupMode = self::MODE_EDIT;
 
-            if (!$this->auth->isAuthenticated()) {
-	            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
-            } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
-              $_SESSION['gourlFlashBag'] = array(
-                'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
-                'type' => 'error'
-              );
-	            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
-            }
+          if (!$this->auth->isAuthenticated()) {
+            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
+          } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
+            $_SESSION['gourlFlashBag'] = array(
+              'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
+              'type' => 'error'
+            );
+            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
+          }
 
-            if (!empty($_POST)) {
-							switch($_POST['formName']) {
-		            case 'group-form':
-			            $this->route = 'group';
-			            break;
+          if (!empty($_POST)) {
+						switch($_POST['formName']) {
+	            case 'group-form':
+		            $this->route = 'group';
+		            break;
 
-		            case 'user-form':
-			            $this->route = 'add-group-user';
-			            break;
+	            case 'user-form':
+		            $this->route = 'add-group-user';
+		            break;
 
-		            default:
-									// missing or unexpected form so bail
-			            $this->redirect($this->lilurl->getBaseUrl($this->pathInfo));
-	            }
+	            default:
+								// missing or unexpected form so bail
+		            $this->redirect($this->lilurl->getBaseUrl($this->pathInfo));
             }
           }
         }

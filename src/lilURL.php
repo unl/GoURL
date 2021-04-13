@@ -17,6 +17,8 @@ class lilURL
     const ERR_INVALID_GA_CAMPAIGN = -7;
     const ERR_INVALID_URL = -8;
     const ERR_MAX_RANDOM_ID_ATTEMPTS = -9;
+    const ERR_ACCESS_DENIED = -10;
+
     const RANDOM_ID_ATTEMPTS_THERSHOLD = 1000000;
     const MAX_RANDOM_ID_BUMP_LENGTH = 5;
     const MAX_RANDOM_ID_ATTEMPTS = 15000000;
@@ -503,7 +505,7 @@ class lilURL
     public function updateURL($url, $id = null, $uid = null, $groupID = null)
     {
 	      if (!$this->userHasURLAccess($id, $uid)) {
-		      throw new Exception('Edit Access Denied.');
+		      throw new Exception('Edit Access Denied.', self::ERR_ACCESS_DENIED);
 	      }
 
         $id = strtolower($id);
