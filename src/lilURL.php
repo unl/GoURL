@@ -369,7 +369,7 @@ class lilURL
 
 				$row = $this->db->select(
 					self::TABLE_URLS,
-					'urlID = ' . self::PDO_PLACEHOLDER_URL_ID,
+					self::WHERE_URL_ID,
 					array(self::PDO_PLACEHOLDER_URL_ID => $id),
 					implode(',', $fields),
 					TRUE,
@@ -415,7 +415,7 @@ class lilURL
 		{
 				$result = $this->db->select(
 					self::TABLE_URLS,
-					'urlID = ' . self::PDO_PLACEHOLDER_URL_ID. ' AND longURL = ' . self::PDO_PLACEHOLDER_LONG_URL,
+					self::WHERE_URL_ID . ' AND longURL = ' . self::PDO_PLACEHOLDER_LONG_URL,
 					array(self::PDO_PLACEHOLDER_URL_ID => $id, self::PDO_PLACEHOLDER_LONG_URL => $url),
 					'urlID'
 				);
@@ -480,7 +480,7 @@ class lilURL
 						ltrim(self::PDO_PLACEHOLDER_LONG_URL, ':') => $url,
 						ltrim(self::PDO_PLACEHOLDER_GROUP_ID, ':') => $groupID
 					),
-					'urlID = ' . self::PDO_PLACEHOLDER_URL_ID,
+					self::WHERE_URL_ID,
 					array(self::PDO_PLACEHOLDER_URL_ID => $id)
 					);
 
@@ -570,7 +570,7 @@ class lilURL
 
 		public function userOwnsURL($urlID, $uid) {
 			$result = $this->db->run(
-				'SELECT count(*) AS ownsCount FROM ' . self::TABLE_URLS . ' WHERE urlID = ' . self::PDO_PLACEHOLDER_URL_ID . ' AND createdBy = ' . self::PDO_PLACEHOLDER_CREATED_BY,
+				'SELECT count(*) AS ownsCount FROM ' . self::TABLE_URLS . ' WHERE ' . self::WHERE_URL_ID. ' AND createdBy = ' . self::PDO_PLACEHOLDER_CREATED_BY,
 				array(self::PDO_PLACEHOLDER_URL_ID => $urlID, self::PDO_PLACEHOLDER_CREATED_BY => $uid),
 				TRUE
 			);
@@ -579,7 +579,7 @@ class lilURL
 
 		public function userHasGroupURLAccess($urlID, $uid) {
 			$result = $this->db->run(
-				'SELECT count(*) AS accessCount FROM ' . self::TABLE_URLS . ' u INNER JOIN tblGroupUsers ug on u.groupID = ug.groupID WHERE u.urlID = ' . self::PDO_PLACEHOLDER_URL_ID . ' AND ug.uid = ' . self::PDO_PLACEHOLDER_UID,
+				'SELECT count(*) AS accessCount FROM ' . self::TABLE_URLS . ' u INNER JOIN tblGroupUsers ug on u.groupID = ug.groupID WHERE ' . self::WHERE_URL_ID . ' AND ug.uid = ' . self::PDO_PLACEHOLDER_UID,
 				array(self::PDO_PLACEHOLDER_URL_ID => $urlID, self::PDO_PLACEHOLDER_UID => $uid),
 				TRUE
 			);
@@ -594,7 +594,7 @@ class lilURL
 		{
 			return $this->db->delete(
 				self::TABLE_URLS,
-				'urlID = ' . self::PDO_PLACEHOLDER_URL_ID . ' LIMIT 1',
+				self::WHERE_URL_ID . ' LIMIT 1',
 				array(self::PDO_PLACEHOLDER_URL_ID => $urlID)
 			);
 		}
@@ -603,7 +603,7 @@ class lilURL
 			return $this->db->update(
 				self::TABLE_URLS,
 				array(ltrim(self::PDO_PLACEHOLDER_REDIRECTS, ':') => 0),
-				'urlID = ' . self::PDO_PLACEHOLDER_URL_ID,
+				self::WHERE_URL_ID,
 				array(self::PDO_PLACEHOLDER_URL_ID => $id)
 			);
 		}
@@ -794,7 +794,7 @@ class lilURL
 		}
 
 		private function incrementRedirectCount($id) {
-			return $this->db->run('UPDATE ' . self::TABLE_URLS . ' SET redirects = redirects + 1 where urlID = ' . self::PDO_PLACEHOLDER_URL_ID,
+			return $this->db->run('UPDATE ' . self::TABLE_URLS . ' SET redirects = redirects + 1 WHERE ' . self::WHERE_URL_ID,
 				array(self::PDO_PLACEHOLDER_URL_ID => $id)
 			);
 		}
