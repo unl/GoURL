@@ -1,6 +1,6 @@
 <?php
 
-class pdoDB extends PDO {
+class PdoDB extends PDO {
 	private $error;
 	private $sql;
 	private $bind;
@@ -8,7 +8,7 @@ class pdoDB extends PDO {
 	private $errorMsgFormat;
 
 	public function __construct($dsn, $user="", $passwd="", $options=array()) {
-		if(empty($options)){
+		if (empty($options)) {
 			$options = array(
 				PDO::ATTR_PERSISTENT => false,
 				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -24,36 +24,42 @@ class pdoDB extends PDO {
 	}
 
 	private function debug() {
-		if(!empty($this->errorCallbackFunction)) {
+		if (!empty($this->errorCallbackFunction)) {
 			$error = array("Error" => $this->error);
-			if(!empty($this->sql))
+			if (!empty($this->sql)) {
 				$error["SQL Statement"] = $this->sql;
-			if(!empty($this->bind))
+			}
+			if (!empty($this->bind)) {
 				$error["Bind Parameters"] = trim(print_r($this->bind, true));
+			}
 
 			$backtrace = debug_backtrace();
-			if(!empty($backtrace)) {
-				foreach($backtrace as $info) {
-					if(isset($info["file"] ) && $info["file"] != __FILE__)
+			if (!empty($backtrace)) {
+				foreach ($backtrace as $info) {
+					if (isset($info["file"] ) && $info["file"] != __FILE__) {
 						$error["Backtrace"] = $info["file"] . " at line " . $info["line"];
+					}
 				}
 			}
 
 			$msg = "";
-			if($this->errorMsgFormat == "html") {
-				if(!empty($error["Bind Parameters"]))
+			if ($this->errorMsgFormat == "html") {
+				if (!empty($error["Bind Parameters"])) {
 					$error["Bind Parameters"] = "<pre>" . $error["Bind Parameters"] . "</pre>";
+				}
 				$css = trim(file_get_contents(dirname(__FILE__) . "/error.css"));
 				$msg .= '<style type="text/css">' . "\n" . $css . "\n</style>";
 				$msg .= "\n" . '<div class="db-error">' . "\n\t<h3>SQL Error</h3>";
-				foreach($error as $key => $val)
+				foreach ($error as $key => $val) {
 					$msg .= "\n\t<label>" . $key . ":</label>" . $val;
+				}
 				$msg .= "\n\t</div>\n</div>";
 			}
-			elseif($this->errorMsgFormat == "text") {
+			elseif ($this->errorMsgFormat == "text") {
 				$msg .= "SQL Error\n" . str_repeat("-", 50);
-				foreach($error as $key => $val)
+				foreach ($error as $key => $val) {
 					$msg .= "\n\n$key:\n$val";
+				}
 			}
 
 			$func = $this->errorCallbackFunction;
@@ -92,14 +98,17 @@ class pdoDB extends PDO {
 	}
 
 	private function cleanup($bind) {
-		if(!is_array($bind)) {
-			if(!empty($bind))
+		if (!is_array($bind)) {
+			if (!empty($bind)) {
 				$bind = array($bind);
-			else
+			}
+			else {
 				$bind = array();
+			}
 		}
-		foreach($bind as $key => $val)
+		foreach ($bind as $key => $val) {
 			$bind[$key] = stripslashes($val);
+		}
 		return $bind;
 	}
 
@@ -107,8 +116,9 @@ class pdoDB extends PDO {
 		$fields = $this->filter($table, $info);
 		$sql = "INSERT INTO " . $table . " (" . implode($fields, ", ") . ") VALUES (:" . implode($fields, ", :") . ");";
 		$bind = array();
-		foreach($fields as $field)
+		foreach ($fields as $field) {
 			$bind[":$field"] = $info[$field];
+		}
 		return $this->run($sql, $bind);
 	}
 
@@ -119,8 +129,8 @@ class pdoDB extends PDO {
 
 		try {
 			$pdostmt = $this->prepare($this->sql);
-			if($pdostmt->execute($this->bind) !== false) {
-				if(preg_match("/^(" . implode("|", array("\(select", "select", "describe", "pragma")) . ") /i", $this->sql)) {
+			if ($pdostmt->execute($this->bind) !== false) {
+				if (preg_match("/^(" . implode("|", array("\(select", "select", "describe", "pragma")) . ") /i", $this->sql)) {
 					return $fetchOne === TRUE ? $pdostmt->fetch($fetchFormat) : $pdostmt->fetchAll($fetchFormat);
 				} elseif(preg_match("/^(" . implode("|", array("delete", "insert", "update")) . ") /i", $this->sql)) {
 					return $pdostmt->rowCount();
@@ -135,21 +145,24 @@ class pdoDB extends PDO {
 
 	public function select($table, $where="", $bind="", $fields="*", $fetchOne = FALSE, $fetchFormat = PDO::FETCH_OBJ) {
 		$sql = "SELECT " . $fields . " FROM " . $table;
-		if(!empty($where))
+		if (!empty($where)) {
 			$sql .= " WHERE " . $where;
+		}
 		$sql .= ";";
 		return $this->run($sql, $bind, $fetchOne, $fetchFormat);
 	}
 
 	public function setErrorCallbackFunction($errorCallbackFunction, $errorMsgFormat="html") {
 		//Variable functions for won't work with language constructs such as echo and print, so these are replaced with print_r.
-		if(in_array(strtolower($errorCallbackFunction), array("echo", "print")))
+		if (in_array(strtolower($errorCallbackFunction), array("echo", "print"))) {
 			$errorCallbackFunction = "print_r";
+		}
 
-		if(function_exists($errorCallbackFunction)) {
+		if (function_exists($errorCallbackFunction)) {
 			$this->errorCallbackFunction = $errorCallbackFunction;
-			if(!in_array(strtolower($errorMsgFormat), array("html", "text")))
+			if (!in_array(strtolower($errorMsgFormat), array("html", "text"))) {
 				$errorMsgFormat = "html";
+			}
 			$this->errorMsgFormat = $errorMsgFormat;
 		}
 	}

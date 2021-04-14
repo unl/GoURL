@@ -59,7 +59,7 @@ class lilURL
     public function __construct($host, $user, $pass, $schema)
     {
         $this->db = new PDO(sprintf('mysql:host=%s;dbname=%s', $host, $schema), $user, $pass);
-        $this->db2 = new pdoDB(sprintf('mysql:host=%s;dbname=%s', $host, $schema), $user, $pass);
+        $this->db2 = new PdoDB(sprintf('mysql:host=%s;dbname=%s', $host, $schema), $user, $pass);
     }
 
     protected function executeQuery($sql, $params = [])
