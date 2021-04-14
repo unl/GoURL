@@ -354,7 +354,7 @@ class lilURL
 					array(self::PDO_PLACEHOLDER_LONG_URL => $url,self::PDO_PLACEHOLDER_CREATED_BY => ''),
 					'urlID'
 				);
-				!empty($result) && !empty($result->urlID) ? $result->urlID : FALSE;
+				return !empty($result) && !empty($result->urlID) ? $result->urlID : FALSE;
 		}
 
 		public function getLinkRow($id, $fields = [], $pdoFormat = PDO::FETCH_OBJ)

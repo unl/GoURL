@@ -62,9 +62,7 @@ class PdoDB extends PDO {
 					$msg .= "\n\n$key:\n$val";
 				}
 			}
-
-			echo $msq;
-			die();
+			
 			$func = $this->_errorCallbackFunction;
 			$func($msg);
 		}
