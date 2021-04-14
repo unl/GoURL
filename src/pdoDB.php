@@ -5,8 +5,6 @@ class PdoDB extends PDO {
 	private $_error;
 	private $_sql;
 	private $_bind;
-	private $_errorCallbackFunction;
-	private $_errorMsgFormat;
 
 	public function __construct($dsn, $user="", $passwd="", $options=array()) {
 		if (empty($options)) {
@@ -21,50 +19,6 @@ class PdoDB extends PDO {
 		} catch (PDOException $e) {
 			trigger_error($e->getMessage());
 			return false;
-		}
-	}
-
-	private function debug() {
-		if (!empty($this->_errorCallbackFunction)) {
-			$error = array("Error" => $this->_error);
-			if (!empty($this->_sql)) {
-				$error["SQL Statement"] = $this->_sql;
-			}
-			if (!empty($this->_bind)) {
-				$error["Bind Parameters"] = trim(print_r($this->_bind, true));
-			}
-
-			$backtrace = debug_backtrace();
-			if (!empty($backtrace)) {
-				foreach ($backtrace as $info) {
-					if (isset($info["file"] ) && $info["file"] != __FILE__) {
-						$error["Backtrace"] = $info["file"] . " at line " . $info["line"];
-					}
-				}
-			}
-
-			$msg = "";
-			if ($this->_errorMsgFormat == "html") {
-				if (!empty($error["Bind Parameters"])) {
-					$error["Bind Parameters"] = "<pre>" . $error["Bind Parameters"] . "</pre>";
-				}
-				$css = trim(file_get_contents(dirname(__FILE__) . "/error.css"));
-				$msg .= '<style type="text/css">' . "\n" . $css . "\n</style>";
-				$msg .= "\n" . '<div class="db-error">' . "\n\t<h3>SQL Error</h3>";
-				foreach ($error as $key => $val) {
-					$msg .= "\n\t<label>" . $key . ":</label>" . $val;
-				}
-				$msg .= "\n\t</div>\n</div>";
-			}
-			elseif ($this->_errorMsgFormat == "text") {
-				$msg .= "SQL Error\n" . str_repeat("-", 50);
-				foreach ($error as $key => $val) {
-					$msg .= "\n\n$key:\n$val";
-				}
-			}
-
-			$func = $this->_errorCallbackFunction;
-			$func($msg);
 		}
 	}
 
@@ -146,7 +100,6 @@ class PdoDB extends PDO {
 			}
 		} catch (PDOException $e) {
 			$this->_error = $e->getMessage();
-			$this->debug();
 			return false;
 		}
 	}
