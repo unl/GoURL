@@ -457,7 +457,7 @@ class GoController
 
 	        // Not authorized to delete user from group
 	        $_SESSION['gourlFlashBag'] = array(
-		        'msg' => '<p class="title">Access Denied</p><p>Unable to remove ' . $uid . ' from group.</p>',
+		        'msg' => '<p class="title">Access Denied</p><p>Unable to remove ' . $this->uid . ' from group.</p>',
 		        'type' => 'error'
 	        );
 	        $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
