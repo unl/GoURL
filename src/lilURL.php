@@ -376,7 +376,7 @@ class lilURL
 					$pdoFormat
 				);
 
-				return (!empty($row)) ? $row : FASLE;
+				return (!empty($row)) ? $row : FALSE;
 		}
 
 		/**

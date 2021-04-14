@@ -8,19 +8,36 @@ class GoController
     const MODE_EDIT = 'edit';
     const DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
 
-    // route destinations
-		const ROUTE_GROUP = 'a/group';
-		const ROUTE_GROUPS = 'a/groups';
-		const ROUTE_LINKS = 'a/links';
-		const ROUTE_LOGIN = 'a/login';
-		const ROUTE_LOGOUT = 'a/logout';
-		const ROUTE_LOOKUP = 'a/lookup';
+    // route names
+		const ROUTE_NAME_API  = 'api';
+		const ROUTE_NAME_EDIT  = 'edit';
+		const ROUTE_NAME_GROUP = 'group';
+		const ROUTE_NAME_GROUPS = 'groups';
+		const ROUTE_NAME_LINKS = 'links';
+		const ROUTE_NAME_LINKINFO = 'linkinfo';
+		const ROUTE_NAME_LOGIN = 'login';
+		const ROUTE_NAME_LOGOUT = 'logout';
+		const ROUTE_NAME_LOOKUP = 'lookup';
+		const ROUTE_NAME_MANAGE = 'manage';
+		const ROUTE_NAME_QR = 'qr';
+		const ROUTE_NAME_REMOVE_USER = 'remove-user';
+		const ROUTE_NAME_RESET = 'reset';
+
+    // route paths
+	  const ROUTE_PATH_API = 'api/';
+		const ROUTE_PATH_GROUP = 'a/group';
+		const ROUTE_PATH_GROUPS = 'a/groups';
+		const ROUTE_PATH_LINKS = 'a/links';
+		const ROUTE_PATH_LOGIN = 'a/login';
+		const ROUTE_PATH_LOGOUT = 'a/logout';
+		const ROUTE_PATH_LOOKUP = 'a/lookup';
 
     private $auth;
     private $lilurl;
     private $route;
     private $groupId;
     private $groupMode;
+    private $uid;
     private $goId;
     private $pathInfo;
     private $viewTemplate;
@@ -39,6 +56,12 @@ class GoController
         $this->lilurl = $lilurl;
         $this->auth = $auth;
         $this->qrIconPNG = $qrIconPNG;
+
+		    // See if already logged in via PHP CAS
+		    if ($this->auth->getAuthType() === $this->auth::AUTH_TYPE_CAS && array_key_exists('unl_sso', $_COOKIE) && !$this->auth->isAuthenticated()) {
+			    // Run PHPCAS checkAuthentication
+			    $this->auth->checkAuthentication();
+		    }
     }
 
     private function redirect($location, $code = 303, $sendCORSHeaders = FALSE) {
@@ -47,6 +70,22 @@ class GoController
 		    $this->sendCORSHeaders();
 	    }
 	    exit();
+    }
+
+    private function routeRequiresLogin() {
+			return in_array($this->route, array(
+				self::ROUTE_NAME_GROUP,
+				self::ROUTE_NAME_GROUPS,
+				self::ROUTE_NAME_LINKS,
+				self::ROUTE_NAME_LOOKUP,
+				self::ROUTE_NAME_REMOVE_USER
+			));
+    }
+
+    private function loginCheck() {
+	    if ($this->routeRequiresLogin() && !$this->auth->isAuthenticated()) {
+		    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LOGIN));
+	    }
     }
 
     public function getViewTemplate() {
@@ -62,15 +101,9 @@ class GoController
         $this->route = '';
         $this->pathInfo = $this->lilurl->getRequestPath();
 
-        // See if already logged in via PHP CAS
-        if ($this->auth->getAuthType() === $this->auth::AUTH_TYPE_CAS && array_key_exists('unl_sso', $_COOKIE) && !$this->auth->isAuthenticated()) {
-          // Run PHPCAS checkAuthentication
-          $this->auth->checkAuthentication();
-        }
-
         if (isset($_GET['login']) || 'a/login' === $this->pathInfo) {
             $this->auth->login();
-	          $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LINKS));
+	          $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
         }
 
         if (isset($_GET['logout']) || 'a/logout' === $this->pathInfo) {
@@ -79,131 +112,86 @@ class GoController
 	          $this->redirect($this->lilurl->getBaseUrl());
         }
 
-        if (isset($_GET['manage']) || in_array($this->pathInfo, array('a/', self::ROUTE_LINKS))) {
-            $this->route = 'manage';
+		    if ('api_create.php' === $this->pathInfo) {
+			    $this->redirect($this->lilurl->getBaseUrl('api/'), 307, TRUE);
+		    }
 
-            if (!$this->auth->isAuthenticated()) {
-	              $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
-            }
-        }
-
-		    if (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_LOOKUP) {
-			    $this->route = 'lookup';
+		    // TODO Move to routes if makes sense
+		    if (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches) && isset($matches[1]) && $this->lilurl->isGroup($matches[1])) {
+			    $this->route = 'group';
+			    $this->groupId = $matches[1];
+			    $this->groupMode = self::MODE_EDIT;
 
 			    if (!$this->auth->isAuthenticated()) {
-				    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
+				    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LOGIN));
+			    } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
+				    $_SESSION['gourlFlashBag'] = array(
+					    'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
+					    'type' => 'error'
+				    );
+				    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
+			    }
+
+			    if (!empty($_POST)) {
+				    switch($_POST['formName']) {
+					    case 'group-form':
+						    $this->route = 'group';
+						    break;
+
+					    case 'user-form':
+						    $this->route = 'add-group-user';
+						    break;
+
+					    default:
+						    // missing or unexpected form so bail
+						    $this->redirect($this->lilurl->getBaseUrl($this->pathInfo));
+				    }
 			    }
 		    }
 
-        if (isset($_GET['groups']) || $this->pathInfo === self::ROUTE_GROUPS) {
-          $this->route = 'groups';
-
-          if (!$this->auth->isAuthenticated()) {
-	          $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
-          }
-        }
-
-        if (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches) && isset($matches[1]) && $this->lilurl->isGroup($matches[1])) {
-					$this->route = 'group';
-          $this->groupId = $matches[1];
-          $this->groupMode = self::MODE_EDIT;
-
-          if (!$this->auth->isAuthenticated()) {
-            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
-          } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
-            $_SESSION['gourlFlashBag'] = array(
-              'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
-              'type' => 'error'
-            );
-            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
-          }
-
-          if (!empty($_POST)) {
-						switch($_POST['formName']) {
-	            case 'group-form':
-		            $this->route = 'group';
-		            break;
-
-	            case 'user-form':
-		            $this->route = 'add-group-user';
-		            break;
-
-	            default:
-								// missing or unexpected form so bail
-		            $this->redirect($this->lilurl->getBaseUrl($this->pathInfo));
-            }
-          }
-        }
-
-        if ($this->pathInfo === 'a/group') {
-            $this->route = 'group';
-            $this->groupId = NULL;
-            $this->groupMode = self::MODE_CREATE;
-
-            if (!$this->auth->isAuthenticated()) {
-	            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
-            }
-        }
-
-	      if (preg_match('/^a\/removeuser\/(\d+)-(\w+)$/', $this->pathInfo, $matches)) {
-		      if (!$this->auth->isAuthenticated()) {
-			      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LOGIN));
-		      }
-
-		      $groupID = $matches[1];
-		      $uid = urldecode($matches[2]);
-
-		      if (isset($matches[1]) && $this->lilurl->isGroupMember($groupID, $this->auth->getUserId())) {
-			      if ($this->lilurl->deleteGroupUser($groupID, $uid, $this->auth->getUserId())) {
-				      $msg = '<p class="title">Delete Successful</p><p>' . $uid . ' has been removed from group.</p>';
-				      $type = 'success';
-			      } else {
-				      $msg = '<p class="title">Delete Failed</p><p>Unable to remove ' . $uid . ' from group.</p>';
-					    $type = 'error';
-			      }
-
-			      $_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
-			      $this->redirect($this->lilurl->getBaseUrl('a/group/' . $groupID));
-		      }
-
-		      // Not authorized to delete user from group
-		      $_SESSION['gourlFlashBag'] = array(
-			      'msg' => '<p class="title">Access Denied</p><p>Unable to remove ' . $uid . ' from group.</p>',
-			      'type' => 'error'
-		      );
-		      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
-	      }
-
-        if ('api_create.php' === $this->pathInfo) {
-	          $this->redirect($this->lilurl->getBaseUrl('api/'), 307, TRUE);
-        }
-
-        if (!isset($_SESSION['clientId'])) {
-            $_SESSION['clientId'] = (string) Uuid::uuid4();
-        }
-        $this->lilurl->setGaClientId($_SESSION['clientId']);
+		    if (!isset($_SESSION['clientId'])) {
+			    $_SESSION['clientId'] = (string) Uuid::uuid4();
+		    }
+	      $this->lilurl->setGaClientId($_SESSION['clientId']);
     }
 
     public function route() {
-        if ('api/' === $this->pathInfo) {
-            $this->route = 'api';
-        } elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
-            $this->route = 'qr';
+		    if (isset($_GET['manage']) || in_array($this->pathInfo, array('a/', self::ROUTE_PATH_LINKS))) {
+			    $this->route = self::ROUTE_NAME_MANAGE;
+		    } elseif (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_PATH_LOOKUP) {
+			    $this->route = self::ROUTE_NAME_LOOKUP;
+		    } elseif ($this->pathInfo === self::ROUTE_PATH_GROUP) {
+			    $this->route = 'group';
+			    $this->groupId = NULL;
+			    $this->groupMode = self::MODE_CREATE;
+		    } elseif ($this->pathInfo === self::ROUTE_PATH_GROUPS) {
+			    $this->route = self::ROUTE_NAME_GROUPS;
+		    } elseif ($this->pathInfo === self::ROUTE_PATH_API) {
+            $this->route = self::ROUTE_NAME_API;
+        } elseif (preg_match('/^a\/removeuser\/(\d+)-(\w+)$/', $this->pathInfo, $matches)) {
+			    $this->route = self::ROUTE_NAME_REMOVE_USER;
+			    $this->groupId = $matches[1];
+			    $this->uid = urldecode($matches[2]);
+		    } elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
+            $this->route = self::ROUTE_NAME_QR;
             $this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\/edit$#', $this->pathInfo, $matches)) {
-            $this->route = 'edit';
+            $this->route = self::ROUTE_NAME_EDIT;
             $this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\/reset$#', $this->pathInfo, $matches)) {
-            $this->route = 'reset';
+            $this->route = self::ROUTE_NAME_EDIT;
             $this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\/info$#', $this->pathInfo, $matches)) {
-            $this->route = 'linkinfo';
+            $this->route = self::ROUTE_NAME_LINKINFO;
             $this->goId = $matches[1];
         }
 
         if (!$this->route && $this->pathInfo !== '') {
             $this->route = 'redirect';
         }
+
+        // check login for protected routes
+	      $this->loginCheck();
     }
 
     public function dispatch() {
@@ -251,7 +239,7 @@ class GoController
                         'url' => $url,
                     );
                     if ($mode === static::MODE_EDIT) {
-	                      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_LINKS));
+	                      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
                     }
                 } catch (Exception $e) {
                     switch ($e->getCode()) {
@@ -375,7 +363,7 @@ class GoController
                 'type' => 'success',
               );
 
-	            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
+	            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
             }
         } elseif ('group' === $this->route) {
 	        $redirect = true;
@@ -420,7 +408,7 @@ class GoController
 		        }
 
 		        if ($redirect) {
-			        $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_GROUPS));
+			        $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
 		        }
 	        }
         } elseif ('add-group-user' === $this->route) {
@@ -429,7 +417,7 @@ class GoController
 	        $msg = '';
 	        $type = '';
 	        $uid = trim($_POST['uid']);
-					$error = '';
+	        $error = '';
 
 	        if ($this->lilurl->isValidGroupUser($uid, $error)) {
 		        if ($this->lilurl->insertGroupUser($this->groupId, $uid, $this->auth->getUserId())) {
@@ -453,7 +441,26 @@ class GoController
 	        if (!empty($msg) && !empty($type)) {
 		        $_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
 	        }
+        } elseif ($this->route === self::ROUTE_NAME_REMOVE_USER) {
+	        if (!empty($this->groupId) && $this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
+		        if ($this->lilurl->deleteGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
+			        $msg = '<p class="title">Delete Successful</p><p>' . $this->uid . ' has been removed from group.</p>';
+			        $type = 'success';
+		        } else {
+			        $msg = '<p class="title">Delete Failed</p><p>Unable to remove ' . $this->uid . ' from group.</p>';
+			        $type = 'error';
+		        }
 
+		        $_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
+		        $this->redirect($this->lilurl->getBaseUrl('a/group/' . $this->groupId));
+	        }
+
+	        // Not authorized to delete user from group
+	        $_SESSION['gourlFlashBag'] = array(
+		        'msg' => '<p class="title">Access Denied</p><p>Unable to remove ' . $uid . ' from group.</p>',
+		        'type' => 'error'
+	        );
+	        $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
         }  elseif ('edit' === $this->route) {
             if (!$this->auth->isAuthenticated() || !$this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
                 header('HTTP/1.1 404 Not Found');
@@ -469,7 +476,7 @@ class GoController
                     'type' => 'error',
                 );
 
-	              $this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_LINKS);
+	              $this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
             }
         } elseif ('reset' === $this->route) {
             if (!$this->auth->isAuthenticated() || !$this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
@@ -490,7 +497,7 @@ class GoController
                 );
             }
 
-	          $this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_LINKS);
+	          $this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
         } elseif ('qr' === $this->route) {
             if (!$this->lilurl->getURL($this->goId)) {
                 header('HTTP/1.1 404 Not Found');
