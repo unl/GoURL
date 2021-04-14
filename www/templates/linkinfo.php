@@ -22,7 +22,7 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
                 </form>
             </div>
             <?php if (!empty($link)) :
-                $http = $_SERVER['HTTPS'] ? 'https://' : 'http';
+                $http = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === TRUE ? 'https://' : 'http://';
 	            $shorURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($link->urlID);
             ?>
             <div>
@@ -37,12 +37,19 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
                     <dt>Redirect Count</dt>
                     <dd class="dcf-pl-6"><?php echo $link->redirects ?></dd>
 
-                    <?php if ($link->submitDateTime): ?>
+                    <?php if ($link->submitDate): ?>
                         <dt>Created On</dt>
-                        <dd class="dcf-pl-6"><?php echo $link->submitDateTime->format('F j, Y') ?></dd>
+                        <dd class="dcf-pl-6"><?php
+	                        $createdOn = 'Unknown';
+	                        if ($link->submitDate !== '0000-00-00 00:00:00') {
+		                        $rowDateTime = new DateTime($link->submitDate);
+                                $createdOn = $rowDateTime->format('F j, Y');
+	                        }
+	                        echo $createdOn;
+                        ?></dd>
                     <?php endif;?>
 
-                    <dt>Owner</dt>
+                    <dt>Owner/Created By</dt>
                     <dd class="dcf-pl-6">
 	                <?php if ($link->createdBy): ?>
                         <?php echo $lilurl->escapeURL($link->createdBy) ?></a>

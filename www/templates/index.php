@@ -53,7 +53,7 @@
                         <?php } ?>
                     </select>
                     <span class="dcf-form-help">Note: The User Group allows the users of the group to have admin access to the url. Only groups which you belong to are options.</span>
-	                <?php if (!empty($goURLForm->getCreatedBy())) {
+	                <?php if (!empty($goURLForm->getCreatedBy() && !empty($goURLForm->getSubmitDate()))) {
 	                    $createDate = new DateTime($goURLForm->getSubmitDate());
 	                ?>
                       <span class="dcf-form-help dcf-mt-4">Created by <?php echo $goURLForm->getCreatedBy(); ?> on <?php echo $createDate->format('F j, Y'); ?></span>
