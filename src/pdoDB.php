@@ -1,11 +1,11 @@
 <?php
 
 class PdoDB extends PDO {
-	private $error;
-	private $sql;
-	private $bind;
-	private $errorCallbackFunction;
-	private $errorMsgFormat;
+	private $_error;
+	private $_sql;
+	private $_bind;
+	private $_errorCallbackFunction;
+	private $_errorMsgFormat;
 
 	public function __construct($dsn, $user="", $passwd="", $options=array()) {
 		if (empty($options)) {
@@ -24,13 +24,13 @@ class PdoDB extends PDO {
 	}
 
 	private function debug() {
-		if (!empty($this->errorCallbackFunction)) {
-			$error = array("Error" => $this->error);
-			if (!empty($this->sql)) {
-				$error["SQL Statement"] = $this->sql;
+		if (!empty($this->_errorCallbackFunction)) {
+			$error = array("Error" => $this->_error);
+			if (!empty($this->_sql)) {
+				$error["SQL Statement"] = $this->_sql;
 			}
-			if (!empty($this->bind)) {
-				$error["Bind Parameters"] = trim(print_r($this->bind, true));
+			if (!empty($this->_bind)) {
+				$error["Bind Parameters"] = trim(print_r($this->_bind, true));
 			}
 
 			$backtrace = debug_backtrace();
@@ -43,7 +43,7 @@ class PdoDB extends PDO {
 			}
 
 			$msg = "";
-			if ($this->errorMsgFormat == "html") {
+			if ($this->_errorMsgFormat == "html") {
 				if (!empty($error["Bind Parameters"])) {
 					$error["Bind Parameters"] = "<pre>" . $error["Bind Parameters"] . "</pre>";
 				}
@@ -55,14 +55,14 @@ class PdoDB extends PDO {
 				}
 				$msg .= "\n\t</div>\n</div>";
 			}
-			elseif ($this->errorMsgFormat == "text") {
+			elseif ($this->_errorMsgFormat == "text") {
 				$msg .= "SQL Error\n" . str_repeat("-", 50);
 				foreach ($error as $key => $val) {
 					$msg .= "\n\n$key:\n$val";
 				}
 			}
 
-			$func = $this->errorCallbackFunction;
+			$func = $this->_errorCallbackFunction;
 			$func($msg);
 		}
 	}
@@ -123,21 +123,21 @@ class PdoDB extends PDO {
 	}
 
 	public function run($sql, $bind="", $fetchOne = FALSE, $fetchFormat = PDO::FETCH_OBJ) {
-		$this->sql = trim($sql);
-		$this->bind = $this->cleanup($bind);
-		$this->error = "";
+		$this->_sql = trim($sql);
+		$this->_bind = $this->cleanup($bind);
+		$this->_error = "";
 
 		try {
-			$pdostmt = $this->prepare($this->sql);
-			if ($pdostmt->execute($this->bind) !== false) {
-				if (preg_match("/^(" . implode("|", array("\(select", "select", "describe", "pragma")) . ") /i", $this->sql)) {
+			$pdostmt = $this->prepare($this->_sql);
+			if ($pdostmt->execute($this->_bind) !== false) {
+				if (preg_match("/^(" . implode("|", array("\(select", "select", "describe", "pragma")) . ") /i", $this->_sql)) {
 					return $fetchOne === TRUE ? $pdostmt->fetch($fetchFormat) : $pdostmt->fetchAll($fetchFormat);
-				} elseif(preg_match("/^(" . implode("|", array("delete", "insert", "update")) . ") /i", $this->sql)) {
+				} elseif(preg_match("/^(" . implode("|", array("delete", "insert", "update")) . ") /i", $this->_sql)) {
 					return $pdostmt->rowCount();
 				}
 			}
 		} catch (PDOException $e) {
-			$this->error = $e->getMessage();
+			$this->_error = $e->getMessage();
 			$this->debug();
 			return false;
 		}
@@ -159,11 +159,11 @@ class PdoDB extends PDO {
 		}
 
 		if (function_exists($errorCallbackFunction)) {
-			$this->errorCallbackFunction = $errorCallbackFunction;
+			$this->_errorCallbackFunction = $errorCallbackFunction;
 			if (!in_array(strtolower($errorMsgFormat), array("html", "text"))) {
 				$errorMsgFormat = "html";
 			}
-			$this->errorMsgFormat = $errorMsgFormat;
+			$this->_errorMsgFormat = $errorMsgFormat;
 		}
 	}
 
