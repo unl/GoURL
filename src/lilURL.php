@@ -31,12 +31,16 @@ class lilURL
 		// Table Column Placeholders
 		const PDO_PLACEHOLDER_URL_ID = ':urlID';
 		const PDO_PLACEHOLDER_LONG_URL = ':longURL';
-		const PDO_PLACEHOLDER_SUBMIT_DATE = ':submitDate';
 		const PDO_PLACEHOLDER_CREATED_BY = ':createdBy';
 		const PDO_PLACEHOLDER_REDIRECTS = ':redirects';
 		const PDO_PLACEHOLDER_GROUP_ID = ':groupID';
 		const PDO_PLACEHOLDER_GROUP_NAME = ':groupName';
 		const PDO_PLACEHOLDER_UID = ':uid';
+
+		// Common where string segements
+		const WHERE_GROUP_ID = 'groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID;
+		const WHERE_URL_ID = 'urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
+		const WHERE_UID = 'uid = ' . self::PDO_PLACEHOLDER_UID;
 
 		protected $db;
 
@@ -608,7 +612,7 @@ class lilURL
 		{
 			return $this->db->select(
 				self::TABLE_GROUPS,
-				'groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID,
+				self::WHERE_GROUP_ID,
 				array(self::PDO_PLACEHOLDER_GROUP_ID => $id),
 				'*',
 				TRUE);
@@ -626,7 +630,7 @@ class lilURL
 		{
 			return $this->db->select(
 				self::TABLE_GROUP_USERS,
-				'groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID . ' ORDER BY uid',
+				self::WHERE_GROUP_ID . ' ORDER BY uid',
 				array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID)
 			);
 		}
@@ -659,7 +663,7 @@ class lilURL
 			if ($this->isGroupMember($groupID, $adminUID)) {
 				return $this->db->delete(
 					self::TABLE_GROUP_USERS,
-					'groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID . ' AND uid = ' . self::PDO_PLACEHOLDER_UID,
+					self::WHERE_GROUP_ID. ' AND ' . self::WHERE_UID,
 					array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID, self::PDO_PLACEHOLDER_UID => $uid)
 				);
 			}
@@ -668,7 +672,7 @@ class lilURL
 
 		public function isGroup($groupID) {
 			$result = $this->db->run(
-				'SELECT count(*) as isGroupCount from tblGroups WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID,
+				'SELECT count(*) as isGroupCount from tblGroups WHERE ' . self::WHERE_GROUP_ID,
 				array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID),
 				TRUE
 			);
@@ -677,7 +681,7 @@ class lilURL
 
 		public function isGroupMember($groupID, $uid) {
 			$result = $this->db->run(
-				'SELECT count(*) AS isMemberCount FROM tblGroupUsers WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID . ' AND uid = ' . self::PDO_PLACEHOLDER_UID,
+				'SELECT count(*) AS isMemberCount FROM tblGroupUsers WHERE ' . self::WHERE_GROUP_ID . ' AND ' . self::WHERE_UID,
 				array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID, self::PDO_PLACEHOLDER_UID => $uid),
 				TRUE
 			);
@@ -693,7 +697,7 @@ class lilURL
 			}
 
 			$result = $this->db->run(
-				'SELECT count(*) AS isGroupCount FROM tblGroups WHERE groupID != ' . self::PDO_PLACEHOLDER_GROUP_ID . ' AND groupName = ' . self::PDO_PLACEHOLDER_GROUP_NAME,
+				'SELECT count(*) AS isGroupCount FROM tblGroups WHERE ' . self::WHERE_GROUP_ID . ' AND groupName = ' . self::PDO_PLACEHOLDER_GROUP_NAME,
 				array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID, self::PDO_PLACEHOLDER_GROUP_NAME => trim($groupName)),
 				TRUE
 			);
@@ -732,7 +736,7 @@ class lilURL
 				return $this->db->update(
 					self::TABLE_GROUPS,
 					array(ltrim(self::PDO_PLACEHOLDER_GROUP_NAME, ':') => trim($group['groupName'])),
-					'groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID,
+					self::WHERE_GROUP_ID,
 					array(self::PDO_PLACEHOLDER_GROUP_ID => $group['groupID'])
 				);
 			}
@@ -751,7 +755,7 @@ class lilURL
 				// Remove all group users
 				$result1 = $this->db->delete(
 					self::TABLE_GROUP_USERS,
-					'groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID,
+					self::WHERE_GROUP_ID,
 					array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID)
 				);
 
@@ -759,7 +763,7 @@ class lilURL
 					// remove group
 					return $this->db->delete(
 						self::TABLE_GROUPS,
-						'groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID,
+						self::WHERE_GROUP_ID,
 						array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID)
 					);
 				}

@@ -62,7 +62,7 @@ class PdoDB extends PDO {
 					$msg .= "\n\n$key:\n$val";
 				}
 			}
-			
+
 			$func = $this->_errorCallbackFunction;
 			$func($msg);
 		}
@@ -145,8 +145,6 @@ class PdoDB extends PDO {
 				}
 			}
 		} catch (PDOException $e) {
-			var_dump($e);
-			die('');
 			$this->_error = $e->getMessage();
 			$this->debug();
 			return false;
