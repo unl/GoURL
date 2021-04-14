@@ -1,6 +1,7 @@
 <?php
 
 class PdoDB extends PDO {
+
 	private $_error;
 	private $_sql;
 	private $_bind;
@@ -67,8 +68,15 @@ class PdoDB extends PDO {
 		}
 	}
 
+	private function where($where, $endStatement = TRUE) {
+		if ($endStatement === TRUE) {
+			$where .= ';';
+		}
+		return " WHERE " . $where;
+	}
+
 	public function delete($table, $where, $bind="") {
-		$sql = "DELETE FROM " . $table . " WHERE " . $where . ";";
+		$sql = "DELETE FROM " . $table . $this->where($where);
 		return $this->run($sql, $bind);
 	}
 
@@ -83,7 +91,7 @@ class PdoDB extends PDO {
 			$key = "Field";
 		}
 		else {
-			$sql = "SELECT column_name FROM information_schema.columns WHERE table_name = '" . $table . "';";
+			$sql = "SELECT column_name FROM information_schema.columns " . $this->where("table_name = '" . $table . "'");
 			$key = "column_name";
 		}
 
@@ -146,7 +154,7 @@ class PdoDB extends PDO {
 	public function select($table, $where="", $bind="", $fields="*", $fetchOne = FALSE, $fetchFormat = PDO::FETCH_OBJ) {
 		$sql = "SELECT " . $fields . " FROM " . $table;
 		if (!empty($where)) {
-			$sql .= " WHERE " . $where;
+			$sql .= $this->where($where, FALSE);
 		}
 		$sql .= ";";
 		return $this->run($sql, $bind, $fetchOne, $fetchFormat);
@@ -178,7 +186,7 @@ class PdoDB extends PDO {
 			}
 			$sql .= $fields[$f] . " = :update_" . $fields[$f];
 		}
-		$sql .= " WHERE " . $where . ";";
+		$sql .= $this->where($where);
 
 		$bind = $this->cleanup($bind);
 		foreach ($fields as $field) {
