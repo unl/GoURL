@@ -177,7 +177,7 @@ class GoController
             $this->route = self::ROUTE_NAME_EDIT;
             $this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\/reset$#', $this->pathInfo, $matches)) {
-            $this->route = self::ROUTE_NAME_EDIT;
+            $this->route = self::ROUTE_NAME_RESET;
             $this->goId = $matches[1];
         }
 
