@@ -2,15 +2,55 @@
 use Endroid\QrCode\QrCode;
 use Ramsey\Uuid\Uuid;
 
-class GoController
-{
-		const FLASH_BAG_SESSION_NAME = 'gourlFlashBag';
-		const FLASH_BAG_ATTR_MESSAGE = 'message';
-		const FLASH_BAG_ATTR_TYPE = 'type';
-		const FLASH_BAG_ATTR_URL = 'url';
-		const FLASH_BAG_TYPE_ERROR = 'error';
-		const FLASH_BAG_TYPE_SUCCESS = 'success';
+class GoFlashBag {
+	const FLASH_BAG_SESSION_NAME = 'gourlFlashBag';
+	const FLASH_BAG_ATTR_MESSAGE = 'message';
+	const FLASH_BAG_ATTR_TYPE = 'type';
+	const FLASH_BAG_ATTR_URL = 'url';
+	const FLASH_BAG_TYPE_ERROR = 'error';
+	const FLASH_BAG_TYPE_SUCCESS = 'success';
 
+	public function setParams($message, $type = self::FLASH_BAG_TYPE_SUCCESS, $url = NULL) {
+		unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
+		$_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_TYPE] = $type;
+		$_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_MESSAGE] = $message;
+		if (!empty($url)) {
+			$_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL] = $url;
+		}
+	}
+
+	public function clearParams() {
+		unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
+	}
+
+	public function getParams() {
+		$error = false;
+		$msg = '';
+		$url = '';
+
+		if (isset($_SESSION[self::FLASH_BAG_SESSION_NAME])) {
+			$msg = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_MESSAGE];
+
+			if (self::FLASH_BAG_TYPE_ERROR === $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_TYPE]) {
+				$error = true;
+			}
+
+			if (isset($_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL])) {
+				$url = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL];
+			}
+
+			unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
+		}
+
+		return array(
+			'msg' => $msg,
+			'url' => $url,
+			'error' => $error
+		);
+	}
+}
+
+class GoController {
     const MODE_CREATE = 'create';
     const MODE_EDIT = 'edit';
     const DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
@@ -56,6 +96,7 @@ class GoController
     private $viewTemplate;
     private $viewParams;
     private $qrIconPNG;
+    private $flashBag;
 
     // Public State
     public static $appName;
@@ -65,10 +106,11 @@ class GoController
     public static $template;
     public static $templateVersion;
 
-    public function __construct($lilurl, $auth, $qrIconPNG) {
+    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG) {
         $this->lilurl = $lilurl;
         $this->auth = $auth;
         $this->qrIconPNG = $qrIconPNG;
+        $this->flashBag = $flashBag;
 
 		    // See if already logged in via PHP CAS
 		    if ($this->auth->getAuthType() === $this->auth::AUTH_TYPE_CAS && array_key_exists('unl_sso', $_COOKIE) && !$this->auth->isAuthenticated()) {
@@ -109,11 +151,11 @@ class GoController
     private function verifyGroup() {
 	    if (isset($this->groupId)) {
 		    if (!$this->lilurl->isGroup($this->groupId)) {
-			    $this->setFlashBagParams('<p class="title">Not Found</p><p>The group is not found.</p>', self::FLASH_BAG_TYPE_ERROR);
+			    $this->flashBag->setParams('<p class="title">Not Found</p><p>The group is not found.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 			    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 404);
 
 		    } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
-			    $this->setFlashBagParams('<p class="title">Access Denied</p><p>You are not a member of this group.</p>', elf::FLASH_BAG_TYPE_ERROR);
+			    $this->flashBag->setParams('<p class="title">Access Denied</p><p>You are not a member of this group.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 			    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 403);
 		    }
 	    }
@@ -193,7 +235,7 @@ class GoController
 					$this->route = self::ROUTE_NAME_API;
 				}
 
-	    if (!$this->route && $this->pathInfo !== '') {
+	      if (!$this->route && $this->pathInfo !== '') {
             $this->route = 'redirect';
         }
 
@@ -280,45 +322,6 @@ class GoController
         return ob_get_clean();
     }
 
-    public function setFlashBagParams($message, $type = self::FLASH_BAG_TYPE_SUCCESS, $url = NULL) {
-	    unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
-	    $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_TYPE] = $type;
-	    $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_MESSAGE] = $message;
-	    if (!empty($url)) {
-		    $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL] = $url;
-	    }
-    }
-
-    public function clearFlashBagParams() {
-	    unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
-    }
-
-    public function getFlashBagParams() {
-        $error = false;
-        $msg = '';
-        $url = '';
-
-        if (isset($_SESSION[self::FLASH_BAG_SESSION_NAME])) {
-            $msg = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_MESSAGE];
-
-            if (self::FLASH_BAG_TYPE_ERROR === $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_TYPE]) {
-                $error = true;
-            }
-
-            if (isset($_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL])) {
-                $url = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL];
-            }
-
-            unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
-        }
-
-        return array(
-            'msg' => $msg,
-            'url' => $url,
-            'error' => $error
-        );
-    }
-
     private function sendCORSHeaders() {
         if (!empty($_SERVER['HTTP_ORIGIN'])) {
             header('Access-Control-Allow-Origin: *');
@@ -342,7 +345,7 @@ class GoController
 				$lookupTerm = filter_input(INPUT_POST, 'lookupTerm', FILTER_SANITIZE_STRING);
 				$link = $this->lilurl->getLinkRow($lookupTerm, NULL, PDO::FETCH_OBJ);
 				if (!$link) {
-					$this->setFlashBagParams('<p class="title">Not Found</p><p>&apos;' . $lookupTerm . '&apos; is not in use and available.</p>', self::FLASH_BAG_TYPE_ERROR);
+					$this->flashBag->setParams('<p class="title">Not Found</p><p>&apos;' . $lookupTerm . '&apos; is not in use and available.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 				} else {
 					$this->viewParams['link'] = $link;
 					$group = $this->lilurl->getGroup($link->groupID);
@@ -360,7 +363,7 @@ class GoController
 			if (isset($_POST, $_POST['urlID'])) {
 				$urlID = filter_input(INPUT_POST, 'urlID', FILTER_SANITIZE_URL);
 				$this->lilurl->deleteURL($urlID, $this->auth->getUserId());
-				$this->setFlashBagParams('<p class="title">Delete Successful</p><p>Your URL has been deleted.</p>', self::FLASH_BAG_TYPE_ERROR);
+				$this->flashBag->setParams('<p class="title">Delete Successful</p><p>Your URL has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 				$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
 			}
 		}
@@ -371,7 +374,7 @@ class GoController
 			if (isset($_POST, $_POST['groupID'])) {
 				$groupID = filter_input(INPUT_POST, 'groupID', FILTER_SANITIZE_NUMBER_INT);
 				$this->lilurl->deleteGroup($groupID, $this->auth->getUserId());
-				$this->setFlashBagParams('<p class="title">Delete Successful</p><p>Your group has been deleted.</p>');
+				$this->flashBag->setParams('<p class="title">Delete Successful</p><p>Your group has been deleted.</p>');
 				$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
 			}
 		}
@@ -393,30 +396,30 @@ class GoController
 				$groupName = filter_input(INPUT_POST, 'groupName', FILTER_SANITIZE_STRING);
 				if (!$this->lilurl->isValidGroupName($groupName, $this->groupId, $error)) {
 					$msg = '<p class="title">Invalid Group</p><p>' . $error . '</p>';
-					$type = self::FLASH_BAG_TYPE_ERROR;
+					$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 					$redirect = false;
 				} else {
 					if ($this->groupMode === self::MODE_CREATE) {
 						if ($this->lilurl->insertGroup($_POST, $this->auth->getUserId())) {
 							$msg = '<p class="title">Add Successful</p><p>Your group has been added.</p>';
-							$type = self::FLASH_BAG_TYPE_SUCCESS;
+							$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
 						} else {
 							$msg = '<p class="title">Add Failed</p><p>Your group has not been added.</p>';
-							$type = self::FLASH_BAG_TYPE_ERROR;
+							$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 						}
 					} elseif ($this->groupMode === self::MODE_EDIT && $this->groupId === $_POST['groupID']) {
 						if ($this->lilurl->updateGroup($_POST, $this->auth->getUserId())) {
 							$msg = '<p class="title">Update Successful</p><p>Your group has been updated.</p>';
-							$type = self::FLASH_BAG_TYPE_SUCCESS;
+							$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
 						}
 					} else {
 						$msg = '<p class="title">Update Failed</p><p>Your group has not been updated.</p>';
-						$type = self::FLASH_BAG_TYPE_ERROR;
+						$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 					}
 				}
 
 				if (!empty($msg) && !empty($type)) {
-					$this->setFlashBagParams($msg, $type);
+					$this->flashBag->setParams($msg, $type);
 				}
 
 				if ($redirect) {
@@ -435,15 +438,15 @@ class GoController
 			if ($this->lilurl->isValidGroupUser($this->uid, $error)) {
 				if ($this->lilurl->insertGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
 					$msg = '<p class="title">Add Successful</p><p>User, ' . $this->uid . ' added to group.</p>';
-					$type = self::FLASH_BAG_TYPE_SUCCESS;
+					$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
 					$_POST['uid'] = NULL;
 				} else {
 					$msg = '<p class="title">Add Failed</p><p>User, ' . $this->uid . ' not added to group.</p>';
-					$type = self::FLASH_BAG_TYPE_ERROR;
+					$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 				}
 			} else {
 				$msg = '<p class="title">Add Failed</p><p>' . $error . '</p>';
-				$type = self::FLASH_BAG_TYPE_ERROR;
+				$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 			}
 
 			if ($this->groupMode === self::MODE_EDIT) {
@@ -452,7 +455,7 @@ class GoController
 			}
 
 			if (!empty($msg) && !empty($type)) {
-				$this->setFlashBagParams($msg, $type);
+				$this->flashBag->setParams($msg, $type);
 			}
 
 			$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUP . '/' . $this->groupId));
@@ -462,18 +465,18 @@ class GoController
 			if (!empty($this->groupId) && $this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
 				if ($this->lilurl->deleteGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
 					$msg = '<p class="title">Delete Successful</p><p>' . $this->uid . ' has been removed from group.</p>';
-					$type = self::FLASH_BAG_TYPE_SUCCESS;
+					$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
 				} else {
 					$msg = '<p class="title">Delete Failed</p><p>Unable to remove ' . $this->uid . ' from group.</p>';
-					$type = self::FLASH_BAG_TYPE_ERROR;
+					$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 				}
 
-				$this->setFlashBagParams($msg, $type);
+				$this->flashBag->setParams($msg, $type);
 				$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUP . '/' . $this->groupId));
 			}
 
 			// Not authorized to delete user from group
-			$this->setFlashBagParams('<p class="title">Access Denied</p><p>Unable to remove ' . $this->uid . ' from group.</p>', self::FLASH_BAG_TYPE_ERROR);
+			$this->flashBag->setParams('<p class="title">Access Denied</p><p>Unable to remove ' . $this->uid . ' from group.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 			$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
 		}
 
@@ -486,7 +489,7 @@ class GoController
 				$this->viewTemplate = 'index.php';
 				$this->viewParams['goURL'] =  $this->lilurl->getLinkRow($this->goId, NULL, PDO::FETCH_ASSOC);
 			} else {
-				$this->setFlashBagParams('<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>', self::FLASH_BAG_TYPE_ERROR);
+				$this->flashBag->setParams('<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 				$this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
 			}
 		}
@@ -498,9 +501,9 @@ class GoController
 
 			if ($this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
 				$this->lilurl->resetRedirectCount($this->goId, $this->auth->getUserId());
-				$this->setFlashBagParams('<p class="title">Reset Successful</p><p>Your Go URL redirect count has been reset.</p>');
+				$this->flashBag->setParams('<p class="title">Reset Successful</p><p>Your Go URL redirect count has been reset.</p>');
 			} else {
-				$this->setFlashBagParams('<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>', self::FLASH_BAG_TYPE_ERROR);
+				$this->flashBag->setParams('<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 			}
 
 			$this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
@@ -547,7 +550,7 @@ class GoController
 				if ($this->auth->isAuthenticated()) {
 					$userId = $this->auth->getUserId();
 
-					if ($mode == static::MODE_EDIT) {
+					if ($mode === static::MODE_EDIT) {
 						if (!empty($_POST['id'])) {
 							$alias = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_STRING);
 						}
@@ -562,7 +565,7 @@ class GoController
 					$url = $this->lilurl->handlePOST($mode, $alias, $userId);
 					$msg = $mode === static::MODE_EDIT ? 'Your Go URL is updated!' : 'You have a Go URL!';
 
-					$this->setFlashBagParams('<p class="title">' . $msg . '</p><input type="text" onclick="this.select(); return false;" value="'.$url.'" />', self::FLASH_BAG_TYPE_SUCCESS, $url);
+					$this->flashBag->setParams('<p class="title">' . $msg . '</p><input type="text" onclick="this.select(); return false;" value="'.$url.'" />', $this->flashBag::FLASH_BAG_TYPE_SUCCESS, $url);
 					if ($mode === static::MODE_EDIT) {
 						$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
 					}
@@ -596,12 +599,12 @@ class GoController
 							$msg = '<p class="title">Whoops, Something Broke</p><p>There was an error submitting your url. Check your steps.</p>';
 					}
 
-					$this->setFlashBagParams($msg, self::FLASH_BAG_TYPE_ERROR);
+					$this->flashBag->setParams($msg, $this->flashBag::FLASH_BAG_TYPE_ERROR);
 				}
 
 				if ('api' === $this->route) {
 					$this->sendCORSHeaders();
-					$this->clearFlashBagParams();
+					$this->flashBag->clearParams();
 
 					if (!empty($url)) {
 						echo htmlspecialchars($url);

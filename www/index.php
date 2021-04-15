@@ -16,7 +16,8 @@ if (!isset($qrIconPng) || empty($qrIconPng)) {
     $qrIconPng = NULL;
 }
 
-$controller = new GoController($lilurl, $auth, $qrIconPng);
+$flashBag = new GoFlashBag();
+$controller = new GoController($lilurl, $auth, $flashBag, $qrIconPng);
 
 // do predispatch actions
 $controller->preDispatch();
@@ -39,7 +40,7 @@ $savvy->addGlobal('theme', $theme);
 $savvy->addGlobal('page', $page);
 $savvy->addGlobal('lilurl', $lilurl);
 $savvy->addGlobal('auth', $auth);
-$savvy->addGlobal('flashBagParams', $controller->getFlashBagParams());
+$savvy->addGlobal('flashBagParams', $flashBag->getParams());
 $savvy->addGlobal('viewParams', $controller->getViewParams());
 $theme->addGlobal('page', $page);
 
