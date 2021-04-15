@@ -14,7 +14,6 @@ class GoController
 		const ROUTE_NAME_GROUP = 'group';
 		const ROUTE_NAME_GROUPS = 'groups';
 		const ROUTE_NAME_LINKS = 'links';
-		const ROUTE_NAME_LINKINFO = 'linkinfo';
 		const ROUTE_NAME_LOGIN = 'login';
 		const ROUTE_NAME_LOGOUT = 'logout';
 		const ROUTE_NAME_LOOKUP = 'lookup';
@@ -179,9 +178,6 @@ class GoController
             $this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\/reset$#', $this->pathInfo, $matches)) {
             $this->route = self::ROUTE_NAME_EDIT;
-            $this->goId = $matches[1];
-        } elseif (preg_match('#^([^/]+)\/info$#', $this->pathInfo, $matches)) {
-            $this->route = self::ROUTE_NAME_LINKINFO;
             $this->goId = $matches[1];
         }
 
@@ -524,21 +520,6 @@ class GoController
             imagepng($out);
             imagedestroy($out);
             exit;
-        } elseif ('linkinfo' === $this->route) {
-            $this->viewTemplate = 'linkinfo.php';
-
-            if (!$link = $this->lilurl->getLinkRow($this->goId, NULL, PDO::FETCH_OBJ)) {
-                header('HTTP/1.1 404 Not Found');
-                include __DIR__ . '/../www/templates/404.php';
-                exit;
-            }
-
-            $this->viewParams['link'] = $link;
-		        $group = $this->lilurl->getGroup($link->groupID);
-		        if (!empty($group)) {
-			        $this->viewParams['group'] = $group;
-			        $this->viewParams['group']->users = $this->lilurl->getGroupUsers($link->groupID);
-		        }
         }
     }
 
