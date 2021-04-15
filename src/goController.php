@@ -92,6 +92,25 @@ class GoController
 	    }
     }
 
+    private function verifyGroup() {
+	    if (isset($this->groupId)) {
+		    if (!$this->lilurl->isGroup($this->groupId)) {
+			    $_SESSION['gourlFlashBag'] = array(
+				    'msg' => '<p class="title">Not Found</p><p>The group is not found.</p>',
+				    'type' => 'error'
+			    );
+			    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 404);
+
+		    } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
+			    $_SESSION['gourlFlashBag'] = array(
+				    'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
+				    'type' => 'error'
+			    );
+			    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 403);
+		    }
+	    }
+    }
+
     public function getViewTemplate() {
         return $this->viewTemplate;
     }
@@ -170,22 +189,7 @@ class GoController
 	      $this->loginCheck();
 
 				// verify group and group access if set
-				if (isset($this->groupId)) {
-					if (!$this->lilurl->isGroup($this->groupId)) {
-			      $_SESSION['gourlFlashBag'] = array(
-				      'msg' => '<p class="title">Not Found</p><p>The group is not found.</p>',
-				      'type' => 'error'
-			      );
-			      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 404);
-
-		      } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
-			      $_SESSION['gourlFlashBag'] = array(
-				      'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
-				      'type' => 'error'
-			      );
-			      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 403);
-		      }
-	      }
+				$this->verifyGroup();
     }
 
     public function dispatch() {
