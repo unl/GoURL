@@ -122,9 +122,7 @@ class GoController
 			    $this->groupId = $matches[1];
 			    $this->groupMode = self::MODE_EDIT;
 
-			    if (!$this->auth->isAuthenticated()) {
-				    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LOGIN));
-			    } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
+			    if (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
 				    $_SESSION['gourlFlashBag'] = array(
 					    'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
 					    'type' => 'error'
@@ -140,6 +138,7 @@ class GoController
 
 					    case 'user-form':
 						    $this->route = 'add-group-user';
+						    $this->uid = filter_input(INPUT_POST, 'uid', FILTER_SANITIZE_STRING);
 						    break;
 
 					    default:
@@ -416,16 +415,15 @@ class GoController
 	        $this->viewParams['groupMode'] = $this->groupMode;
 	        $msg = '';
 	        $type = '';
-	        $uid = trim($_POST['uid']);
 	        $error = '';
 
-	        if ($this->lilurl->isValidGroupUser($uid, $error)) {
-		        if ($this->lilurl->insertGroupUser($this->groupId, $uid, $this->auth->getUserId())) {
-			        $msg = '<p class="title">Add Successful</p><p>User, ' . $uid . ' added to group.</p>';
+	        if ($this->lilurl->isValidGroupUser($this->uid, $error)) {
+		        if ($this->lilurl->insertGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
+			        $msg = '<p class="title">Add Successful</p><p>User, ' . $this->uid . ' added to group.</p>';
 			        $type = 'success';
 			        $_POST['uid'] = NULL;
 		        } else {
-			        $msg = '<p class="title">Add Failed</p><p>User, ' . $uid . ' not added to group.</p>';
+			        $msg = '<p class="title">Add Failed</p><p>User, ' . $this->uid . ' not added to group.</p>';
 			        $type = 'error';
 		        }
 	        } else {
