@@ -4,6 +4,13 @@ use Ramsey\Uuid\Uuid;
 
 class GoController
 {
+		const FLASH_BAG_SESSION_NAME = 'gourlFlashBag';
+		const FLASH_BAG_ATTR_MESSAGE = 'message';
+		const FLASH_BAG_ATTR_TYPE = 'type';
+		const FLASH_BAG_ATTR_URL = 'url';
+		const FLASH_BAG_TYPE_ERROR = 'error';
+		const FLASH_BAG_TYPE_SUCCESS = 'success';
+
     const MODE_CREATE = 'create';
     const MODE_EDIT = 'edit';
     const DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
@@ -80,12 +87,16 @@ class GoController
 
     private function routeRequiresLogin() {
 			return in_array($this->route, array(
+				self::ROUTE_NAME_EDIT,
 				self::ROUTE_NAME_GROUP,
 				self::ROUTE_NAME_GROUP_USER_ADD,
 				self::ROUTE_NAME_GROUP_USER_REMOVE,
 				self::ROUTE_NAME_GROUPS,
 				self::ROUTE_NAME_LINKS,
-				self::ROUTE_NAME_LOOKUP
+				self::ROUTE_NAME_LOOKUP,
+				self::ROUTE_NAME_MANAGE,
+				self::ROUTE_NAME_REDIRECT,
+				self::ROUTE_NAME_RESET
 			));
     }
 
@@ -98,17 +109,11 @@ class GoController
     private function verifyGroup() {
 	    if (isset($this->groupId)) {
 		    if (!$this->lilurl->isGroup($this->groupId)) {
-			    $_SESSION['gourlFlashBag'] = array(
-				    'msg' => '<p class="title">Not Found</p><p>The group is not found.</p>',
-				    'type' => 'error'
-			    );
+			    $this->setFlashBagParams('<p class="title">Not Found</p><p>The group is not found.</p>', self::FLASH_BAG_TYPE_ERROR);
 			    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 404);
 
 		    } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
-			    $_SESSION['gourlFlashBag'] = array(
-				    'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
-				    'type' => 'error'
-			    );
+			    $this->setFlashBagParams('<p class="title">Access Denied</p><p>You are not a member of this group.</p>', elf::FLASH_BAG_TYPE_ERROR);
 			    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 403);
 		    }
 	    }
@@ -275,23 +280,36 @@ class GoController
         return ob_get_clean();
     }
 
+    public function setFlashBagParams($message, $type = self::FLASH_BAG_TYPE_SUCCESS, $url = NULL) {
+	    unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
+	    $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_TYPE] = $type;
+	    $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_MESSAGE] = $message;
+	    if (!empty($url)) {
+		    $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL] = $url;
+	    }
+    }
+
+    public function clearFlashBagParams() {
+	    unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
+    }
+
     public function getFlashBagParams() {
         $error = false;
         $msg = '';
         $url = '';
 
-        if (isset($_SESSION['gourlFlashBag'])) {
-            $msg = $_SESSION['gourlFlashBag']['msg'];
+        if (isset($_SESSION[self::FLASH_BAG_SESSION_NAME])) {
+            $msg = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_MESSAGE];
 
-            if ('error' === $_SESSION['gourlFlashBag']['type']) {
+            if (self::FLASH_BAG_TYPE_ERROR === $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_TYPE]) {
                 $error = true;
             }
 
-            if (isset($_SESSION['gourlFlashBag']['url'])) {
-                $url = $_SESSION['gourlFlashBag']['url'];
+            if (isset($_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL])) {
+                $url = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL];
             }
 
-            unset($_SESSION['gourlFlashBag']);
+            unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
         }
 
         return array(
@@ -324,10 +342,7 @@ class GoController
 				$lookupTerm = filter_input(INPUT_POST, 'lookupTerm', FILTER_SANITIZE_STRING);
 				$link = $this->lilurl->getLinkRow($lookupTerm, NULL, PDO::FETCH_OBJ);
 				if (!$link) {
-					$_SESSION['gourlFlashBag'] = array(
-						'msg' => '<p class="title">Not Found</p><p>&apos;' . $lookupTerm . '&apos; is not in use and available.</p>',
-						'type' => 'error',
-					);
+					$this->setFlashBagParams('<p class="title">Not Found</p><p>&apos;' . $lookupTerm . '&apos; is not in use and available.</p>', self::FLASH_BAG_TYPE_ERROR);
 				} else {
 					$this->viewParams['link'] = $link;
 					$group = $this->lilurl->getGroup($link->groupID);
@@ -345,10 +360,7 @@ class GoController
 			if (isset($_POST, $_POST['urlID'])) {
 				$urlID = filter_input(INPUT_POST, 'urlID', FILTER_SANITIZE_URL);
 				$this->lilurl->deleteURL($urlID, $this->auth->getUserId());
-				$_SESSION['gourlFlashBag'] = array(
-					'msg' => '<p class="title">Delete Successful</p><p>Your URL has been deleted.</p>',
-					'type' => 'success',
-				);
+				$this->setFlashBagParams('<p class="title">Delete Successful</p><p>Your URL has been deleted.</p>', self::FLASH_BAG_TYPE_ERROR);
 				$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
 			}
 		}
@@ -359,11 +371,7 @@ class GoController
 			if (isset($_POST, $_POST['groupID'])) {
 				$groupID = filter_input(INPUT_POST, 'groupID', FILTER_SANITIZE_NUMBER_INT);
 				$this->lilurl->deleteGroup($groupID, $this->auth->getUserId());
-				$_SESSION['gourlFlashBag'] = array(
-					'msg' => '<p class="title">Delete Successful</p><p>Your group has been deleted.</p>',
-					'type' => 'success',
-				);
-
+				$this->setFlashBagParams('<p class="title">Delete Successful</p><p>Your group has been deleted.</p>');
 				$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
 			}
 		}
@@ -385,30 +393,30 @@ class GoController
 				$groupName = filter_input(INPUT_POST, 'groupName', FILTER_SANITIZE_STRING);
 				if (!$this->lilurl->isValidGroupName($groupName, $this->groupId, $error)) {
 					$msg = '<p class="title">Invalid Group</p><p>' . $error . '</p>';
-					$type = 'error';
+					$type = self::FLASH_BAG_TYPE_ERROR;
 					$redirect = false;
 				} else {
 					if ($this->groupMode === self::MODE_CREATE) {
 						if ($this->lilurl->insertGroup($_POST, $this->auth->getUserId())) {
 							$msg = '<p class="title">Add Successful</p><p>Your group has been added.</p>';
-							$type = 'success';
+							$type = self::FLASH_BAG_TYPE_SUCCESS;
 						} else {
 							$msg = '<p class="title">Add Failed</p><p>Your group has not been added.</p>';
-							$type = 'error';
+							$type = self::FLASH_BAG_TYPE_ERROR;
 						}
 					} elseif ($this->groupMode === self::MODE_EDIT && $this->groupId === $_POST['groupID']) {
 						if ($this->lilurl->updateGroup($_POST, $this->auth->getUserId())) {
 							$msg = '<p class="title">Update Successful</p><p>Your group has been updated.</p>';
-							$type = 'success';
+							$type = self::FLASH_BAG_TYPE_SUCCESS;
 						}
 					} else {
 						$msg = '<p class="title">Update Failed</p><p>Your group has not been updated.</p>';
-						$type = 'error';
+						$type = self::FLASH_BAG_TYPE_ERROR;
 					}
 				}
 
 				if (!empty($msg) && !empty($type)) {
-					$_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
+					$this->setFlashBagParams($msg, $type);
 				}
 
 				if ($redirect) {
@@ -427,15 +435,15 @@ class GoController
 			if ($this->lilurl->isValidGroupUser($this->uid, $error)) {
 				if ($this->lilurl->insertGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
 					$msg = '<p class="title">Add Successful</p><p>User, ' . $this->uid . ' added to group.</p>';
-					$type = 'success';
+					$type = self::FLASH_BAG_TYPE_SUCCESS;
 					$_POST['uid'] = NULL;
 				} else {
 					$msg = '<p class="title">Add Failed</p><p>User, ' . $this->uid . ' not added to group.</p>';
-					$type = 'error';
+					$type = self::FLASH_BAG_TYPE_ERROR;
 				}
 			} else {
 				$msg = '<p class="title">Add Failed</p><p>' . $error . '</p>';
-				$type = 'error';
+				$type = self::FLASH_BAG_TYPE_ERROR;
 			}
 
 			if ($this->groupMode === self::MODE_EDIT) {
@@ -444,7 +452,7 @@ class GoController
 			}
 
 			if (!empty($msg) && !empty($type)) {
-				$_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
+				$this->setFlashBagParams($msg, $type);
 			}
 
 			$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUP . '/' . $this->groupId));
@@ -454,21 +462,18 @@ class GoController
 			if (!empty($this->groupId) && $this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
 				if ($this->lilurl->deleteGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
 					$msg = '<p class="title">Delete Successful</p><p>' . $this->uid . ' has been removed from group.</p>';
-					$type = 'success';
+					$type = self::FLASH_BAG_TYPE_SUCCESS;
 				} else {
 					$msg = '<p class="title">Delete Failed</p><p>Unable to remove ' . $this->uid . ' from group.</p>';
-					$type = 'error';
+					$type = self::FLASH_BAG_TYPE_ERROR;
 				}
 
-				$_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
+				$this->setFlashBagParams($msg, $type);
 				$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUP . '/' . $this->groupId));
 			}
 
 			// Not authorized to delete user from group
-			$_SESSION['gourlFlashBag'] = array(
-				'msg' => '<p class="title">Access Denied</p><p>Unable to remove ' . $this->uid . ' from group.</p>',
-				'type' => 'error'
-			);
+			$this->setFlashBagParams('<p class="title">Access Denied</p><p>Unable to remove ' . $this->uid . ' from group.</p>', self::FLASH_BAG_TYPE_ERROR);
 			$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
 		}
 
@@ -481,11 +486,7 @@ class GoController
 				$this->viewTemplate = 'index.php';
 				$this->viewParams['goURL'] =  $this->lilurl->getLinkRow($this->goId, NULL, PDO::FETCH_ASSOC);
 			} else {
-				$_SESSION['gourlFlashBag'] = array(
-					'msg' => '<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>',
-					'type' => 'error',
-				);
-
+				$this->setFlashBagParams('<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>', self::FLASH_BAG_TYPE_ERROR);
 				$this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
 			}
 		}
@@ -497,15 +498,9 @@ class GoController
 
 			if ($this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
 				$this->lilurl->resetRedirectCount($this->goId, $this->auth->getUserId());
-				$_SESSION['gourlFlashBag'] = array(
-					'msg' => '<p class="title">Reset Successful</p><p>Your Go URL redirect count has been reset.</p>',
-					'type' => 'success',
-				);
+				$this->setFlashBagParams('<p class="title">Reset Successful</p><p>Your Go URL redirect count has been reset.</p>');
 			} else {
-				$_SESSION['gourlFlashBag'] = array(
-					'msg' => '<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>',
-					'type' => 'error',
-				);
+				$this->setFlashBagParams('<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>', self::FLASH_BAG_TYPE_ERROR);
 			}
 
 			$this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
@@ -567,68 +562,46 @@ class GoController
 					$url = $this->lilurl->handlePOST($mode, $alias, $userId);
 					$msg = $mode === static::MODE_EDIT ? 'Your Go URL is updated!' : 'You have a Go URL!';
 
-					$_SESSION['gourlFlashBag'] = array(
-						'msg' => '<p class="title">' . $msg . '</p><input type="text" onclick="this.select(); return false;" value="'.$url.'" />',
-						'type' => 'success',
-						'url' => $url,
-					);
+					$this->setFlashBagParams('<p class="title">' . $msg . '</p><input type="text" onclick="this.select(); return false;" value="'.$url.'" />', self::FLASH_BAG_TYPE_SUCCESS, $url);
 					if ($mode === static::MODE_EDIT) {
 						$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
 					}
 				} catch (Exception $e) {
 					switch ($e->getCode()) {
 						case lilURL::ERR_INVALID_PROTOCOL:
-							$_SESSION['gourlFlashBag'] = array(
-								'msg' => '<p class="title">Whoops, Something Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>',
-							);
+							$msg = '<p class="title">Whoops, Something Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>';
 							break;
 						case lilURL::ERR_INVALID_DOMAIN:
-							$_SESSION['gourlFlashBag'] = array(
-								'msg' => '<p class="title">Whoops, Something Broke</p><p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>',
-							);
+							$msg = '<p class="title">Whoops, Something Broke</p><p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>';
 							break;
 						case lilURL::ERR_INVALID_ALIAS:
-							$_SESSION['gourlFlashBag'] = array(
-								'msg' => '<p class="title">Whoops, Something Broke</p><p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>',
-							);
+							$msg = '<p class="title">Whoops, Something Broke</p><p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>';
 							break;
 						case lilURL::ERR_USED:
-							$_SESSION['gourlFlashBag'] = array(
-								'msg' => '<p class="title">Whoops, this alias/URL pair already exists.</p><p>The existing Go URL for this pair is: </p>',
-							);
+							$msg = '<p class="title">Whoops, this alias/URL pair already exists.</p><p>The existing Go URL for this pair is: </p>';
 							break;
 						case lilURL::ERR_ALIAS_EXISTS:
-							$_SESSION['gourlFlashBag'] = array(
-								'msg' => '<p class="title">Whoops, This alias is already in use.</p><p>Please use a different alias.</p>',
-							);
+							$msg = '<p class="title">Whoops, This alias is already in use.</p><p>Please use a different alias.</p>';
 							break;
 						case lilURL::ERR_INVALID_GA_CAMPAIGN:
-							$_SESSION['gourlFlashBag'] = array(
-								'msg' => '<p class="title">Whoops, Invalid Google Campaign.</p><p>Please provide all required campaign information.</p>',
-							);
+							$msg = '<p class="title">Whoops, Invalid Google Campaign.</p><p>Please provide all required campaign information.</p>';
 							break;
 						case lilURL::ERR_INVALID_URL:
-							$_SESSION['gourlFlashBag'] = array(
-								'msg' => '<p class="title">Whoops, Invalid URL.</p><p>Please verify the URL is correct.</p>',
-							);
+							$msg = '<p class="title">Whoops, Invalid URL.</p><p>Please verify the URL is correct.</p>';
 							break;
 						case lilURL::ERR_MAX_RANDOM_ID_ATTEMPTS:
-							$_SESSION['gourlFlashBag'] = array(
-								'msg' => '<p class="title">Whoops, Random Alias Error.</p><p>'. $e->getMessage() . '</p>',
-							);
+							$msg = '<p class="title">Whoops, Random Alias Error.</p><p>'. $e->getMessage() . '</p>';
 							break;
 						default:
-							$_SESSION['gourlFlashBag'] = array(
-								'msg' => '<p class="title">Whoops, Something Broke</p><p>There was an error submitting your url. Check your steps.</p>',
-							);
+							$msg = '<p class="title">Whoops, Something Broke</p><p>There was an error submitting your url. Check your steps.</p>';
 					}
 
-					$_SESSION['gourlFlashBag']['type'] = 'error';
+					$this->setFlashBagParams($msg, self::FLASH_BAG_TYPE_ERROR);
 				}
 
 				if ('api' === $this->route) {
 					$this->sendCORSHeaders();
-					unset($_SESSION['gourlFlashBag']);
+					$this->clearFlashBagParams();
 
 					if (!empty($url)) {
 						echo htmlspecialchars($url);
