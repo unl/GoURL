@@ -29,7 +29,7 @@
 
         <?php if (isset($group->users)) { ?>
             <h2 class="dcf-mt-6 dcf-txt-h5">Group Users</h2>
-            <form class="dcf-form dcf-w-max-lg" id="user-form" method="post">
+            <form class="dcf-form dcf-w-max-lg" id="user-form" method="post" action="<?php echo $lilurl->getBaseUrl(goController::ROUTE_PATH_GROUP_USER_ADD) . '/' . $groupID; ?>">
                 <input type="hidden" name="formName" value="user-form">
                 <input type="hidden" name="groupID" value="<?php echo $groupID; ?>">
                 <label for="uid">Username <small class="dcf-required">Required</small></label>
@@ -40,7 +40,7 @@
             </form>
             <ul class="dcf-list-inline dcf-mt-6 dcf-p-0">
             <?php foreach($group->users as $index => $user) { ?>
-                <li class="dcf-p-2"><?php echo $user->uid; ?>&nbsp;<a class="dcf-btn dcf-btn-secondary dcf-txt-3xs" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/removeuser/' . $groupID . '-'. urlencode($user->uid))) ?>" title="Remove <?php echo $user->uid;?> from <?php echo $group->groupName; ?>" >&times;</a></li>
+                <li class="dcf-p-2"><?php echo $user->uid; ?>&nbsp;<a class="dcf-btn dcf-btn-secondary dcf-txt-3xs" href="<?php echo htmlspecialchars($lilurl->getBaseUrl(goController::ROUTE_PATH_GROUP_USER_REMOVE . '/' . $groupID . '-'. urlencode($user->uid))) ?>" title="Remove <?php echo $user->uid;?> from <?php echo $group->groupName; ?>" >&times;</a></li>
             <?php } ?>
             </ul>
         <?php } ?>

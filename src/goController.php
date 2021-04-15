@@ -12,6 +12,8 @@ class GoController
 		const ROUTE_NAME_API  = 'api';
 		const ROUTE_NAME_EDIT  = 'edit';
 		const ROUTE_NAME_GROUP = 'group';
+		const ROUTE_NAME_GROUP_USER_ADD = 'group-user-add';
+		const ROUTE_NAME_GROUP_USER_REMOVE = 'group-user-remove';
 		const ROUTE_NAME_GROUPS = 'groups';
 		const ROUTE_NAME_LINKS = 'links';
 		const ROUTE_NAME_LOGIN = 'login';
@@ -19,12 +21,14 @@ class GoController
 		const ROUTE_NAME_LOOKUP = 'lookup';
 		const ROUTE_NAME_MANAGE = 'manage';
 		const ROUTE_NAME_QR = 'qr';
-		const ROUTE_NAME_REMOVE_USER = 'remove-user';
 		const ROUTE_NAME_RESET = 'reset';
 
     // route paths
+		const ROUTE_PATH_A = 'a/';
 	  const ROUTE_PATH_API = 'api/';
 		const ROUTE_PATH_GROUP = 'a/group';
+		const ROUTE_PATH_GROUP_USER_ADD = 'a/group-user-add';
+		const ROUTE_PATH_GROUP_USER_REMOVE = 'a/group-user-remove';
 		const ROUTE_PATH_GROUPS = 'a/groups';
 		const ROUTE_PATH_LINKS = 'a/links';
 		const ROUTE_PATH_LOGIN = 'a/login';
@@ -74,10 +78,11 @@ class GoController
     private function routeRequiresLogin() {
 			return in_array($this->route, array(
 				self::ROUTE_NAME_GROUP,
+				self::ROUTE_NAME_GROUP_USER_ADD,
+				self::ROUTE_NAME_GROUP_USER_REMOVE,
 				self::ROUTE_NAME_GROUPS,
 				self::ROUTE_NAME_LINKS,
-				self::ROUTE_NAME_LOOKUP,
-				self::ROUTE_NAME_REMOVE_USER
+				self::ROUTE_NAME_LOOKUP
 			));
     }
 
@@ -100,51 +105,19 @@ class GoController
         $this->route = '';
         $this->pathInfo = $this->lilurl->getRequestPath();
 
-        if (isset($_GET['login']) || 'a/login' === $this->pathInfo) {
+        if (isset($_GET['login']) || $this->pathInfo === self::ROUTE_PATH_LOGIN) {
             $this->auth->login();
 	          $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
         }
 
-        if (isset($_GET['logout']) || 'a/logout' === $this->pathInfo) {
+        if (isset($_GET['logout']) || $this->pathInfo === self::ROUTE_PATH_LOGOUT) {
             session_destroy();
             $this->auth->logout();
 	          $this->redirect($this->lilurl->getBaseUrl());
         }
 
-		    if ('api_create.php' === $this->pathInfo) {
-			    $this->redirect($this->lilurl->getBaseUrl('api/'), 307, TRUE);
-		    }
-
-		    // TODO Move to routes if makes sense
-		    if (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches) && isset($matches[1]) && $this->lilurl->isGroup($matches[1])) {
-			    $this->route = 'group';
-			    $this->groupId = $matches[1];
-			    $this->groupMode = self::MODE_EDIT;
-
-			    if (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
-				    $_SESSION['gourlFlashBag'] = array(
-					    'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
-					    'type' => 'error'
-				    );
-				    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
-			    }
-
-			    if (!empty($_POST)) {
-				    switch($_POST['formName']) {
-					    case 'group-form':
-						    $this->route = 'group';
-						    break;
-
-					    case 'user-form':
-						    $this->route = 'add-group-user';
-						    $this->uid = filter_input(INPUT_POST, 'uid', FILTER_SANITIZE_STRING);
-						    break;
-
-					    default:
-						    // missing or unexpected form so bail
-						    $this->redirect($this->lilurl->getBaseUrl($this->pathInfo));
-				    }
-			    }
+		    if ($this->pathInfo === 'api_create.php') {
+			    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_API), 307, TRUE);
 		    }
 
 		    if (!isset($_SESSION['clientId'])) {
@@ -154,10 +127,14 @@ class GoController
     }
 
     public function route() {
-		    if (isset($_GET['manage']) || in_array($this->pathInfo, array('a/', self::ROUTE_PATH_LINKS))) {
+		    if (isset($_GET['manage']) || in_array($this->pathInfo, array(self::ROUTE_PATH_A, self::ROUTE_PATH_LINKS))) {
 			    $this->route = self::ROUTE_NAME_MANAGE;
 		    } elseif (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_PATH_LOOKUP) {
 			    $this->route = self::ROUTE_NAME_LOOKUP;
+		    } elseif (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
+			    $this->route = 'group';
+			    $this->groupId = $matches[1];
+			    $this->groupMode = self::MODE_EDIT;
 		    } elseif ($this->pathInfo === self::ROUTE_PATH_GROUP) {
 			    $this->route = 'group';
 			    $this->groupId = NULL;
@@ -165,20 +142,24 @@ class GoController
 		    } elseif ($this->pathInfo === self::ROUTE_PATH_GROUPS) {
 			    $this->route = self::ROUTE_NAME_GROUPS;
 		    } elseif ($this->pathInfo === self::ROUTE_PATH_API) {
-            $this->route = self::ROUTE_NAME_API;
-        } elseif (preg_match('/^a\/removeuser\/(\d+)-(\w+)$/', $this->pathInfo, $matches)) {
-			    $this->route = self::ROUTE_NAME_REMOVE_USER;
+			    $this->route = self::ROUTE_NAME_API;
+		    } elseif (preg_match('/^a\/group-user-add\/(\d+)$/', $this->pathInfo, $matches)) {
+			    $this->route = self::ROUTE_NAME_GROUP_USER_ADD;
+			    $this->groupId = $matches[1];
+			    $this->uid = filter_input(INPUT_POST, 'uid', FILTER_SANITIZE_STRING);
+        } elseif (preg_match('/^a\/group-user-remove\/(\d+)-(\w+)$/', $this->pathInfo, $matches)) {
+			    $this->route = self::ROUTE_NAME_GROUP_USER_REMOVE;
 			    $this->groupId = $matches[1];
 			    $this->uid = urldecode($matches[2]);
 		    } elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
-            $this->route = self::ROUTE_NAME_QR;
-            $this->goId = $matches[1];
+					$this->route = self::ROUTE_NAME_QR;
+					$this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\/edit$#', $this->pathInfo, $matches)) {
-            $this->route = self::ROUTE_NAME_EDIT;
-            $this->goId = $matches[1];
+					$this->route = self::ROUTE_NAME_EDIT;
+					$this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\/reset$#', $this->pathInfo, $matches)) {
-            $this->route = self::ROUTE_NAME_RESET;
-            $this->goId = $matches[1];
+					$this->route = self::ROUTE_NAME_RESET;
+					$this->goId = $matches[1];
         }
 
         if (!$this->route && $this->pathInfo !== '') {
@@ -187,6 +168,24 @@ class GoController
 
         // check login for protected routes
 	      $this->loginCheck();
+
+				// verify group and group access if set
+				if (isset($this->groupId)) {
+					if (!$this->lilurl->isGroup($this->groupId)) {
+			      $_SESSION['gourlFlashBag'] = array(
+				      'msg' => '<p class="title">Not Found</p><p>The group is not found.</p>',
+				      'type' => 'error'
+			      );
+			      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 404);
+
+		      } elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
+			      $_SESSION['gourlFlashBag'] = array(
+				      'msg' => '<p class="title">Access Denied</p><p>You are not a member of this group.</p>',
+				      'type' => 'error'
+			      );
+			      $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 403);
+		      }
+	      }
     }
 
     public function dispatch() {
@@ -406,7 +405,7 @@ class GoController
 			        $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
 		        }
 	        }
-        } elseif ('add-group-user' === $this->route) {
+        } elseif ($this->route === self::ROUTE_NAME_GROUP_USER_ADD) {
 	        $this->viewTemplate = 'group.php';
 	        $this->viewParams['groupMode'] = $this->groupMode;
 	        $msg = '';
@@ -435,7 +434,10 @@ class GoController
 	        if (!empty($msg) && !empty($type)) {
 		        $_SESSION['gourlFlashBag'] = array('msg' => $msg, 'type' => $type);
 	        }
-        } elseif ($this->route === self::ROUTE_NAME_REMOVE_USER) {
+
+	        $this->redirect($this->lilurl->getBaseUrl('a/group/' . $this->groupId));
+
+        } elseif ($this->route === self::ROUTE_NAME_GROUP_USER_REMOVE) {
 	        if (!empty($this->groupId) && $this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
 		        if ($this->lilurl->deleteGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
 			        $msg = '<p class="title">Delete Successful</p><p>' . $this->uid . ' has been removed from group.</p>';
