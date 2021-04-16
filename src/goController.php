@@ -203,11 +203,11 @@ class GoController {
 		    } elseif (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_PATH_LOOKUP) {
 			    $this->route = self::ROUTE_NAME_LOOKUP;
 		    } elseif (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
-			    $this->route = 'group';
+			    $this->route = self::REOUTE_NAME_GROUP;
 			    $this->groupId = $matches[1];
 			    $this->groupMode = self::MODE_EDIT;
 		    } elseif ($this->pathInfo === self::ROUTE_PATH_GROUP) {
-			    $this->route = 'group';
+			    $this->route = self::REOUTE_NAME_GROUP;
 			    $this->groupId = NULL;
 			    $this->groupMode = self::MODE_CREATE;
 		    } elseif ($this->pathInfo === self::ROUTE_PATH_GROUPS) {
@@ -236,7 +236,7 @@ class GoController {
 				}
 
 	      if (!$this->route && $this->pathInfo !== '') {
-            $this->route = 'redirect';
+            $this->route = self::ROUTE_NAME_REDIRECT;
         }
 
         // check login for protected routes
