@@ -121,6 +121,23 @@ class GoRouter {
 	public function route() {
 		$this->route = NULL;
 
+		if (empty($this->pathInfo)) {
+			$this->route = self::ROUTE_NAME_HOME;
+		} elseif ($this->pathInfo === self::ROUTE_PATH_API) {
+			$this->route = self::ROUTE_NAME_API;
+		} elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
+			$this->route = self::ROUTE_NAME_QR;
+			$this->goId = $matches[1];
+		}
+
+		$this->routeAdmin();
+
+		if (!$this->route && $this->pathInfo !== '') {
+			$this->route = self::ROUTE_NAME_REDIRECT;
+		}
+	}
+
+	private function routeAdmin() {
 		if (isset($_GET['manage']) || in_array($this->pathInfo, array(self::ROUTE_PATH_A, self::ROUTE_PATH_LINKS))) {
 			$this->route = self::ROUTE_NAME_MANAGE;
 		} elseif (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_PATH_LOOKUP) {
@@ -143,23 +160,12 @@ class GoRouter {
 			$this->route = self::ROUTE_NAME_GROUP_USER_REMOVE;
 			$this->groupId = $matches[1];
 			$this->uid = urldecode($matches[2]);
-		} elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
-			$this->route = self::ROUTE_NAME_QR;
-			$this->goId = $matches[1];
 		} elseif (preg_match('#^([^/]+)\/edit$#', $this->pathInfo, $matches)) {
 			$this->route = self::ROUTE_NAME_EDIT;
 			$this->goId = $matches[1];
 		} elseif (preg_match('#^([^/]+)\/reset$#', $this->pathInfo, $matches)) {
 			$this->route = self::ROUTE_NAME_RESET;
 			$this->goId = $matches[1];
-		} elseif (empty($this->pathInfo)) {
-			$this->route = self::ROUTE_NAME_HOME;
-		} elseif ($this->pathInfo === self::ROUTE_PATH_API) {
-			$this->route = self::ROUTE_NAME_API;
-		}
-
-		if (!$this->route && $this->pathInfo !== '') {
-			$this->route = self::ROUTE_NAME_REDIRECT;
 		}
 	}
 
