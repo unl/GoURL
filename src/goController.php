@@ -50,51 +50,149 @@ class GoFlashBag {
 	}
 }
 
-class GoController {
-    const MODE_CREATE = 'create';
-    const MODE_EDIT = 'edit';
+class GoRouter {
+	// Edit Modes
+	const MODE_CREATE = 'create';
+	const MODE_EDIT = 'edit';
+
+	// route names
+	const ROUTE_NAME_API  = 'api';
+	const ROUTE_NAME_EDIT  = 'edit';
+	const ROUTE_NAME_GROUP = 'group';
+	const ROUTE_NAME_GROUP_USER_ADD = 'group-user-add';
+	const ROUTE_NAME_GROUP_USER_REMOVE = 'group-user-remove';
+	const ROUTE_NAME_GROUPS = 'groups';
+	const ROUTE_NAME_HOME = 'home';
+	const ROUTE_NAME_LINKS = 'links';
+	const ROUTE_NAME_LOGIN = 'login';
+	const ROUTE_NAME_LOGOUT = 'logout';
+	const ROUTE_NAME_LOOKUP = 'lookup';
+	const ROUTE_NAME_MANAGE = 'manage';
+	const ROUTE_NAME_QR = 'qr';
+	const ROUTE_NAME_REDIRECT = 'redirect';
+	const ROUTE_NAME_RESET = 'reset';
+
+	// route paths
+	const ROUTE_PATH_A = 'a/';
+	const ROUTE_PATH_API = 'api/';
+	const ROUTE_PATH_GROUP = 'a/group';
+	const ROUTE_PATH_GROUP_USER_ADD = 'a/group-user-add';
+	const ROUTE_PATH_GROUP_USER_REMOVE = 'a/group-user-remove';
+	const ROUTE_PATH_GROUPS = 'a/groups';
+	const ROUTE_PATH_HOME = '';
+	const ROUTE_PATH_LINKS = 'a/links';
+	const ROUTE_PATH_LOGIN = 'a/login';
+	const ROUTE_PATH_LOGOUT = 'a/logout';
+	const ROUTE_PATH_LOOKUP = 'a/lookup';
+
+	protected $viewTemplate;
+	protected $viewParams;
+	protected $route;
+	protected $groupId;
+	protected $groupMode;
+	protected $uid;
+	protected $goId;
+	protected $pathInfo;
+
+	protected function routeRequiresLogin(): bool
+	{
+		return in_array($this->route, array(
+			self::ROUTE_NAME_EDIT,
+			self::ROUTE_NAME_GROUP,
+			self::ROUTE_NAME_GROUP_USER_ADD,
+			self::ROUTE_NAME_GROUP_USER_REMOVE,
+			self::ROUTE_NAME_GROUPS,
+			self::ROUTE_NAME_LINKS,
+			self::ROUTE_NAME_LOOKUP,
+			self::ROUTE_NAME_MANAGE,
+			self::ROUTE_NAME_REDIRECT,
+			self::ROUTE_NAME_RESET
+		));
+	}
+
+	public function getViewTemplate() {
+		return $this->viewTemplate;
+	}
+
+	public function getViewParams() {
+		return $this->viewParams;
+	}
+
+	public function route() {
+		$this->route = NULL;
+
+		if (isset($_GET['manage']) || in_array($this->pathInfo, array(self::ROUTE_PATH_A, self::ROUTE_PATH_LINKS))) {
+			$this->route = self::ROUTE_NAME_MANAGE;
+		} elseif (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_PATH_LOOKUP) {
+			$this->route = self::ROUTE_NAME_LOOKUP;
+		} elseif (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
+			$this->route = self::ROUTE_NAME_GROUP;
+			$this->groupId = $matches[1];
+			$this->groupMode = self::MODE_EDIT;
+		} elseif ($this->pathInfo === self::ROUTE_PATH_GROUP) {
+			$this->route = self::ROUTE_NAME_GROUP;
+			$this->groupId = NULL;
+			$this->groupMode = self::MODE_CREATE;
+		} elseif ($this->pathInfo === self::ROUTE_PATH_GROUPS) {
+			$this->route = self::ROUTE_NAME_GROUPS;
+		} elseif (preg_match('/^a\/group-user-add\/(\d+)$/', $this->pathInfo, $matches)) {
+			$this->route = self::ROUTE_NAME_GROUP_USER_ADD;
+			$this->groupId = $matches[1];
+			$this->uid = filter_input(INPUT_POST, 'uid', FILTER_SANITIZE_STRING);
+		} elseif (preg_match('/^a\/group-user-remove\/(\d+)-(\w+)$/', $this->pathInfo, $matches)) {
+			$this->route = self::ROUTE_NAME_GROUP_USER_REMOVE;
+			$this->groupId = $matches[1];
+			$this->uid = urldecode($matches[2]);
+		} elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
+			$this->route = self::ROUTE_NAME_QR;
+			$this->goId = $matches[1];
+		} elseif (preg_match('#^([^/]+)\/edit$#', $this->pathInfo, $matches)) {
+			$this->route = self::ROUTE_NAME_EDIT;
+			$this->goId = $matches[1];
+		} elseif (preg_match('#^([^/]+)\/reset$#', $this->pathInfo, $matches)) {
+			$this->route = self::ROUTE_NAME_RESET;
+			$this->goId = $matches[1];
+		} elseif (empty($this->pathInfo)) {
+			$this->route = self::ROUTE_NAME_HOME;
+		} elseif ($this->pathInfo === self::ROUTE_PATH_API) {
+			$this->route = self::ROUTE_NAME_API;
+		}
+
+		if (!$this->route && $this->pathInfo !== '') {
+			$this->route = self::ROUTE_NAME_REDIRECT;
+		}
+	}
+
+	protected function redirect($location, $code = 303, $sendCORSHeaders = FALSE) {
+		header("LOCATION: ". htmlspecialchars($location), TRUE, $code);
+		if ($sendCORSHeaders) {
+			$this->sendCORSHeaders();
+		}
+		exit();
+	}
+
+	protected function sendCORSHeaders() {
+		if (!empty($_SERVER['HTTP_ORIGIN'])) {
+			header('Access-Control-Allow-Origin: *');
+			header('Access-Control-Allow-Methods: GET, POST');
+			header('Access-Control-Allow-Headers: X-Requested-With');
+		}
+	}
+
+	protected function handle404($showCustom = TRUE) {
+		header('HTTP/1.1 404 Not Found');
+		if ($showCustom === TRUE) {
+			include __DIR__ . '/../www/templates/404.php';
+		}
+		exit;
+	}
+}
+
+class GoController extends GoRouter {
     const DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
-
-    // route names
-		const ROUTE_NAME_API  = 'api';
-		const ROUTE_NAME_EDIT  = 'edit';
-		const ROUTE_NAME_GROUP = 'group';
-		const ROUTE_NAME_GROUP_USER_ADD = 'group-user-add';
-		const ROUTE_NAME_GROUP_USER_REMOVE = 'group-user-remove';
-		const ROUTE_NAME_GROUPS = 'groups';
-		const ROUTE_NAME_HOME = 'home';
-		const ROUTE_NAME_LINKS = 'links';
-		const ROUTE_NAME_LOGIN = 'login';
-		const ROUTE_NAME_LOGOUT = 'logout';
-		const ROUTE_NAME_LOOKUP = 'lookup';
-		const ROUTE_NAME_MANAGE = 'manage';
-		const ROUTE_NAME_QR = 'qr';
-		const ROUTE_NAME_REDIRECT = 'redirect';
-		const ROUTE_NAME_RESET = 'reset';
-
-    // route paths
-		const ROUTE_PATH_A = 'a/';
-	  const ROUTE_PATH_API = 'api/';
-		const ROUTE_PATH_GROUP = 'a/group';
-		const ROUTE_PATH_GROUP_USER_ADD = 'a/group-user-add';
-		const ROUTE_PATH_GROUP_USER_REMOVE = 'a/group-user-remove';
-		const ROUTE_PATH_GROUPS = 'a/groups';
-		const ROUTE_PATH_HOME = '';
-		const ROUTE_PATH_LINKS = 'a/links';
-		const ROUTE_PATH_LOGIN = 'a/login';
-		const ROUTE_PATH_LOGOUT = 'a/logout';
-		const ROUTE_PATH_LOOKUP = 'a/lookup';
 
     private $auth;
     private $lilurl;
-    private $route;
-    private $groupId;
-    private $groupMode;
-    private $uid;
-    private $goId;
-    private $pathInfo;
-    private $viewTemplate;
-    private $viewParams;
     private $qrIconPNG;
     private $flashBag;
 
@@ -119,29 +217,6 @@ class GoController {
 		    }
     }
 
-    private function redirect($location, $code = 303, $sendCORSHeaders = FALSE) {
-	    header("LOCATION: ". htmlspecialchars($location), TRUE, $code);
-	    if ($sendCORSHeaders) {
-		    $this->sendCORSHeaders();
-	    }
-	    exit();
-    }
-
-    private function routeRequiresLogin() {
-			return in_array($this->route, array(
-				self::ROUTE_NAME_EDIT,
-				self::ROUTE_NAME_GROUP,
-				self::ROUTE_NAME_GROUP_USER_ADD,
-				self::ROUTE_NAME_GROUP_USER_REMOVE,
-				self::ROUTE_NAME_GROUPS,
-				self::ROUTE_NAME_LINKS,
-				self::ROUTE_NAME_LOOKUP,
-				self::ROUTE_NAME_MANAGE,
-				self::ROUTE_NAME_REDIRECT,
-				self::ROUTE_NAME_RESET
-			));
-    }
-
     private function loginCheck() {
 	    if ($this->routeRequiresLogin() && !$this->auth->isAuthenticated()) {
 		    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LOGIN));
@@ -159,14 +234,6 @@ class GoController {
 			    $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 403);
 		    }
 	    }
-    }
-
-    public function getViewTemplate() {
-        return $this->viewTemplate;
-    }
-
-    public function getViewParams() {
-        return $this->viewParams;
     }
 
     public function preDispatch() {
@@ -195,58 +262,13 @@ class GoController {
 	      $this->lilurl->setGaClientId($_SESSION['clientId']);
     }
 
-    public function route() {
-				$this->route = NULL;
-
-		    if (isset($_GET['manage']) || in_array($this->pathInfo, array(self::ROUTE_PATH_A, self::ROUTE_PATH_LINKS))) {
-			    $this->route = self::ROUTE_NAME_MANAGE;
-		    } elseif (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_PATH_LOOKUP) {
-			    $this->route = self::ROUTE_NAME_LOOKUP;
-		    } elseif (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
-			    $this->route = self::ROUTE_NAME_GROUP;
-			    $this->groupId = $matches[1];
-			    $this->groupMode = self::MODE_EDIT;
-		    } elseif ($this->pathInfo === self::ROUTE_PATH_GROUP) {
-			    $this->route = self::ROUTE_NAME_GROUP;
-			    $this->groupId = NULL;
-			    $this->groupMode = self::MODE_CREATE;
-		    } elseif ($this->pathInfo === self::ROUTE_PATH_GROUPS) {
-			    $this->route = self::ROUTE_NAME_GROUPS;
-		    } elseif (preg_match('/^a\/group-user-add\/(\d+)$/', $this->pathInfo, $matches)) {
-			    $this->route = self::ROUTE_NAME_GROUP_USER_ADD;
-			    $this->groupId = $matches[1];
-			    $this->uid = filter_input(INPUT_POST, 'uid', FILTER_SANITIZE_STRING);
-        } elseif (preg_match('/^a\/group-user-remove\/(\d+)-(\w+)$/', $this->pathInfo, $matches)) {
-			    $this->route = self::ROUTE_NAME_GROUP_USER_REMOVE;
-			    $this->groupId = $matches[1];
-			    $this->uid = urldecode($matches[2]);
-		    } elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
-					$this->route = self::ROUTE_NAME_QR;
-					$this->goId = $matches[1];
-        } elseif (preg_match('#^([^/]+)\/edit$#', $this->pathInfo, $matches)) {
-					$this->route = self::ROUTE_NAME_EDIT;
-					$this->goId = $matches[1];
-        } elseif (preg_match('#^([^/]+)\/reset$#', $this->pathInfo, $matches)) {
-					$this->route = self::ROUTE_NAME_RESET;
-					$this->goId = $matches[1];
-        } elseif (empty($this->pathInfo)) {
-					$this->route = self::ROUTE_NAME_HOME;
-				} elseif ($this->pathInfo === self::ROUTE_PATH_API) {
-					$this->route = self::ROUTE_NAME_API;
-				}
-
-	      if (!$this->route && $this->pathInfo !== '') {
-            $this->route = self::ROUTE_NAME_REDIRECT;
-        }
-
+    public function dispatch() {
         // check login for protected routes
 	      $this->loginCheck();
 
-				// verify group and group access if set
-				$this->verifyGroup();
-    }
+	      // verify group and group access if set
+	      $this->verifyGroup();
 
-    public function dispatch() {
         $this->viewTemplate = 'index.php';
         $this->viewParams = [];
 
@@ -321,22 +343,6 @@ class GoController {
         include __DIR__ .'/../www/templates/' . $file;
         return ob_get_clean();
     }
-
-    private function sendCORSHeaders() {
-        if (!empty($_SERVER['HTTP_ORIGIN'])) {
-            header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Methods: GET, POST');
-            header('Access-Control-Allow-Headers: X-Requested-With');
-        }
-    }
-
-		private function handle404($showCustom = TRUE) {
-			header('HTTP/1.1 404 Not Found');
-			if ($showCustom === TRUE) {
-				include __DIR__ . '/../www/templates/404.php';
-			}
-			exit;
-		}
 
 		private function handleRouteLookup() {
 			$this->viewTemplate = 'linkinfo.php';
