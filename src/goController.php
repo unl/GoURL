@@ -392,7 +392,6 @@ class GoController extends GoRouter {
 		}
 
 		private function handleRouteGroup() {
-			$redirect = true;
 			$this->viewTemplate = 'group.php';
 			$this->viewParams['groupMode'] = $this->groupMode;
 
@@ -402,43 +401,48 @@ class GoController extends GoRouter {
 			}
 
 			if (!empty($_POST)) {
-				$error = '';
-				$msg = '';
-				$type = '';
-				$groupName = filter_input(INPUT_POST, 'groupName', FILTER_SANITIZE_STRING);
-				if (!$this->lilurl->isValidGroupName($groupName, $this->groupId, $error)) {
-					$msg = '<p class="title">Invalid Group</p><p>' . $error . '</p>';
-					$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
-					$redirect = false;
-				} else {
-					if ($this->groupMode === self::MODE_CREATE) {
-						if ($this->lilurl->insertGroup($_POST, $this->auth->getUserId())) {
-							$msg = '<p class="title">Add Successful</p><p>Your group has been added.</p>';
-							$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
-						} else {
-							$msg = '<p class="title">Add Failed</p><p>Your group has not been added.</p>';
-							$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
-						}
-					} elseif ($this->groupMode === self::MODE_EDIT && $this->groupId === $_POST['groupID']) {
-						if ($this->lilurl->updateGroup($_POST, $this->auth->getUserId())) {
-							$msg = '<p class="title">Update Successful</p><p>Your group has been updated.</p>';
-							$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
-						}
-					} else {
-						$msg = '<p class="title">Update Failed</p><p>Your group has not been updated.</p>';
-						$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
-					}
-				}
-
-				if (!empty($msg) && !empty($type)) {
-					$this->flashBag->setParams($msg, $type);
-				}
-
-				if ($redirect) {
-					$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
-				}
+				$this->handleRouteGroupPost();
 			}
 		}
+
+		private function handleRouteGroupPost() {
+			$redirect = true;
+			$error = '';
+			$msg = '';
+			$type = '';
+			$groupName = filter_input(INPUT_POST, 'groupName', FILTER_SANITIZE_STRING);
+			if (!$this->lilurl->isValidGroupName($groupName, $this->groupId, $error)) {
+				$msg = '<p class="title">Invalid Group</p><p>' . $error . '</p>';
+				$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
+				$redirect = false;
+			} else {
+				if ($this->groupMode === self::MODE_CREATE) {
+					if ($this->lilurl->insertGroup($_POST, $this->auth->getUserId())) {
+						$msg = '<p class="title">Add Successful</p><p>Your group has been added.</p>';
+						$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
+					} else {
+						$msg = '<p class="title">Add Failed</p><p>Your group has not been added.</p>';
+						$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
+					}
+				} elseif ($this->groupMode === self::MODE_EDIT && $this->groupId === $_POST['groupID']) {
+					if ($this->lilurl->updateGroup($_POST, $this->auth->getUserId())) {
+						$msg = '<p class="title">Update Successful</p><p>Your group has been updated.</p>';
+						$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
+					}
+				} else {
+					$msg = '<p class="title">Update Failed</p><p>Your group has not been updated.</p>';
+					$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
+				}
+			}
+
+			if (!empty($msg) && !empty($type)) {
+				$this->flashBag->setParams($msg, $type);
+			}
+
+			if ($redirect) {
+				$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
+			}
+    }
 
 		private function handleRouteGroupAdd() {
 			$this->viewTemplate = 'group.php';
