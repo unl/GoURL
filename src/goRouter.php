@@ -34,6 +34,8 @@ class GoRouter {
 	const ROUTE_PATH_LOGOUT = 'a/logout';
 	const ROUTE_PATH_LOOKUP = 'a/lookup';
 
+	public static $corsAllowedDomains = array();
+
 	protected $viewTemplate;
 	protected $viewParams;
 	protected $route;
@@ -126,9 +128,21 @@ class GoRouter {
 		exit();
 	}
 
-	protected function sendCORSHeaders() {
+	public function allowedCORSDomain() {
 		if (!empty($_SERVER['HTTP_ORIGIN'])) {
-			header('Access-Control-Allow-Origin: *');
+			foreach (static::$corsAllowedDomains as $allowedDomain) {
+				$domainCheck = "/https?:\/\/.*" . $allowedDomain . "$/";
+				if (preg_match($domainCheck, $_SERVER['HTTP_ORIGIN'])) {
+					return $_SERVER['HTTP_ORIGIN'];
+				}
+			}
+		}
+		return false;
+	}
+
+	protected function sendCORSHeaders() {
+		if ($allowedCORSDomain = $this->allowedCORSDomain()) {
+			header('Access-Control-Allow-Origin: ' . $allowedCORSDomain);
 			header('Access-Control-Allow-Methods: GET, POST');
 			header('Access-Control-Allow-Headers: X-Requested-With');
 		}

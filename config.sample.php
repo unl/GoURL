@@ -8,6 +8,9 @@ define('MYSQL_PASS', 'mypass');
 define('MYSQL_DB',   'goURL');
 define('MYSQL_HOST', 'localhost');
 
+// Set allowed domains for CORS
+GoRouter::$corsAllowedDomains = array('unl.edu');
+
 $useTheme = 'unl';
 if ($useTheme === 'dcf') {
     // dcf
