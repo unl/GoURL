@@ -1,14 +1,11 @@
 <?php
 extract($viewParams);
-
 // Load JQuery dataTables for filtering GoURLs
 $page->addScript($lilurl->getBaseUrl('js/datatables-1.10.21.min.js'), NULL, TRUE);
 $appPart = !empty($appName) ? ' - ' . $appName : '';
 $institutionPart = !empty($institution) ? ' | ' . $institution : '';
 $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
-
 ?>
-
 <div class="dcf-bleed dcf-pt-4 dcf-pb-8">
   <div class="dcf-wrapper">
     <h2 class="dcf-txt-h4">Your Groups</h2>

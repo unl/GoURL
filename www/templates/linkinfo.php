@@ -5,9 +5,7 @@ $appPart = !empty($appName) ? ' - ' . $appName : '';
 $institutionPart = !empty($institution) ? ' | ' . $institution : '';
 $page->doctitle = 'URL Info' . $appPart . $institutionPart;
 $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
-
 ?>
-
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
         <div class="dcf-grid-full dcf-grid-halves@md dcf-col-gap-8 dcf-row-gap-8">
@@ -23,7 +21,7 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
             </div>
             <?php if (!empty($link)) :
                 $http = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === TRUE ? 'https://' : 'http://';
-	            $shorURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($link->urlID);
+                $shorURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($link->urlID);
             ?>
             <div>
                 <h2 class="dcf-txt-h4">Details for &apos;<?php echo $link->urlID ?>&apos;</h2>
@@ -40,18 +38,18 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
                     <?php if ($link->submitDate): ?>
                         <dt>Created On</dt>
                         <dd class="dcf-pl-6"><?php
-	                        $createdOn = 'Unknown';
-	                        if ($link->submitDate !== '0000-00-00 00:00:00') {
-		                        $rowDateTime = new DateTime($link->submitDate);
+                            $createdOn = 'Unknown';
+                            if ($link->submitDate !== '0000-00-00 00:00:00') {
+                                $rowDateTime = new DateTime($link->submitDate);
                                 $createdOn = $rowDateTime->format('F j, Y');
-	                        }
-	                        echo $createdOn;
+                            }
+                            echo $createdOn;
                         ?></dd>
                     <?php endif;?>
 
                     <dt>Owner/Created By</dt>
                     <dd class="dcf-pl-6">
-	                <?php if ($link->createdBy): ?>
+                    <?php if ($link->createdBy): ?>
                         <?php echo $lilurl->escapeURL($link->createdBy) ?></a>
                     <?php else: ?>
                         Anonymous
@@ -67,7 +65,7 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
                     <?php endif; ?>
                     </dd>
 
-	                <?php if (!empty($group)): ?>
+                    <?php if (!empty($group)): ?>
                     <dt>Group Users</dt>
                     <dd class="dcf-pl-6">
                         <?php if (!empty($group->users)): ?>
@@ -76,7 +74,7 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
                             <li><?php echo $user->uid; ?></li>
                         <?php endforeach; ?>
                         </ul>
-	                    <?php else: ?>
+                        <?php else: ?>
                         None
                         <?php endif; ?>
                     </dd>
@@ -85,6 +83,5 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
             </div>
             <?php endif; ?>
         </div>
-
     </div>
 </div>
