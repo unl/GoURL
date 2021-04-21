@@ -21,8 +21,6 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
         </thead>
         <tbody>
         <?php foreach ($groups as $group): ?>
-          <?php
-          ?>
           <tr class="unl-bg-cream">
             <td data-header="Group"><?php echo $group->groupName; ?></td>
             <td class="dcf-txt-sm">

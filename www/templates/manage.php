@@ -34,6 +34,7 @@
                     <tr>
                         <th scope="col">Short URL</th>
                         <th scope="col">Long URL</th>
+                        <th scope="col">Group</th>
                         <th scope="col">Redirects</th>
                         <th scope="col">Created&nbsp;on</th>
                         <th scope="col" data-searchable="false" data-orderable="false">Actions</th>
@@ -53,6 +54,7 @@
                     <tr class="unl-bg-cream">
                         <td data-header="Short URL"><a href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID)); ?>" target="_blank" rel="noopener"><?php echo $url->urlID; ?></a></td>
                         <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($url->longURL); ?>"><?php echo $longURLDisplay; ?></a></td>
+                        <td data-header="Group"><?php echo !empty($url->groupName) ? $url->groupName : 'N/A' ?></td>
                         <td data-header="Redirects"><?php echo $url->redirects ?></td>
                         <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
                             <?php if ($rowDateTime): ?>
