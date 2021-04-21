@@ -581,39 +581,10 @@ class GoController extends GoRouter {
 						$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
 					}
 				} catch (Exception $e) {
-					switch ($e->getCode()) {
-						case lilURL::ERR_INVALID_PROTOCOL:
-							$msg = '<p class="title">Whoops, Something Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>';
-							break;
-						case lilURL::ERR_INVALID_DOMAIN:
-							$msg = '<p class="title">Whoops, Something Broke</p><p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>';
-							break;
-						case lilURL::ERR_INVALID_ALIAS:
-							$msg = '<p class="title">Whoops, Something Broke</p><p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>';
-							break;
-						case lilURL::ERR_USED:
-							$msg = '<p class="title">Whoops, this alias/URL pair already exists.</p><p>The existing Go URL for this pair is: </p>';
-							break;
-						case lilURL::ERR_ALIAS_EXISTS:
-							$msg = '<p class="title">Whoops, This alias is already in use.</p><p>Please use a different alias.</p>';
-							break;
-						case lilURL::ERR_INVALID_GA_CAMPAIGN:
-							$msg = '<p class="title">Whoops, Invalid Google Campaign.</p><p>Please provide all required campaign information.</p>';
-							break;
-						case lilURL::ERR_INVALID_URL:
-							$msg = '<p class="title">Whoops, Invalid URL.</p><p>Please verify the URL is correct.</p>';
-							break;
-						case lilURL::ERR_MAX_RANDOM_ID_ATTEMPTS:
-							$msg = '<p class="title">Whoops, Random Alias Error.</p><p>'. $e->getMessage() . '</p>';
-							break;
-						default:
-							$msg = '<p class="title">Whoops, Something Broke</p><p>There was an error submitting your url. Check your steps.</p>';
-					}
-
-					$this->flashBag->setParams($msg, $this->flashBag::FLASH_BAG_TYPE_ERROR);
+					$this->handleException($e);
 				}
 
-				if ('api' === $this->route) {
+				if ($this->route === self::ROUTE_NAME_API) {
 					$this->sendCORSHeaders();
 					$this->flashBag->clearParams();
 
@@ -629,11 +600,44 @@ class GoController extends GoRouter {
 
 				$this->redirect($this->lilurl->getBaseUrl());
 
-			} elseif ('api' === $this->route) {
+			} elseif ($this->route === self::ROUTE_NAME_API) {
 				$this->sendCORSHeaders();
 				header('HTTP/1.1 404 Not Found');
 				echo 'You need a URL!';
 				exit;
 			}
+		}
+
+		private function handleException(Exception $e) {
+			switch ($e->getCode()) {
+				case lilURL::ERR_INVALID_PROTOCOL:
+					$msg = '<p class="title">Whoops, Something Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>';
+					break;
+				case lilURL::ERR_INVALID_DOMAIN:
+					$msg = '<p class="title">Whoops, Something Broke</p><p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>';
+					break;
+				case lilURL::ERR_INVALID_ALIAS:
+					$msg = '<p class="title">Whoops, Something Broke</p><p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>';
+					break;
+				case lilURL::ERR_USED:
+					$msg = '<p class="title">Whoops, this alias/URL pair already exists.</p><p>The existing Go URL for this pair is: </p>';
+					break;
+				case lilURL::ERR_ALIAS_EXISTS:
+					$msg = '<p class="title">Whoops, This alias is already in use.</p><p>Please use a different alias.</p>';
+					break;
+				case lilURL::ERR_INVALID_GA_CAMPAIGN:
+					$msg = '<p class="title">Whoops, Invalid Google Campaign.</p><p>Please provide all required campaign information.</p>';
+					break;
+				case lilURL::ERR_INVALID_URL:
+					$msg = '<p class="title">Whoops, Invalid URL.</p><p>Please verify the URL is correct.</p>';
+					break;
+				case lilURL::ERR_MAX_RANDOM_ID_ATTEMPTS:
+					$msg = '<p class="title">Whoops, Random Alias Error.</p><p>'. $e->getMessage() . '</p>';
+					break;
+				default:
+					$msg = '<p class="title">Whoops, Something Broke</p><p>There was an error submitting your url. Check your steps.</p>';
+			}
+
+			$this->flashBag->setParams($msg, $this->flashBag::FLASH_BAG_TYPE_ERROR);
 		}
 }
