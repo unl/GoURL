@@ -555,23 +555,11 @@ class GoController extends GoRouter {
 			}
 
 			if (isset($_POST['theURL'])) {
-				$mode = filter_input(INPUT_POST, 'mode', FILTER_SANITIZE_STRING) === static::MODE_EDIT ? static::MODE_EDIT : static::MODE_CREATE;
-				$userId = $alias = null;
-
-				if ($this->auth->isAuthenticated()) {
-					$userId = $this->auth->getUserId();
-
-					if ($mode === static::MODE_EDIT) {
-						if (!empty($_POST['id'])) {
-							$alias = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_STRING);
-						}
-					} else {
-						if (!empty($_POST['theAlias'])) {
-							$alias = filter_input(INPUT_POST, 'theAlias', FILTER_SANITIZE_STRING);
-						}
-					}
-				}
-
+				$mode = static::MODE_CREATE;
+				$userId = NULL;
+				$alias = NULL;
+				$this->sanitizeURLPost($mode, $userId, $alias);
+				
 				try {
 					$url = $this->lilurl->handlePOST($mode, $alias, $userId);
 					$msg = $mode === static::MODE_EDIT ? 'Your Go URL is updated!' : 'You have a Go URL!';
@@ -605,6 +593,25 @@ class GoController extends GoRouter {
 				header('HTTP/1.1 404 Not Found');
 				echo 'You need a URL!';
 				exit;
+			}
+		}
+
+		private function sanitizeURLPost(&$mode, &$userId, &$alias) {
+			$mode = filter_input(INPUT_POST, 'mode', FILTER_SANITIZE_STRING) === static::MODE_EDIT ? static::MODE_EDIT : static::MODE_CREATE;
+			$userId = $alias = null;
+
+			if ($this->auth->isAuthenticated()) {
+				$userId = $this->auth->getUserId();
+
+				if ($mode === static::MODE_EDIT) {
+					if (!empty($_POST['id'])) {
+						$alias = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_STRING);
+					}
+				} else {
+					if (!empty($_POST['theAlias'])) {
+						$alias = filter_input(INPUT_POST, 'theAlias', FILTER_SANITIZE_STRING);
+					}
+				}
 			}
 		}
 
