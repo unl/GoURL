@@ -1,8 +1,15 @@
+#AuthType shibboleth
+##use shibboleth auth, but allow browsing anonymously (don't require a session)
+#require shibboleth
+
+<IfModule mod_rewrite.c>
 RewriteEngine On
+
 RewriteBase /workspace/UNL_Go_URL/www/
-
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteRule ^Shibboleth.sso - [L]
 RewriteRule ^api_create.php$ index.php [L]
-
-DirectoryIndex disabled
-DirectoryIndex index.php
-FallbackResource /workspace/UNL_Go_URL/www/index.php
+RewriteRule ^(css|js|wdn|custom)($|/) - [L]
+RewriteRule . index.php [L]
+</IfModule>
