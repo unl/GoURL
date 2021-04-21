@@ -690,7 +690,7 @@ class lilURL
 		}
 
 		$result = $this->db->run(
-			'SELECT count(*) AS isGroupCount FROM tblGroups WHERE ' . self::WHERE_GROUP_ID . ' AND groupName = ' . self::PDO_PLACEHOLDER_GROUP_NAME,
+			'SELECT count(*) AS isGroupCount FROM tblGroups WHERE groupID <> ' . self::PDO_PLACEHOLDER_GROUP_ID . ' AND groupName = ' . self::PDO_PLACEHOLDER_GROUP_NAME,
 			array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID, self::PDO_PLACEHOLDER_GROUP_NAME => trim($groupName)),
 			TRUE
 		);
