@@ -1,7 +1,5 @@
 <?php
-
 class PdoDB extends PDO {
-
 	private $_error;
 	private $_sql;
 	private $_bind;
