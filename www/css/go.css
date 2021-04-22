@@ -79,12 +79,14 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
 	overflow: auto;
 }
 .dataTables_wrapper .dataTables_length {
-	float:left
+	float:left;
+	padding: 5px 5px 0;
 }
 .dataTables_wrapper .dataTables_filter {
 	float:right;
 	text-align:right;
 	margin-bottom: 1em;
+	padding: 5px 5px 0;
 }
 .dataTables_wrapper .dataTables_filter input {
 	margin-left:0.5em
