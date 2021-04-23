@@ -28,7 +28,7 @@
       <h2 class="dcf-txt-h4">Your URLs</h2>
         <?php $urls = $lilurl->getUserURLs($auth->getUserId()); ?>
         <?php if (count($urls) > 0): ?>
-            <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
+            <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 4, &quot;desc&quot; ]]">
                 <caption class="dcf-sr-only">Your Go URLs</caption>
                 <thead class="unl-bg-lighter-gray">
                     <tr>
@@ -36,6 +36,7 @@
                         <th scope="col">Long URL</th>
                         <th scope="col">Group</th>
                         <th scope="col">Redirects</th>
+                        <th scope="col">Last Redirect</th>
                         <th scope="col">Created&nbsp;on</th>
                         <th scope="col" data-searchable="false" data-orderable="false">Actions</th>
                     </tr>
@@ -43,10 +44,9 @@
                 <tbody>
                 <?php foreach ($urls as $url) : ?>
                     <?php
-                    $rowDateTime = null;
-                    if ($url->submitDate !== '0000-00-00 00:00:00') {
-                        $rowDateTime = new DateTime($url->submitDate);
-                    }
+	                $submitDate = $lilurl->createDateTimeFromTimestamp($url->submitDate);
+	                $lastRedirect = $lilurl->createDateTimeFromTimestamp($url->lastRedirect);
+
                     // Generate QR modal for each GoURL
                     $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.qr', $appName);
                     $longURLDisplay = strlen($url->longURL) > 50 ? substr($url->longURL,0,50)."..." : $url->longURL;
@@ -56,10 +56,11 @@
                         <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($url->longURL); ?>"><?php echo $longURLDisplay; ?></a></td>
                         <td data-header="Group"><?php echo !empty($url->groupName) ? $url->groupName : 'N/A' ?></td>
                         <td data-header="Redirects"><?php echo $url->redirects ?></td>
-                        <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
-                            <?php if ($rowDateTime): ?>
-                                <?php echo $rowDateTime->format('M j, Y') ?>
-                            <?php endif; ?>
+                        <td data-header="LastRedirect"<?php if ($lastRedirect): ?> data-search="<?php echo $lastRedirect->format('M j, Y m/d/Y') ?>" data-order="<?php echo $lastRedirect->format('U') ?>"<?php endif; ?>>
+                            <?php echo !empty($lastRedirect) ? $lastRedirect->format('M j, Y') : 'Never'; ?>
+                        </td>
+                        <td data-header="Created on"<?php if ($submitDate): ?> data-search="<?php echo $submitDate->format('M j, Y m/d/Y') ?>" data-order="<?php echo $submitDate->format('U') ?>"<?php endif; ?>>
+                            <?php echo !empty($submitDate) ? $submitDate->format('M j, Y') : 'N/A'; ?>
                         </td>
                         <td class="dcf-txt-sm">
                             <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal dcf-mt-1" data-toggles-modal="qr-modal-<?php echo $url->urlID; ?>" type="button" title="QR Code for <?php echo $url->urlID; ?> URL"><span class="qrImage"></span> QR Code®</button>
@@ -96,5 +97,4 @@ jQuery(document).ready(function($) {
 <?php
 // Display QR Modal Markup
 echo $qrModals;
-
 ?>

@@ -27,10 +27,12 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
   `submitDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createdBy` varchar(25) DEFAULT NULL,
   `redirects` int(11) unsigned DEFAULT 0,
+  `lastRedirect` timestamp NULL,
   PRIMARY KEY (`urlID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- ALTER TABLE `tblURLs` ADD COLUMN `groupID` int(10) unsigned NULL AFTER `urlID`;
+-- ALTER TABLE `tblURLs` ADD COLUMN `lastRedirect` timestamp NULL AFTER `redirects`;
 
 DROP TABLE IF EXISTS `tblGroups`;
 CREATE TABLE IF NOT EXISTS `tblGroups` (

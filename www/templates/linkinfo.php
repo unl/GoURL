@@ -35,15 +35,21 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
                     <dt>Redirect Count</dt>
                     <dd class="dcf-pl-6"><?php echo $link->redirects ?></dd>
 
+                    <dt>Last Redirect</dt>
+                    <dd class="dcf-pl-6"><?php
+	                    if ($link->lastRedirect) {
+		                    $lastRedirect = $lilurl->createDateTimeFromTimestamp($link->lastRedirect);
+		                    echo !empty($lastRedirect) ? $lastRedirect->format('F j, Y') : 'Never';
+	                    } else {
+	                        echo 'Never';
+                        }
+                    ?></dd>
+
                     <?php if ($link->submitDate): ?>
                         <dt>Created On</dt>
                         <dd class="dcf-pl-6"><?php
-                            $createdOn = 'Unknown';
-                            if ($link->submitDate !== '0000-00-00 00:00:00') {
-                                $rowDateTime = new DateTime($link->submitDate);
-                                $createdOn = $rowDateTime->format('F j, Y');
-                            }
-                            echo $createdOn;
+	                        $createdOn = $lilurl->createDateTimeFromTimestamp($link->submitDate);
+	                        echo !empty($createdOn) ? $createdOn->format('F j, Y') : 'Unknown';
                         ?></dd>
                     <?php endif;?>
 

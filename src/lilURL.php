@@ -786,8 +786,19 @@ class lilURL
 		return $this;
 	}
 
+	public function createDateTimeFromTimestamp($timestamp) {
+		if (!empty($timestamp) && $timestamp !== '0000-00-00 00:00:00') {
+			try {
+				return new DateTime($timestamp);
+			} catch (Exception $e) {
+				// Do Nothing
+			}
+		}
+		return NULL;
+	}
+
 	private function incrementRedirectCount($id) {
-		return $this->db->run('UPDATE ' . self::TABLE_URLS . ' SET redirects = redirects + 1 WHERE ' . self::WHERE_URL_ID,
+		return $this->db->run('UPDATE ' . self::TABLE_URLS . ' SET redirects = redirects + 1, lastRedirect = now() WHERE ' . self::WHERE_URL_ID,
 			array(self::PDO_PLACEHOLDER_URL_ID => $id)
 		);
 	}
