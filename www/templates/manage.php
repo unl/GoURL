@@ -79,7 +79,8 @@
             <p>You haven't created any Go URLs, yet.</p>
         <?php endif;?>
         <div class="dcf-mt-6 dcf-mb-6">
-            <a class="dcf-btn dcf-btn-primary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl()); ?>">Add URL</a>
+            <a class="dcf-btn dcf-btn-primary dcf-mr-6" href="<?php echo htmlspecialchars($lilurl->getBaseUrl()); ?>">Add URL</a>
+            <span class="dcf-d-inline-block dcf-mt-6 dcf-mt-0@md dcf-form-help"><?php echo GoController::URL_AUTO_PURGE_NOTICE; ?></span>
         </div>
     </div>
 </div>

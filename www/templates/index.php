@@ -124,6 +124,7 @@
             <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($goURLForm->getID() . '/reset')) ?>" title="Reset redirect count for <?php echo $goURLForm->getID(); ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $goURLForm->getID(); ?>\'?');">Reset Redirects</a>
             <button class="dcf-btn dcf-btn-secondary dcf-mt-1" type="button" onclick="return confirm('Are you for sure you want to delete \'<?php echo $goURLForm->getID(); ?>\'?') && submitDelete();">Delete</button>
         <?php endif ?>
+        <span class="dcf-d-block dcf-mt-6 dcf-form-help"><?php echo GoController::URL_AUTO_PURGE_NOTICE; ?></span>
         </div>
     </form>
     <?php if ($mode === 'edit') : ?>

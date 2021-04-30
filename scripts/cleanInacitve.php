@@ -3,7 +3,7 @@ require_once dirname(__DIR__) . '/config.inc.php';
 
 $mysqli = new mysqli(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB);
 
-$result = $mysqli->query("DELETE FROM tblURLs WHERE (submitDate <= DATE_SUB(NOW(),INTERVAL 1 YEAR) AND lastRedirect IS NULL) OR lastRedirect <= DATE_SUB(NOW(),INTERVAL 1 YEAR)");
+$result = $mysqli->query("DELETE FROM tblURLs WHERE (submitDate <= DATE_SUB(NOW(),INTERVAL 2 YEAR) AND lastRedirect IS NULL) OR (lastRedirect IS NOT NULL AND lastRedirect <= DATE_SUB(NOW(),INTERVAL 2 YEAR))");
 if (!$result) {
 	echo "query error"; exit();
 }
