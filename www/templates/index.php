@@ -33,9 +33,13 @@
                         <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
                         <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <em><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?>/admissions</em> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                         <?php if ($mode === 'edit') : ?>
-                        <span class="dcf-form-help">Note: The Custom Alias is an identifier and can not be edited.  If you need to update the alias you must delete url and recreate with new alias.</span>
+                        <span class="dcf-form-help">Note: The Custom Alias is an identifier and can not be edited.  If you need to update the alias you must delete URL and recreate with new alias.</span>
                         <?php endif ?>
-                    </span>
+                        <?php if (!empty($goURLForm->getCreatedBy() && !empty($goURLForm->getSubmitDate()))) {
+                            $createDate = new DateTime($goURLForm->getSubmitDate());
+                        ?>
+                            <span class="dcf-form-help dcf-mt-4">Created by <?php echo $goURLForm->getCreatedBy(); ?> on <?php echo $createDate->format('F j, Y'); ?></span>
+                        <?php } ?>
                 </div>
             </fieldset>
             <fieldset>
@@ -52,12 +56,7 @@
                         <option value="<?php echo $group->groupID; ?>"<?php echo $selected; ?>><?php echo $group->groupName; ?></option>
                         <?php } ?>
                     </select>
-                    <span class="dcf-form-help">Note: The User Group allows the users of the group to have admin access to the url. Only groups which you belong to are options.</span>
-	                <?php if (!empty($goURLForm->getCreatedBy() && !empty($goURLForm->getSubmitDate()))) {
-	                    $createDate = new DateTime($goURLForm->getSubmitDate());
-	                ?>
-                      <span class="dcf-form-help dcf-mt-4">Created by <?php echo $goURLForm->getCreatedBy(); ?> on <?php echo $createDate->format('F j, Y'); ?></span>
-	                <?php } ?>
+                    <span class="dcf-form-help">Note: The User Group allows the users of the group to have admin access to the URL. Only groups which you belong to are options.</span>
                 </div>
             </fieldset>
             <fieldset>
