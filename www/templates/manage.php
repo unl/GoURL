@@ -53,7 +53,7 @@
                     ?>
                     <tr class="unl-bg-cream">
                         <td data-header="Short URL"><a href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID)); ?>" target="_blank" rel="noopener"><?php echo $url->urlID; ?></a></td>
-                        <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($url->longURL); ?>" title="Full URL: <?php echo $longURLDisplay; ?>"><?php echo $longURLDisplay; ?></a></td>
+                        <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($url->longURL); ?>" title="Full URL: <?php echo $url->longURL; ?>"><?php echo $longURLDisplay; ?></a></td>
                         <td data-header="Group"><?php echo !empty($url->groupName) ? $url->groupName : 'N/A' ?></td>
                         <td data-header="Redirects"><?php echo $url->redirects ?></td>
                         <td data-header="LastRedirect"<?php if ($lastRedirect): ?> data-search="<?php echo $lastRedirect->format('M j, Y m/d/Y') ?>" data-order="<?php echo $lastRedirect->format('U') ?>"<?php endif; ?>>
