@@ -4,7 +4,7 @@ use Ramsey\Uuid\Uuid;
 
 class GoController extends GoRouter {
 	const DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
-	const URL_AUTO_PURGE_NOTICE = 'URLs not redirected for two years will be removed without notice.';
+	const URL_AUTO_PURGE_NOTICE = '<abbr title="Uniform Resource Locators">URLs</abbr> not redirected for two years will be removed without notice.';
 
 	private $auth;
 	private $lilurl;
