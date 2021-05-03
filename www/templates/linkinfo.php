@@ -12,7 +12,7 @@ $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
             <div>
                 <h2 class="dcf-txt-h4"><?php echo $appName; ?> Lookup</h2>
                 <form class="dcf-form" id="lookup-form" method="post" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/lookup')) ?>">
-                    <label>Lookup</label>
+                    <label>Short <abbr title="Uniform Resource Locator">URL</abbr></label>
                     <div class="dcf-input-group">
                         <input id="lookupTerm" name="lookupTerm" type="text" value="<?php echo trim($lookupTerm); ?>" required >
                         <button class="dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit">Search</button>
