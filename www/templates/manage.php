@@ -49,7 +49,7 @@
 
                     // Generate QR modal for each GoURL
                     $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.qr', $appName);
-                    $longURLDisplay = strlen($url->longURL) > 25 ? substr($url->longURL,0,25)."..." : $url->longURL;
+                    $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : $url->longURL;
                     ?>
                     <tr class="unl-bg-cream">
                         <td data-header="Short URL"><a href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID)); ?>" target="_blank" rel="noopener"><?php echo $url->urlID; ?></a></td>
