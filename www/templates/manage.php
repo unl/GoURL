@@ -86,7 +86,11 @@
 </div>
 <script>
 jQuery(document).ready(function($) {
-    $('#go-urls').DataTable();
+    $('#go-urls').DataTable({
+      "oLanguage": {
+        "sSearch": "Search"
+      }
+    });
     $('.dataTables_length label').addClass('dcf-label');
     $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
     $('.dataTables_filter label').addClass('dcf-label');

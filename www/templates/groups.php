@@ -44,7 +44,11 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
 </div>
 <script>
   jQuery(document).ready(function($) {
-    $('#groups').DataTable();
+    $('#groups').DataTable({
+      "oLanguage": {
+        "sSearch": "Search"
+      }
+    });
     $('.dataTables_length label').addClass('dcf-label');
     $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
     $('.dataTables_filter label').addClass('dcf-label');
