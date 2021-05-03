@@ -80,7 +80,9 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
 }
 .dataTables_wrapper .dataTables_length {
 	float:left;
-	padding: 5px 5px 0;
+}
+.dataTables_wrapper .dataTables_length .dcf-input-select {
+	margin: 5px 5px 0 5px;
 }
 .dataTables_wrapper .dataTables_filter {
 	float:right;
