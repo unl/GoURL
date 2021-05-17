@@ -10,6 +10,8 @@
 /vendor/
 /www/custom/*
 !/www/custom/.gitkeep
+!/www/custom/dcf
 /src/Themes/*
 !/src/Themes/.gitkeep
 !/src/Themes/unl
+!/src/Themes/dcf
