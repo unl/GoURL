@@ -15,7 +15,7 @@
     $disabledAlias = $mode === 'edit' ? ' disabled ' : '';
 ?>
 <div class="dcf-bleed dcf-wrapper dcf-pt-8 dcf-pb-8 dcf-d-flex dcf-jc-center">
-    <form class="dcf-form dcf-w-max-lg" id="shorten-form" action="<?php echo $lilurl->getBaseUrl() ?>" method="post">
+    <form class="dcf-form dcf-w-max-lg" id="shorten-form" action="<?php echo htmlspecialchars($lilurl->getBaseUrl()) ?>" method="post">
         <input type="hidden" name="mode" value="<?php echo $mode; ?>">
         <input type="hidden" name="id" value="<?php echo $goURLForm->getID(); ?>">
         <div class="dcf-form-controls-inline dcf-mb-5">
@@ -29,13 +29,34 @@
             <fieldset>
                 <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
                 <div class="dcf-form-group">
-                    <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label><span>
+                    <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
                         <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
                         <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <em><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?>/admissions</em> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                         <?php if ($mode === 'edit') : ?>
-                        <span class="dcf-form-help">Note: The Custom Alias is an indentifer and can not be edited.  If you need to update the alias you must delete goURL and recreate with new alias.</span>
+                        <span class="dcf-form-help">Note: The Custom Alias is an identifier and can not be edited.  If you need to update the alias you must delete URL and recreate with new alias.</span>
                         <?php endif ?>
-                    </span>
+                        <?php if (!empty($goURLForm->getCreatedBy() && !empty($goURLForm->getSubmitDate()))) {
+                            $createDate = new DateTime($goURLForm->getSubmitDate());
+                        ?>
+                            <span class="dcf-form-help dcf-mt-4">Created by <?php echo $goURLForm->getCreatedBy(); ?> on <?php echo $createDate->format('F j, Y'); ?></span>
+                        <?php } ?>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend class="dcf-bold dcf-txt-lg">User Admin Access</legend>
+                <div class="dcf-form-group">
+                    <label>User Group <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
+                    <select id="groupID" name="groupID">
+                        <option value="0">No user group</option>
+                        <?php
+                            $groups = $lilurl->getUserGroups($auth->getUserId());
+                            foreach ($groups as $group) {
+                                $selected = $group->groupID === $goURLForm->getGroupID() ? ' selected=selected ' : '';
+                        ?>
+                        <option value="<?php echo $group->groupID; ?>"<?php echo $selected; ?>><?php echo $group->groupName; ?></option>
+                        <?php } ?>
+                    </select>
+                    <span class="dcf-form-help">Note: The User Group allows the users of the group to have admin access to the URL. Only groups which you belong to are options.</span>
                 </div>
             </fieldset>
             <fieldset>
@@ -99,13 +120,14 @@
         <?php endif ?>
         <input class="dcf-mt-6 dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit" value="<?php echo $submitBtnLabel; ?>">
         <?php if ($mode === 'edit') : ?>
-            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($goURLForm->getID() . '/reset') ?>" title="Reset redirect count for <?php echo $goURLForm->getID(); ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $goURLForm->getID(); ?>\'?');">Reset Redirects</a>
+            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($goURLForm->getID() . '/reset')) ?>" title="Reset redirect count for <?php echo $goURLForm->getID(); ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $goURLForm->getID(); ?>\'?');">Reset Redirects</a>
             <button class="dcf-btn dcf-btn-secondary dcf-mt-1" type="button" onclick="return confirm('Are you for sure you want to delete \'<?php echo $goURLForm->getID(); ?>\'?') && submitDelete();">Delete</button>
         <?php endif ?>
+        <span class="dcf-d-block dcf-mt-6 dcf-form-help"><?php echo GoController::URL_AUTO_PURGE_NOTICE; ?></span>
         </div>
     </form>
     <?php if ($mode === 'edit') : ?>
-    <form id="delete-form" class="dcf-form" action="<?php echo $lilurl->getBaseUrl('a/links') ?>" method="post">
+    <form id="delete-form" class="dcf-form" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')) ?>" method="post">
         <input type="hidden" name="urlID" value="<?php echo $goURLForm->getID(); ?>" />
     </form>
     <script>
@@ -166,6 +188,9 @@
     class goURLForm {
         private $urlID;
         private $longURL;
+        private $groupID;
+        private $createdBy;
+        private $submitDate;
         private $hasGa = FALSE;
         private $gaName;
         private $gaMedium;
@@ -186,6 +211,18 @@
             if (isset($params['longURL'])) {
                 $this->setLongUrl($params['longURL']);
             }
+
+	        if (isset($params['groupID'])) {
+		        $this->groupID = $params['groupID'];
+	        }
+
+	        if (isset($params['createdBy'])) {
+		        $this->createdBy = $params['createdBy'];
+	        }
+
+	        if (isset($params['submitDate'])) {
+		        $this->submitDate = $params['submitDate'];
+	        }
 
             if (isset($params['redirects'])) {
                 $this->redirects = $params['redirects'];
@@ -240,6 +277,18 @@
         public function getLongURL() {
             return $this->longURL;
         }
+
+	    public function getGroupID() {
+		    return $this->groupID;
+	    }
+
+	    public function getCreatedBy() {
+		    return $this->createdBy;
+	    }
+
+	    public function getSubmitDate() {
+		    return $this->submitDate;
+	    }
 
         public function getHasGa() {
             return $this->hasGa;

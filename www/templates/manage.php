@@ -7,16 +7,16 @@
     $institutionPart = !empty($institution) ? ' | ' . $institution : '';
     $page->doctitle = 'Your URLs' . $appPart . $institutionPart;
 
-    function generateQRModal($id, $src) {
+    function generateQRModal($id, $src, $appName) {
         $modalId = "qr-modal-" . $id;
         return "<div class=\"dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
         <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
-            <div class=\"dcf-modal-header dcf-wrapper dcf-pt-8 dcf-sticky dcf-pin-top\">
-                <h3 id=\"" . $modalId . "-heading\">QR Code for " . $id . " Go URL</h3>
+            <div class=\"dcf-modal-header dcf-wrapper dcf-pt-4 dcf-sticky dcf-pin-top\">
+                <h3 id=\"" . $modalId . "-heading\">". $appName . " QR Code for &apos;" . $id . "&apos;</h3>
                 <button class=\"dcf-btn-close-modal dcf-btn dcf-btn-tertiary dcf-absolute dcf-pin-top dcf-pin-right dcf-z-1\" type=\"button\" aria-label=\"Close\">Close</button>
             </div>
-            <div class=\"dcf-modal-content dcf-wrapper dcf-pb-8\">
-                <img style=\"max-height: 60vh;\" src=\"" . $src . "\" alt=\"QR Code for " . $id ." Go URL\">
+            <div class=\"dcf-modal-content dcf-wrapper dcf-pb-4\">
+                <img style=\"max-height: 60vh;\" src=\"" . htmlspecialchars($src) . "\" alt=\"". $appName . " QR Code for &apos;" . $id ."&apos;\">
             </div>
         </div>
     </div>";
@@ -27,62 +27,70 @@
     <div class="dcf-wrapper">
       <h2 class="dcf-txt-h4">Your URLs</h2>
         <?php $urls = $lilurl->getUserURLs($auth->getUserId()); ?>
-        <?php if ($urls->columnCount()): ?>
-            <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 3, &quot;desc&quot; ]]">
-                <caption>Your Go URLs</caption>
+        <?php if (count($urls) > 0): ?>
+            <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 4, &quot;desc&quot; ]]">
+                <caption class="dcf-sr-only">Your Go URLs</caption>
                 <thead class="unl-bg-lighter-gray">
                     <tr>
                         <th scope="col">Short URL</th>
                         <th scope="col">Long URL</th>
+                        <th scope="col">Group</th>
                         <th scope="col">Redirects</th>
+                        <th scope="col">Last Redirect</th>
                         <th scope="col">Created&nbsp;on</th>
                         <th scope="col" data-searchable="false" data-orderable="false">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php while ($row = $urls->fetch(PDO::FETCH_ASSOC)): ?>
+                <?php foreach ($urls as $url) : ?>
                     <?php
-                    $rowDateTime = null;
-                    if ($row['submitDate'] !== '0000-00-00 00:00:00') {
-                        $rowDateTime = new DateTime($row['submitDate']);
-                    }
+	                $submitDate = $lilurl->createDateTimeFromTimestamp($url->submitDate);
+	                $lastRedirect = $lilurl->createDateTimeFromTimestamp($url->lastRedirect);
+
                     // Generate QR modal for each GoURL
-                    $qrModals .= generateQRModal($row['urlID'], $lilurl->getBaseUrl($row['urlID']). '.qr');
-                    $longURLDisplay = strlen($row['longURL']) > 50 ? substr($row['longURL'],0,50)."..." : $row['longURL'];
+                    $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.qr', $appName);
+                    $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : $url->longURL;
                     ?>
                     <tr class="unl-bg-cream">
-                        <td data-header="Short URL"><a href="<?php echo $lilurl->getBaseUrl($row['urlID']); ?>" target="_blank"><?php echo $row['urlID']; ?></a></td>
-                        <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($row['longURL']); ?>"><?php echo $longURLDisplay; ?></a></td>
-                        <td data-header="Redirects"><?php echo $row['redirects'] ?></td>
-                        <td data-header="Created on"<?php if ($rowDateTime): ?> data-search="<?php echo $rowDateTime->format('M j, Y m/d/Y') ?>" data-order="<?php echo $rowDateTime->format('U') ?>"<?php endif; ?>>
-                            <?php if ($rowDateTime): ?>
-                                <?php echo $rowDateTime->format('M j, Y') ?>
-                            <?php endif; ?>
+                        <td data-header="Short URL"><a href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID)); ?>" target="_blank" rel="noopener"><?php echo $url->urlID; ?></a></td>
+                        <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($url->longURL); ?>" title="Full URL: <?php echo $url->longURL; ?>"><?php echo $longURLDisplay; ?></a></td>
+                        <td data-header="Group"><?php echo !empty($url->groupName) ? $url->groupName : 'N/A' ?></td>
+                        <td data-header="Redirects"><?php echo $url->redirects ?></td>
+                        <td data-header="LastRedirect"<?php if ($lastRedirect): ?> data-search="<?php echo $lastRedirect->format('M j, Y m/d/Y') ?>" data-order="<?php echo $lastRedirect->format('U') ?>"<?php endif; ?>>
+                            <?php echo !empty($lastRedirect) ? $lastRedirect->format('M j, Y') : 'Never'; ?>
+                        </td>
+                        <td data-header="Created on"<?php if ($submitDate): ?> data-search="<?php echo $submitDate->format('M j, Y m/d/Y') ?>" data-order="<?php echo $submitDate->format('U') ?>"<?php endif; ?>>
+                            <?php echo !empty($submitDate) ? $submitDate->format('M j, Y') : 'N/A'; ?>
                         </td>
                         <td class="dcf-txt-sm">
-                            <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal dcf-mt-1" data-toggles-modal="qr-modal-<?php echo $row['urlID']; ?>" type="button" title="QR Code for <?php echo $row['urlID']; ?> Go URL"><span class="qrImage"></span> QR Code®</button>
-                            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '/edit') ?>" title="Edit <?php echo $row['urlID']; ?> Go URL" >Edit</a>
-                            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($row['urlID'] . '/reset') ?>" title="Reset redirect count for <?php echo $row['urlID']; ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $row['urlID']; ?>\'?');">Reset Redirects</a>
-                            <form class="dcf-form dcf-d-inline" action="<?php echo $lilurl->getBaseUrl('a/links') ?>" method="post">
-                                <input type="hidden" name="urlID" value="<?php echo $row['urlID']; ?>" />
-                                <button class="dcf-btn dcf-btn-primary dcf-mt-1" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo $row['urlID']; ?>\'?');">Delete</button>
+                            <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal dcf-mt-1" data-toggles-modal="qr-modal-<?php echo $url->urlID; ?>" type="button" title="QR Code for <?php echo $url->urlID; ?> URL"><span class="qrImage"></span> QR Code®</button>
+                            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/edit')) ?>" title="Edit <?php echo $url->urlID; ?> URL" >Edit</a>
+                            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/reset')) ?>" title="Reset redirect count for <?php echo $url->urlID; ?> URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $url->urlID; ?>\'?');">Reset Redirects</a>
+                            <form class="dcf-form dcf-d-inline" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')) ?>" method="post">
+                                <input type="hidden" name="urlID" value="<?php echo $url->urlID; ?>" />
+                                <button class="dcf-btn dcf-btn-primary dcf-mt-1" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo $url->urlID; ?>\'?');">Delete</button>
                             </form>
                         </td>
                     </tr>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         <?php else: ?>
             <p>You haven't created any Go URLs, yet.</p>
         <?php endif;?>
         <div class="dcf-mt-6 dcf-mb-6">
-            <a class="dcf-btn dcf-btn-primary" href="<?php echo $lilurl->getBaseUrl(); ?>">Add URL</a>
+            <a class="dcf-btn dcf-btn-primary dcf-mr-6" href="<?php echo htmlspecialchars($lilurl->getBaseUrl()); ?>">Add URL</a>
+            <span class="dcf-d-inline-block dcf-mt-6 dcf-mt-0@md dcf-form-help"><?php echo GoController::URL_AUTO_PURGE_NOTICE; ?></span>
         </div>
     </div>
 </div>
 <script>
 jQuery(document).ready(function($) {
-    $('#go-urls').DataTable();
+    $('#go-urls').DataTable({
+      "oLanguage": {
+        "sSearch": "Search"
+      }
+    });
     $('.dataTables_length label').addClass('dcf-label');
     $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
     $('.dataTables_filter label').addClass('dcf-label');
@@ -94,5 +102,4 @@ jQuery(document).ready(function($) {
 <?php
 // Display QR Modal Markup
 echo $qrModals;
-
 ?>

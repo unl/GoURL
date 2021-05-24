@@ -8,10 +8,13 @@ define('MYSQL_PASS', 'mypass');
 define('MYSQL_DB',   'goURL');
 define('MYSQL_HOST', 'localhost');
 
+// Set allowed domains for CORS
+GoRouter::$corsAllowedDomains = array('unl.edu');
+
 $useTheme = 'unl';
 if ($useTheme === 'dcf') {
     // dcf
-    GoController::$appName = 'ShortURL';
+    GoController::$appName = 'Short URL';
     GoController::$institution = 'University of DCF';
     GoController::$themePath = __DIR__ . '/src/Themes/dcf';
     GoController::$template = UNL\Templates\Theme::TYPE_APP;
@@ -19,7 +22,7 @@ if ($useTheme === 'dcf') {
     GoController::$templateVersion = UNL\Templates\Theme::CUSTOM_VERSION;
 } else {
     // UNL
-    GoController::$appName = 'GoURL';
+    GoController::$appName = 'Go URL';
     GoController::$institution = 'University of Nebraska&ndash;Lincoln';
     GoController::$themePath = __DIR__ . '/src/Themes/unl';
     GoController::$template = UNL\Templates\Theme::TYPE_APP_LOCAL;
