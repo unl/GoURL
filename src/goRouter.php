@@ -56,7 +56,6 @@ class GoRouter {
             self::ROUTE_NAME_LINKS,
             self::ROUTE_NAME_LOOKUP,
             self::ROUTE_NAME_MANAGE,
-            self::ROUTE_NAME_REDIRECT,
             self::ROUTE_NAME_RESET
         ));
     }
