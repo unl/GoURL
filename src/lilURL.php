@@ -653,7 +653,7 @@ class lilURL
 
 	public function deleteGroupUser($groupID, $uid, $adminUID)
 	{
-		if ($this->isGroupMember($groupID, $adminUID)) {
+		if ($this->mayDeleteGroupUser($groupID, $adminUID)) {
 			return $this->db->delete(
 				self::TABLE_GROUP_USERS,
 				self::WHERE_GROUP_ID. ' AND ' . self::WHERE_UID,
@@ -670,6 +670,18 @@ class lilURL
 			TRUE
 		);
 		return $result->isGroupCount > 0;
+	}
+
+	public function mayDeleteGroupUser($groupID, $uid) {
+		if ($this->isGroupMember($groupID, $uid)) {
+			$result = $this->db->run(
+				'SELECT count(*) AS isMemberCount FROM tblGroupUsers WHERE ' . self::WHERE_GROUP_ID . ' AND uid <> ' . self::PDO_PLACEHOLDER_UID,
+				array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID, self::PDO_PLACEHOLDER_UID => $uid),
+				TRUE
+			);
+			return $result->isMemberCount > 0;
+		}
+		return false;
 	}
 
 	public function isGroupMember($groupID, $uid) {
