@@ -45,6 +45,7 @@ $savvy->addGlobal('viewParams', $controller->getViewParams());
 $theme->addGlobal('page', $page);
 
 $appName = !empty(goController::$appName) ? goController::$appName : 'Go URL';
+$institution = !empty(goController::$institution) ? goController::$institution : '';
 
 // Theme Based Items
 if ($theme->isCustomTheme()) {
@@ -72,7 +73,9 @@ EOD
 }
 
 // Shared Items
-$page->doctitle = 'Go URL, a short URL service | University of DCF';
+$appPart = !empty($appName) ?  $appName . ', a ': 'A ';
+$institutionPart = !empty($institution) ? ' | ' . $institution : '';
+$page->doctitle = 'Go URL, a short URL service ' . $institutionPart;
 $page->titlegraphic = '<a href="/" class="dcf-txt-h5">' . $appName . '</a>';
 
 $page->addScript($lilurl->getBaseUrl('js/jquery-3.5.1.min.js'), NULL, TRUE);

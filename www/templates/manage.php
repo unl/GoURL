@@ -3,6 +3,9 @@
     $qrModals = '';
     // Load JQuery dataTables for filtering GoURLs
     $page->addScript($lilurl->getBaseUrl('js/datatables-1.10.21.min.js'), NULL, TRUE);
+    if (!isset($appName)) {
+        $appName = GoController::$appName;
+    }
     $appPart = !empty($appName) ? ' - ' . $appName : '';
     $institutionPart = !empty($institution) ? ' | ' . $institution : '';
     $page->doctitle = 'Your URLs' . $appPart . $institutionPart;
