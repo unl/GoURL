@@ -47,8 +47,8 @@
                 <tbody>
                 <?php foreach ($urls as $url) : ?>
                     <?php
-	                $submitDate = $lilurl->createDateTimeFromTimestamp($url->submitDate);
-	                $lastRedirect = $lilurl->createDateTimeFromTimestamp($url->lastRedirect);
+                    $submitDate = $lilurl->createDateTimeFromTimestamp($url->submitDate);
+                    $lastRedirect = $lilurl->createDateTimeFromTimestamp($url->lastRedirect);
 
                     // Generate QR modal for each GoURL
                     $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.qr', $appName);
@@ -89,52 +89,49 @@
 </div>
 <script>
 jQuery(document).ready(function ($) {
-	// do not place in dom
-	var $entities = $('<textarea />');
+    // do not place in dom
+    var $entities = $('<textarea />');
 
-	//https://datatables.net/reference/option/columnDefs
-	//https://datatables.net/reference/option/columns.data
+    //https://datatables.net/reference/option/columnDefs
+    //https://datatables.net/reference/option/columns.data
 
-	$('#go-urls').DataTable({
-		"oLanguage": {
-			"sSearch": "Search"
-		},
-		'columnDefs': [
-			{
-				"targets": 1,
-				"data": function (row, type, val, meta) {
-					if (type === 'set') {
-						row.d = val;
-						row.d_display = val;
+    $('#go-urls').DataTable({
+        "oLanguage": {
+            "sSearch": "Search"
+        },
+        'columnDefs': [
+            {
+                "targets": 1,
+                "data": function (row, type, val, meta) {
+                    if (type === 'set') {
+                        row.d = val;
+                        row.d_display = val;
 
-						// DOM parser will decode any entities in the url ( like &amp; )
-						// strip 'Full URL:' from the search text if present
-						$entities.html(/^(?:full\s*url\s*:\s*)?(.*)$/i.exec($(val).attr('title'))[1]);
+                        // DOM parser will decode any entities in the url ( like &amp; )
+                        // strip 'Full URL:' from the search text if present
+                        $entities.html(/^(?:full\s*url\s*:\s*)?(.*)$/i.exec($(val).attr('title'))[1]);
 
-						row.d_filter = $entities.val();
+                        row.d_filter = $entities.val();
 
-						return;
+                        return;
+                    } else if (type === 'display') {
+                        return row.d_display;
 
-					} else if (type === 'display') {
+                    } else if (type === 'filter') {
+                        return row.d_filter;
+                        
+                    }
 
-						return row.d_display;
-
-					} else if (type === 'filter') {
-
-						return row.d_filter;
-
-					}
-
-					return row.d;
-				}
-			}
-		]
-	});
-	$('.dataTables_length label').addClass('dcf-label');
-	$('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
-	$('.dataTables_filter label').addClass('dcf-label');
-	$('.dataTables_filter label input').addClass('dcf-d-inline dcf-input-text dcf-txt-sm');
-	$('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
+                    return row.d;
+                }
+            }
+        ]
+    });
+    $('.dataTables_length label').addClass('dcf-label');
+    $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
+    $('.dataTables_filter label').addClass('dcf-label');
+    $('.dataTables_filter label input').addClass('dcf-d-inline dcf-input-text dcf-txt-sm');
+    $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
 });
 </script>
 
