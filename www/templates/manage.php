@@ -112,14 +112,14 @@ jQuery(document).ready(function ($) {
                         $entities.html(/^(?:full\s*url\s*:\s*)?(.*)$/i.exec($(val).attr('title'))[1]);
 
                         row.d_filter = $entities.val();
-
                         return;
+
                     } else if (type === 'display') {
                         return row.d_display;
 
                     } else if (type === 'filter') {
                         return row.d_filter;
-                        
+
                     }
 
                     return row.d;
