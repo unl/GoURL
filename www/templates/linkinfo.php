@@ -1,6 +1,9 @@
 <?php
 extract($viewParams);
 $rowDateTime = null;
+if (!isset($appName)) {
+    $appName = null;
+}
 $appPart = !empty($appName) ? ' - ' . $appName : '';
 $institutionPart = !empty($institution) ? ' | ' . $institution : '';
 $page->doctitle = 'URL Info' . $appPart . $institutionPart;

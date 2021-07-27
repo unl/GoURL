@@ -78,16 +78,17 @@ $institutionPart = !empty($institution) ? ' | ' . $institution : '';
 $page->doctitle = 'Go URL, a short URL service ' . $institutionPart;
 $page->titlegraphic = '<a href="/" class="dcf-txt-h5">' . $appName . '</a>';
 
-$page->addScript($lilurl->getBaseUrl('js/jquery-3.5.1.min.js'), NULL, TRUE);
 $page->addStyleDeclaration(file_get_contents(__DIR__ . '/css/go.css'));
 $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 
-$page->addScriptDeclaration("jQuery(document).ready(function($){
-    var \$out = $('.go_notice input');
-    \$out.attr('id', 'gourl_out');
-    \$out.attr('class', 'dcf-input-text dcf-w-100%');
-    \$out.attr('title', 'Your Go URL');
-    \$out.attr('style', 'color: #000');
+$page->addScriptDeclaration("require(['jquery'], function(jq) {
+	jq(function($){
+	    var \$out = $('.go_notice input');
+	    \$out.attr('id', 'gourl_out');
+	    \$out.attr('class', 'dcf-input-text dcf-w-100%');
+	    \$out.attr('title', 'Your Go URL');
+	    \$out.attr('style', 'color: #000');
+	});
 });");
 
 $page->appcontrols = $savvy->render(null,'navigation.php');

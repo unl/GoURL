@@ -1,7 +1,5 @@
 <?php
 extract($viewParams);
-// Load JQuery dataTables for filtering GoURLs
-$page->addScript($lilurl->getBaseUrl('js/datatables-1.10.21.min.js'), NULL, TRUE);
 $appPart = !empty($appName) ? ' - ' . $appName : '';
 $institutionPart = !empty($institution) ? ' | ' . $institution : '';
 $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
@@ -42,17 +40,20 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
     </div>
   </div>
 </div>
-<script>
-  jQuery(document).ready(function($) {
-    $('#groups').DataTable({
-      "oLanguage": {
-        "sSearch": "Search"
-      }
+<?php
+$page->addScriptDeclaration("
+  require(['jquery', '/js/datatables-1.10.21.min.js'], function(jq) {
+    jq(document).ready(function ($) {
+      $('#groups').DataTable({
+        'oLanguage': {
+          'sSearch': 'Search'
+        }
+      });
+      $('.dataTables_length label').addClass('dcf-label');
+      $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
+      $('.dataTables_filter label').addClass('dcf-label');
+      $('.dataTables_filter label input').addClass('dcf-d-inline dcf-input-text dcf-txt-sm');
+      $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
     });
-    $('.dataTables_length label').addClass('dcf-label');
-    $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
-    $('.dataTables_filter label').addClass('dcf-label');
-    $('.dataTables_filter label input').addClass('dcf-d-inline dcf-input-text dcf-txt-sm');
-    $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
-  });
-</script>
+  });");
+?>
