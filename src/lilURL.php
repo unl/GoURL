@@ -631,8 +631,8 @@ class lilURL
 	public function isValidGroupUser($uid, &$error = '') {
 		if (empty(trim($uid))) {
 			$error = 'A user must have a username.';
-		} elseif (!preg_match('/^[\w\.]+$/', $uid)) {
-			$error = 'Invalid username format. Allows alphanumeric, underscore and period.';
+		} elseif (!preg_match('/^[\w\-\.]+$/', $uid)) {
+			$error = 'Invalid username format. Allows alphanumeric, dash, underscore and period.';
 		}
 		return empty($error);
 	}
