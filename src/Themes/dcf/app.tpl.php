@@ -16,7 +16,6 @@
 
     <script src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=default"></script>
     <script src="/custom/dcf/js/vendor/bodyScrollLock.min.js"></script>
-    <script src="/custom/dcf/js/vendor/bodyScrollLock.min.js"></script>
     <script src="/custom/dcf/js/vendor/ofi.min.js"></script>
     <script src="/custom/dcf/js/vendor/require.js"></script>
     <!-- InstanceBeginEditable name="head" -->
