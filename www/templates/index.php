@@ -18,7 +18,7 @@
     <form class="dcf-form dcf-w-max-lg" id="shorten-form" action="<?php echo htmlspecialchars($lilurl->getBaseUrl()) ?>" method="post">
         <input type="hidden" name="mode" value="<?php echo $mode; ?>">
         <input type="hidden" name="id" value="<?php echo $goURLForm->getID(); ?>">
-        <div class="dcf-form-controls-inline dcf-mb-5">
+        <div class="dcf-mb-5">
             <label for="theURL">Enter the <abbr class="dcf-txt-sm" title="Uniform Resource Locator">URL</abbr> that you want to shorten <small class="dcf-required">Required</small></label>
             <div class="dcf-input-group">
               <input id="theURL" name="theURL" type="text" value="<?php echo (!empty($goURLForm->getLongURL()))?htmlentities($goURLForm->getLongURL(), ENT_QUOTES):'';?>" required oninvalid="this.setCustomValidity('Please provide a URL to redirect to.')" oninput="this.setCustomValidity('')">
