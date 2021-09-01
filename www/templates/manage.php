@@ -31,7 +31,7 @@
         <?php if (count($urls) > 0): ?>
             <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 4, &quot;desc&quot; ]]">
                 <caption class="dcf-sr-only">Your Go URLs</caption>
-                <thead class="unl-bg-lighter-gray">
+                <thead>
                     <tr>
                         <th scope="col">Short URL</th>
                         <th scope="col">Long URL</th>
@@ -52,7 +52,7 @@
                     $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.qr', $appName);
                     $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : $url->longURL;
                     ?>
-                    <tr class="unl-bg-cream">
+                    <tr>
                         <td data-header="Short URL"><a href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID)); ?>" target="_blank" rel="noopener"><?php echo $url->urlID; ?></a></td>
                         <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($url->longURL); ?>" title="Full URL: <?php echo $url->longURL; ?>"><?php echo $longURLDisplay; ?></a></td>
                         <td data-header="Group"><?php echo !empty($url->groupName) ? $url->groupName : 'N/A' ?></td>
