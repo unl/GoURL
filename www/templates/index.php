@@ -29,7 +29,7 @@
             <fieldset>
                 <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
                 <div class="dcf-form-group">
-                    <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
+                    <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic">Optional</small></label>
                         <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
                         <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <em><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?>/admissions</em> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                         <?php if ($mode === 'edit') : ?>
@@ -45,7 +45,7 @@
             <fieldset>
                 <legend class="dcf-bold dcf-txt-lg">User Admin Access</legend>
                 <div class="dcf-form-group">
-                    <label>User Group <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
+                    <label>User Group <small class="dcf-pl-1 dcf-txt-xs dcf-italic">Optional</small></label>
                     <select id="groupID" name="groupID">
                         <option value="0">No user group</option>
                         <?php
@@ -63,7 +63,7 @@
                     <legend class="dcf-bold dcf-txt-lg">Google Analytics Campaign Tagging</legend>
                     <div class="dcf-input-checkbox">
                         <input id="with-ga-campaign" name="with-ga-campaign" type="checkbox" value="1" aria-labelledby="with-ga-campaign-label">
-                        <label for="with-ga-campaign" id="with-ga-campaign-label">Use Google Analytics Campaign with URL <small class="dcf-pl-1 dcf-txt-xs dcf-italic unl-dark-gray">Optional</small></label>
+                        <label for="with-ga-campaign" id="with-ga-campaign-label">Use Google Analytics Campaign with URL <small class="dcf-pl-1 dcf-txt-xs dcf-italic">Optional</small></label>
                     </div>
                     <div id="ga-tagging" style="display:none">
                         <p class="dcf-txt-sm">Add your campaign information here and it will be automatically added to your URL when redirected.</p>

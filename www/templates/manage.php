@@ -31,7 +31,7 @@
         <?php if (count($urls) > 0): ?>
             <table id="go-urls" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 4, &quot;desc&quot; ]]">
                 <caption class="dcf-sr-only">Your Go URLs</caption>
-                <thead class="unl-bg-lighter-gray">
+                <thead>
                     <tr>
                         <th scope="col">Short URL</th>
                         <th scope="col">Long URL</th>
@@ -52,7 +52,7 @@
                     $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.qr', $appName);
                     $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : $url->longURL;
                     ?>
-                    <tr class="unl-bg-cream">
+                    <tr>
                         <td data-header="Short URL"><a href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID)); ?>" target="_blank" rel="noopener"><?php echo $url->urlID; ?></a></td>
                         <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($url->longURL); ?>" title="Full URL: <?php echo $url->longURL; ?>"><?php echo $longURLDisplay; ?></a></td>
                         <td data-header="Group"><?php echo !empty($url->groupName) ? $url->groupName : 'N/A' ?></td>
@@ -64,13 +64,15 @@
                             <?php echo !empty($submitDate) ? $submitDate->format('M j, Y') : 'N/A'; ?>
                         </td>
                         <td class="dcf-txt-sm">
-                            <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal dcf-mt-1" data-toggles-modal="qr-modal-<?php echo $url->urlID; ?>" type="button" title="QR Code for <?php echo $url->urlID; ?> URL"><span class="qrImage"></span> QR Code®</button>
-                            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/edit')) ?>" title="Edit <?php echo $url->urlID; ?> URL" >Edit</a>
-                            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/reset')) ?>" title="Reset redirect count for <?php echo $url->urlID; ?> URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $url->urlID; ?>\'?');">Reset Redirects</a>
-                            <form class="dcf-form dcf-d-inline" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')) ?>" method="post">
-                                <input type="hidden" name="urlID" value="<?php echo $url->urlID; ?>" />
-                                <button class="dcf-btn dcf-btn-primary dcf-mt-1" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo $url->urlID; ?>\'?');">Delete</button>
-                            </form>
+                            <div class="dcf-d-flex dcf-flex-wrap dcf-col-gap-1 dcf-row-gap-1">
+                                <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal" data-toggles-modal="qr-modal-<?php echo $url->urlID; ?>" type="button" title="QR Code for <?php echo $url->urlID; ?> URL"><span class="qrImage"></span> QR Code®</button>
+                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/edit')) ?>" title="Edit <?php echo $url->urlID; ?> URL" >Edit</a>
+                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/reset')) ?>" title="Reset redirect count for <?php echo $url->urlID; ?> URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $url->urlID; ?>\'?');">Reset Redirects</a>
+                                <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')) ?>" method="post">
+                                    <input type="hidden" name="urlID" value="<?php echo $url->urlID; ?>" />
+                                    <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo $url->urlID; ?>\'?');">Delete</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
