@@ -14,7 +14,7 @@
         $saveBtnLabel = 'Update';
     }
 ?>
-<div class="dcf-bleed dcf-pt-4 dcf-pb-8">
+<div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
         <h2 class="dcf-txt-h4">Manage Group</h2>
         <form class="dcf-form dcf-w-max-lg" id="group-form" method="post">

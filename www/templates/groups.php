@@ -4,7 +4,7 @@ $appPart = !empty($appName) ? ' - ' . $appName : '';
 $institutionPart = !empty($institution) ? ' | ' . $institution : '';
 $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
 ?>
-<div class="dcf-bleed dcf-pt-4 dcf-pb-8">
+<div class="dcf-bleed dcf-pt-8 dcf-pb-8">
   <div class="dcf-wrapper">
     <h2 class="dcf-txt-h4">Your Groups</h2>
     <?php $groups = $lilurl->getUserGroups($auth->getUserId()); ?>
