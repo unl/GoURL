@@ -107,15 +107,15 @@
         <?php else: ?>
             <div class="dcf-txt-xs">
                 <h2 class="dcf-txt-h4">Unauthenticated User Notice</h2>
+	            <?php if (count($lilurl->getAllowedDomains())): ?>
+                    <p class="dcf-txt-lg">You can shorten any <strong><?php echo implode("</strong>, <strong>", $lilurl->getAllowedDomains()); ?></strong> URL.</p>
+                <?php endif; ?>
+                <p>Please <a href="./?login">Log In</a> for these advanced services:</p>
                 <ul>
-                    <li>You cannot manage the URL.</li>
-                    <li>You cannot define a Custom Alias or Google Analytics Campaign Tagging.</li>
-                    <?php if (count($lilurl->getAllowedDomains())): ?>
-                    <li>Only allowed <abbr class="dcf-txt-sm" title="Uniform Resource Locator">URL</abbr> domains
-                        are: <?php echo implode(", ", $lilurl->getAllowedDomains()); ?>.</li>
-                    <?php endif; ?>
+                    <li>Custom Alias</li>
+                    <li>Google Analytics Campaign Tagging</li>
+                    <li>URL management and stats</li>
                 </ul>
-                <p>Please <a href="./?login">log in</a> if you need any of the above.</p>
             </div>
         <?php endif ?>
         <input class="dcf-mt-6 dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit" value="<?php echo $submitBtnLabel; ?>">
