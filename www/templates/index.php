@@ -107,7 +107,7 @@
         <?php else: ?>
             <div class="dcf-txt-xs">
                 <h2 class="dcf-txt-h4">Unauthenticated User Notice</h2>
-	            <?php if (count($lilurl->getAllowedDomains())): ?>
+                <?php if (count($lilurl->getAllowedDomains())): ?>
                     <p class="dcf-txt-lg">You can shorten any <strong><?php echo implode("</strong>, <strong>", $lilurl->getAllowedDomains()); ?></strong> URL.</p>
                 <?php endif; ?>
                 <p>Please <a href="./?login">Log In</a> for these advanced services:</p>
