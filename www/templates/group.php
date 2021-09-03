@@ -23,7 +23,7 @@
             <label for="groupName">Name <small class="dcf-required">Required</small></label>
             <div class="dcf-input-group">
                 <input id="groupName" name="groupName" type="text" value="<?php echo trim($groupName); ?>" required >
-                <button class="dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit"><?php echo $saveBtnLabel; ?></button>
+                <button class="dcf-btn dcf-btn-primary" id="group-name-submit" name="submit" type="submit"><?php echo $saveBtnLabel; ?></button>
             </div>
         </form>
 
@@ -35,7 +35,7 @@
                 <label for="uid">Username <small class="dcf-required">Required</small></label>
                 <div class="dcf-input-group">
                     <input id="uid" name="uid" type="text" value="<?php echo trim($uid); ?>" required >
-                    <button class="dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit">Add User</button>
+                    <button class="dcf-btn dcf-btn-primary" id="add-user-submit" name="submit" type="submit">Add User</button>
                 </div>
             </form>
             <ol class="dcf-list-inline dcf-mt-6 dcf-p-0">

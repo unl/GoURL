@@ -29,7 +29,7 @@
             <fieldset>
                 <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
                 <div class="dcf-form-group">
-                    <label>Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic">Optional</small></label>
+                    <label for="theAlias">Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic">Optional</small></label>
                         <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
                         <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <em><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?>/admissions</em> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                         <?php if ($mode === 'edit') : ?>
@@ -45,7 +45,7 @@
             <fieldset>
                 <legend class="dcf-bold dcf-txt-lg">User Admin Access</legend>
                 <div class="dcf-form-group">
-                    <label>User Group <small class="dcf-pl-1 dcf-txt-xs dcf-italic">Optional</small></label>
+                    <label for="groupID">User Group <small class="dcf-pl-1 dcf-txt-xs dcf-italic">Optional</small></label>
                     <select id="groupID" name="groupID">
                         <option value="0">No user group</option>
                         <?php
