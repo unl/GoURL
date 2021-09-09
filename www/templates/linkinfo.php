@@ -10,7 +10,7 @@ $page->doctitle = 'URL Info' . $appPart . $institutionPart;
 $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
 $http = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === TRUE ? 'https://' : 'http://';
 $exampleURLID = 'sample';
-$exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLID);
+$exampleURL = $http . htmlspecialchars($_SERVER['SERVER_NAME']) . $lilurl->getBaseUrl($exampleURLID);
 ?>
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
