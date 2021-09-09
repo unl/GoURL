@@ -10,7 +10,7 @@ $page->doctitle = 'URL Info' . $appPart . $institutionPart;
 $lookupTerm = !empty($_POST['lookupTerm']) ? $_POST['lookupTerm'] : '';
 $http = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === TRUE ? 'https://' : 'http://';
 $exampleURLID = 'sample';
-$exampleURL = $http . htmlspecialchars($_SERVER['SERVER_NAME']) . $lilurl->getBaseUrl($exampleURLID);
+$exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLID);
 ?>
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
@@ -23,7 +23,7 @@ $exampleURL = $http . htmlspecialchars($_SERVER['SERVER_NAME']) . $lilurl->getBa
                         <input id="lookupTerm" name="lookupTerm" type="text" value="<?php echo trim($lookupTerm); ?>" required >
                         <button class="dcf-btn dcf-btn-primary" id="lookup-submit" name="submit" type="submit">Search</button>
                     </div>
-                    <span class="dcf-form-help">Lookup only searches against short <abbr title="Uniform Resource Locators">URLs</abbr> with exact match. To lookup <em><?php echo $exampleURL; ?></em>, search for <em><?php echo $exampleURLID; ?></em>.</span>
+                    <span class="dcf-form-help">Lookup only searches against short <abbr title="Uniform Resource Locators">URLs</abbr> with exact match. To lookup <em><?php echo htmlspecialchars($exampleURL); ?></em>, search for <em><?php echo htmlspecialchars($exampleURLID); ?></em>.</span>
                 </form>
             </div>
             <?php if (!empty($link)) :
