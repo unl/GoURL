@@ -23,7 +23,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                         <input id="lookupTerm" name="lookupTerm" type="text" value="<?php echo trim($lookupTerm); ?>" required >
                         <button class="dcf-btn dcf-btn-primary" id="lookup-submit" name="submit" type="submit">Search</button>
                     </div>
-                    <span class="dcf-form-help">Lookup only searches against short <abbr title="Uniform Resource Locators">URLs</abbr> with exact match. To lookup <em><?php echo $exampleURL; ?></em> search for <em><?php echo $exampleURLID; ?></em>.</span>
+                    <span class="dcf-form-help">Lookup only searches against short <abbr title="Uniform Resource Locators">URLs</abbr> with exact match. To lookup <em><?php echo $exampleURL; ?></em>, search for <em><?php echo $exampleURLID; ?></em>.</span>
                 </form>
             </div>
             <?php if (!empty($link)) :
