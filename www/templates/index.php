@@ -212,17 +212,17 @@
                 $this->setLongUrl($params['longURL']);
             }
 
-	        if (isset($params['groupID'])) {
-		        $this->groupID = $params['groupID'];
-	        }
+            if (isset($params['groupID'])) {
+                $this->groupID = $params['groupID'];
+            }
 
-	        if (isset($params['createdBy'])) {
-		        $this->createdBy = $params['createdBy'];
-	        }
+            if (isset($params['createdBy'])) {
+                $this->createdBy = $params['createdBy'];
+            }
 
-	        if (isset($params['submitDate'])) {
-		        $this->submitDate = $params['submitDate'];
-	        }
+            if (isset($params['submitDate'])) {
+                $this->submitDate = $params['submitDate'];
+            }
 
             if (isset($params['redirects'])) {
                 $this->redirects = $params['redirects'];
@@ -234,10 +234,14 @@
             if (isset($urlParts['scheme']) && isset($urlParts['host'])) {
                 $query = isset($urlParts['query']) ? $urlParts['query'] : null;
                 $path = isset($urlParts['path']) ? $urlParts['path'] : '';
+
                 $nonGAQueryString = $this->parseQueryString($query);
                 $this->longURL = $urlParts['scheme'] . '://' . $urlParts['host'] . $path;
                 if (!empty($nonGAQueryString)) {
                     $this->longURL .= '?' . substr($nonGAQueryString, 0, -1);
+                }
+                if (!empty($urlParts['fragment'])) {
+                    $this->longURL .= '#' . $urlParts['fragment'];
                 }
             } else {
                 $this->longURL = $longURL;
@@ -278,17 +282,17 @@
             return $this->longURL;
         }
 
-	    public function getGroupID() {
-		    return $this->groupID;
-	    }
+        public function getGroupID() {
+            return $this->groupID;
+        }
 
-	    public function getCreatedBy() {
-		    return $this->createdBy;
-	    }
+        public function getCreatedBy() {
+            return $this->createdBy;
+        }
 
-	    public function getSubmitDate() {
-		    return $this->submitDate;
-	    }
+        public function getSubmitDate() {
+            return $this->submitDate;
+        }
 
         public function getHasGa() {
             return $this->hasGa;
@@ -317,7 +321,6 @@
         private function parseQueryString($query) {
             $nonGAQueryString = '';
             if (empty($query)) { return $nonGAQueryString; }
-
             $varDefs = explode('&', $query);
             foreach($varDefs as $varDef){
                 $parts = explode('=', $varDef);
