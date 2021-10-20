@@ -236,11 +236,11 @@
                 $path = isset($urlParts['path']) ? $urlParts['path'] : '';
                 $nonGAQueryString = $this->parseQueryString($query);
                 $this->longURL = $urlParts['scheme'] . '://' . $urlParts['host'] . $path;
+	            if (!empty($urlParts['fragment'])) {
+		            $this->longURL .= '#' . $urlParts['fragment'];
+	            }
                 if (!empty($nonGAQueryString)) {
                     $this->longURL .= '?' . substr($nonGAQueryString, 0, -1);
-                }
-                if (!empty($urlParts['fragment'])) {
-                    $this->longURL .= '#' . $urlParts['fragment'];
                 }
             } else {
                 $this->longURL = $longURL;
