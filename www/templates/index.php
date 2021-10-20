@@ -239,6 +239,9 @@
                 if (!empty($nonGAQueryString)) {
                     $this->longURL .= '?' . substr($nonGAQueryString, 0, -1);
                 }
+                if (!empty($urlParts['fragment'])) {
+                    $this->longURL .= '#' . $urlParts['fragment'];
+                }
             } else {
                 $this->longURL = $longURL;
             }
