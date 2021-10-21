@@ -87,7 +87,6 @@ $page->addScriptDeclaration("require(['jquery'], function(jq) {
 	    \$out.attr('id', 'gourl_out');
 	    \$out.attr('class', 'dcf-input-text dcf-w-100%');
 	    \$out.attr('title', 'Your Go URL');
-	    \$out.attr('style', 'color: #000');
 	});
 });");
 
