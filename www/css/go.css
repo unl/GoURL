@@ -250,6 +250,10 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
   margin: 0;
 }
 
+.go_notice .message input {
+  color: var(--body);
+}
+
 .go_notice .message h4,
 .go_notice .message .title {
   font-family: Gotham SSm A,Gotham SSm B,Verdana,sans-serif;
