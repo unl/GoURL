@@ -207,65 +207,13 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
   word-break: break-all;
 }
 
-.go_notice {
-  background-color: #007197;
-  background-image: url('https://unlcms.unl.edu/wdn/templates_5.1/js/js-css/img/information.svg');
-  background-position: 1em 50%;
-  background-repeat: no-repeat;
-  background-size: 1.78em;
-  border-radius: 2px;
-  box-shadow: 0 1px 1px 0 rgba(36,36,35,.5);
-  color: #fefdfa;
-  margin-bottom: 1em;
-  padding: 1em;
-}
-
-.go_notice.affirm {
-  background-color: #00784e;
-  background-image: url('https://unlcms.unl.edu/wdn/templates_5.1/js/js-css/img/check-circle-2.svg');
-}
-
-.go_notice.negate {
-  background-color: #b60000;
-  background-image: url('https://unlcms.unl.edu/wdn/templates_5.1/js/js-css/img/cross-bubble.svg');
-}
-
-.go_notice.alert {
-  background-color: #e72c0c;
-  background-image: url('https://unlcms.unl.edu/wdn/templates_5.1/js/js-css/img/alert-2.svg');
-}
-
-.go_notice a,
-.go_notice a:hover {
-  color: #fefdfa;
-}
-
-.go_notice .message {
-  padding-left: 3.16em;
-  padding-right: 1.33em;
-}
-
-.go_notice .message * {
-  color: inherit;
-  margin: 0;
-}
-
-.go_notice .message input {
+.dcf-notice .dcf-notice-message input {
   color: var(--body);
-}
-
-.go_notice .message h4,
-.go_notice .message .title {
-  font-family: Gotham SSm A,Gotham SSm B,Verdana,sans-serif;
-  letter-spacing: .01em;
-  line-height: 1.33;
-  text-transform: uppercase;
 }
 
 .go_responsive_table thead th abbr {
   border-bottom: none;
 }
-
 
 @media only screen and (max-width: 47.99em) {
 

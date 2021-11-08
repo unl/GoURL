@@ -65,6 +65,7 @@ if ($theme->isCustomTheme()) {
 
     $page->addScriptDeclaration(sprintf(<<<EOD
     require(['wdn'], function(WDN) {
+        WDN.initializePlugin('notice');
         WDN.setPluginParam('idm', 'login', '%s');
         WDN.setPluginParam('idm', 'logout', '%s');
     });
@@ -83,7 +84,7 @@ $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 
 $page->addScriptDeclaration("require(['jquery'], function(jq) {
 	jq(function($){
-	    var \$out = $('.go_notice input');
+	    var \$out = $('.dcf-notice input');
 	    \$out.attr('id', 'gourl_out');
 	    \$out.attr('class', 'dcf-input-text dcf-w-100%');
 	    \$out.attr('title', 'Your Go URL');

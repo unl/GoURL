@@ -41,10 +41,10 @@ class GoController extends GoRouter {
     private function verifyGroup() {
 		if (isset($this->groupId)) {
 			if (!$this->lilurl->isGroup($this->groupId)) {
-				$this->flashBag->setParams('<p class="title">Not Found</p><p>The group is not found.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+				$this->flashBag->setParams('Not Found', '<p>The group is not found.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 				$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 404);
 			} elseif (!$this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
-				$this->flashBag->setParams('<p class="title">Access Denied</p><p>You are not a member of this group.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+				$this->flashBag->setParams('Access Denied', '<p>You are not a member of this group.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 				$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS), 403);
 			}
         }
@@ -165,7 +165,7 @@ class GoController extends GoRouter {
 			$lookupTerm = filter_input(INPUT_POST, 'lookupTerm', FILTER_SANITIZE_STRING);
 			$link = $this->lilurl->getLinkRow($lookupTerm, NULL, PDO::FETCH_OBJ);
 			if (!$link) {
-				$this->flashBag->setParams('<p class="title">Not Found</p><p>&apos;' . $lookupTerm . '&apos; is not in use and available.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+				$this->flashBag->setParams('Not Found', '<p>&apos;' . $lookupTerm . '&apos; is not in use and available.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 			} else {
 				$this->viewParams['link'] = $link;
 				$group = $this->lilurl->getGroup($link->groupID);
@@ -183,7 +183,7 @@ class GoController extends GoRouter {
 		if (isset($_POST, $_POST['urlID'])) {
 			$urlID = filter_input(INPUT_POST, 'urlID', FILTER_SANITIZE_URL);
 			$this->lilurl->deleteURL($urlID, $this->auth->getUserId());
-			$this->flashBag->setParams('<p class="title">Delete Successful</p><p>Your URL has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+			$this->flashBag->setParams('Delete Successful', '<p>Your URL has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 			$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
 		}
 	}
@@ -194,7 +194,7 @@ class GoController extends GoRouter {
 		if (isset($_POST, $_POST['groupID'])) {
 			$groupID = filter_input(INPUT_POST, 'groupID', FILTER_SANITIZE_NUMBER_INT);
 			$this->lilurl->deleteGroup($groupID, $this->auth->getUserId());
-			$this->flashBag->setParams('<p class="title">Delete Successful</p><p>Your group has been deleted.</p>');
+			$this->flashBag->setParams('Delete Successful', '<p>Your group has been deleted.</p>');
 			$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
 		}
 	}
@@ -220,29 +220,34 @@ class GoController extends GoRouter {
 		$groupName = filter_input(INPUT_POST, 'groupName', FILTER_SANITIZE_STRING);
 
 		if (!$this->lilurl->isValidGroupName($groupName, $this->groupId, $error)) {
-			$msg = '<p class="title">Invalid Group</p><p>' . $error . '</p>';
+			$heading = 'Invalid Group';
+			$msg = '<p>' . $error . '</p>';
 			$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
-			$this->flashBag->setParams($msg, $type);
+			$this->flashBag->setParams($heading, $msg, $type);
 		} else {
 			if ($this->groupMode === self::MODE_CREATE) {
 				if ($this->lilurl->insertGroup($_POST, $this->auth->getUserId())) {
-					$msg = '<p class="title">Add Successful</p><p>Your group has been added.</p>';
+					$heading = 'Add Successful';
+					$msg = '<p>Your group has been added.</p>';
 					$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
 				} else {
-					$msg = '<p class="title">Add Failed</p><p>Your group has not been added.</p>';
+					$heading = 'Add Failed';
+					$msg = '<p>Your group has not been added.</p>';
 					$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 				}
 			} elseif ($this->groupMode === self::MODE_EDIT && $this->groupId === $_POST['groupID']) {
 				if ($this->lilurl->updateGroup($_POST, $this->auth->getUserId())) {
-					$msg = '<p class="title">Update Successful</p><p>Your group has been updated.</p>';
+					$heading = 'Update Successful';
+					$msg = '<p>Your group has been updated.</p>';
 					$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
 				} else {
-					$msg = '<p class="title">Update Failed</p><p>Your group has not been updated.</p>';
+					$heading = 'Update Failed';
+					$msg = '<p>Your group has not been updated.</p>';
 					$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 				}
 			}
 
-			$this->flashBag->setParams($msg, $type);
+			$this->flashBag->setParams($heading, $msg, $type);
 			$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
 		}
     }
@@ -250,21 +255,25 @@ class GoController extends GoRouter {
 	private function handleRouteGroupAdd() {
 		$this->viewTemplate = 'group.php';
 		$this->viewParams['groupMode'] = $this->groupMode;
+		$heading = '';
 		$msg = '';
 		$type = '';
 		$error = '';
 
 		if ($this->lilurl->isValidGroupUser($this->uid, $error)) {
 			if ($this->lilurl->insertGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
-				$msg = '<p class="title">Add Successful</p><p>User, ' . $this->uid . ' added to group.</p>';
+				$heading = 'Add Successful';
+				$msg = '<p>User, ' . $this->uid . ' added to group.</p>';
 				$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
 				$_POST['uid'] = NULL;
 			} else {
-				$msg = '<p class="title">Add Failed</p><p>User, ' . $this->uid . ' not added to group.</p>';
+				$heading = 'Add Failed';
+				$msg = '<p>User, ' . $this->uid . ' not added to group.</p>';
 				$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 			}
 		} else {
-			$msg = '<p class="title">Add Failed</p><p>' . $error . '</p>';
+			$heading = 'Add Failed';
+			$msg = '<p>' . $error . '</p>';
 			$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 		}
 
@@ -274,7 +283,7 @@ class GoController extends GoRouter {
 		}
 
 		if (!empty($msg) && !empty($type)) {
-			$this->flashBag->setParams($msg, $type);
+			$this->flashBag->setParams($heading, $msg, $type);
 		}
 
 		$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUP . '/' . $this->groupId));
@@ -283,19 +292,21 @@ class GoController extends GoRouter {
 	private function handleRouteGroupRemove() {
 		if (!empty($this->groupId) && $this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
 			if ($this->lilurl->deleteGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
-				$msg = '<p class="title">Delete Successful</p><p>' . $this->uid . ' has been removed from group.</p>';
+				$heading = 'Delete Successful';
+				$msg = '<p>' . $this->uid . ' has been removed from group.</p>';
 				$type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
 			} else {
-				$msg = '<p class="title">Delete Failed</p><p>Unable to remove ' . $this->uid . ' from group.</p>';
+				$heading = 'Delete Failed';
+				$msg = '<p>Unable to remove ' . $this->uid . ' from group.</p>';
 				$type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
 			}
 
-			$this->flashBag->setParams($msg, $type);
+			$this->flashBag->setParams($heading, $msg, $type);
 			$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUP . '/' . $this->groupId));
 		}
 
 		// Not authorized to delete user from group
-		$this->flashBag->setParams('<p class="title">Access Denied</p><p>Unable to remove ' . $this->uid . ' from group.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+		$this->flashBag->setParams('Access Denied', '<p>Unable to remove ' . $this->uid . ' from group.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 		$this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
 	}
 
@@ -308,7 +319,7 @@ class GoController extends GoRouter {
 			$this->viewTemplate = 'index.php';
 			$this->viewParams['goURL'] =  $this->lilurl->getLinkRow($this->goId, NULL, PDO::FETCH_ASSOC);
 		} else {
-			$this->flashBag->setParams('<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+			$this->flashBag->setParams('Not Authorized', '<p>You are not the owner of the Go URL.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 			$this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
 		}
 	}
@@ -320,9 +331,9 @@ class GoController extends GoRouter {
 
 		if ($this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
 			$this->lilurl->resetRedirectCount($this->goId, $this->auth->getUserId());
-			$this->flashBag->setParams('<p class="title">Reset Successful</p><p>Your Go URL redirect count has been reset.</p>');
+			$this->flashBag->setParams('Reset Successful', '<p>Your Go URL redirect count has been reset.</p>');
 		} else {
-			$this->flashBag->setParams('<p class="title">Not Authorized</p><p>You are not the owner of the Go URL.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+			$this->flashBag->setParams('Not Authorized', '<p>You are not the owner of the Go URL.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
 		}
 
 		$this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
@@ -370,9 +381,9 @@ class GoController extends GoRouter {
 
 			try {
 				$url = $this->lilurl->handlePOST($mode, $alias, $userId);
-				$msg = $mode === static::MODE_EDIT ? 'Your Go URL is updated!' : 'You have a Go URL!';
+				$heading = $mode === static::MODE_EDIT ? 'Your Go URL is updated!' : 'You have a Go URL!';
 
-				$this->flashBag->setParams('<p class="title">' . $msg . '</p><input type="text" onclick="this.select(); return false;" value="'.$url.'" />', $this->flashBag::FLASH_BAG_TYPE_SUCCESS, $url);
+				$this->flashBag->setParams($heading, '<input type="text" onclick="this.select(); return false;" value="'.$url.'" />', $this->flashBag::FLASH_BAG_TYPE_SUCCESS, $url);
 				if ($mode === static::MODE_EDIT) {
                     $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
 				}
@@ -426,33 +437,42 @@ class GoController extends GoRouter {
 	private function handleException(Exception $e) {
 		switch ($e->getCode()) {
 			case lilURL::ERR_INVALID_PROTOCOL:
-				$msg = '<p class="title">Whoops, Something Broke</p><p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>';
+				$heading = 'hoops, Something Broke';
+				$msg = '<p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>';
 				break;
 			case lilURL::ERR_INVALID_DOMAIN:
-				$msg = '<p class="title">Whoops, Something Broke</p><p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>';
+				$heading = 'hoops, Something Broke';
+				$msg = '<p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>';
 				break;
 			case lilURL::ERR_INVALID_ALIAS:
-				$msg = '<p class="title">Whoops, Something Broke</p><p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>';
+				$heading = 'Whoops, Something Broke';
+				$msg = '<p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>';
 				break;
 			case lilURL::ERR_USED:
-				$msg = '<p class="title">Whoops, this alias/URL pair already exists.</p><p>The existing Go URL for this pair is: </p>';
+				$heading = 'Whoops, this alias/URL pair already exists.';
+				$msg = '<p>The existing Go URL for this pair is: </p>';
 				break;
 			case lilURL::ERR_ALIAS_EXISTS:
-				$msg = '<p class="title">Whoops, This alias is already in use.</p><p>Please use a different alias.</p>';
+				$heading = 'Whoops, This alias is already in use.';
+				$msg = '<p>Please use a different alias.</p>';
 				break;
 			case lilURL::ERR_INVALID_GA_CAMPAIGN:
-				$msg = '<p class="title">Whoops, Invalid Google Campaign.</p><p>Please provide all required campaign information.</p>';
+				$heading = 'Whoops, Invalid Google Campaign.';
+				$msg = '<p>Please provide all required campaign information.</p>';
 				break;
 			case lilURL::ERR_INVALID_URL:
-				$msg = '<p class="title">Whoops, Invalid URL.</p><p>Please verify the URL is correct.</p>';
+				$heading = 'Whoops, Invalid URL.';
+				$msg = '<p>Please verify the URL is correct.</p>';
 				break;
 			case lilURL::ERR_MAX_RANDOM_ID_ATTEMPTS:
-				$msg = '<p class="title">Whoops, Random Alias Error.</p><p>'. $e->getMessage() . '</p>';
+				$heading = 'Whoops, Random Alias Error.';
+				$msg = '<p>'. $e->getMessage() . '</p>';
 				break;
 			default:
-				$msg = '<p class="title">Whoops, Something Broke</p><p>There was an error submitting your url. Check your steps.</p>';
+				$heading = 'Whoops, Something Broke';
+				$msg = '<p>There was an error submitting your url. Check your steps.</p>';
 		}
 
-		$this->flashBag->setParams($msg, $this->flashBag::FLASH_BAG_TYPE_ERROR);
+		$this->flashBag->setParams($heading, $msg, $this->flashBag::FLASH_BAG_TYPE_ERROR);
 	}
 }
