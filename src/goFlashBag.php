@@ -5,10 +5,11 @@ class GoFlashBag {
     const FLASH_BAG_ATTR_MESSAGE = 'message';
     const FLASH_BAG_ATTR_TYPE = 'type';
     const FLASH_BAG_ATTR_URL = 'url';
-    const FLASH_BAG_TYPE_ERROR = 'error';
-    const FLASH_BAG_TYPE_SUCCESS = 'success';
+    const FLASH_BAG_TYPE_ERROR = 'dcf-notice-danger';
+    const FLASH_BAG_TYPE_SUCCESS = 'dcf-notice-success';
+    const FLASH_BAG_TYPE_INFO = 'dcf-notice-info';
 
-    public function setParams($heading, $message, $type = self::FLASH_BAG_TYPE_SUCCESS, $url = NULL) {
+    public function setParams($heading, $message, $type = self::FLASH_BAG_TYPE_INFO, $url = NULL) {
         unset($_SESSION[self::FLASH_BAG_SESSION_NAME]);
         $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_TYPE] = $type;
         $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_HEADING] = $heading;
@@ -23,18 +24,15 @@ class GoFlashBag {
     }
 
     public function getParams() {
-        $error = false;
+        $type = self::FLASH_BAG_TYPE_INFO;
         $heading = '';
         $msg = '';
         $url = '';
 
         if (isset($_SESSION[self::FLASH_BAG_SESSION_NAME])) {
+            $type = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_TYPE];
             $heading = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_HEADING];
             $msg = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_MESSAGE];
-
-            if (self::FLASH_BAG_TYPE_ERROR === $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_TYPE]) {
-                $error = true;
-            }
 
             if (isset($_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL])) {
                 $url = $_SESSION[self::FLASH_BAG_SESSION_NAME][self::FLASH_BAG_ATTR_URL];
@@ -44,10 +42,10 @@ class GoFlashBag {
         }
 
         return array(
+            'type' => $type,
             'heading' => $heading,
             'msg' => $msg,
-            'url' => $url,
-            'error' => $error
+            'url' => $url
         );
     }
 }

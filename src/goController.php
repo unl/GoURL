@@ -6,6 +6,9 @@ class GoController extends GoRouter {
     const DEFAULT_QR_ICON_NAME = 'icons/blank_qr_235.png';
     const URL_AUTO_PURGE_NOTICE = '<abbr title="Uniform Resource Locators">URLs</abbr> not redirected for two years will be removed without notice.';
 
+    const FLASHBAG_HEADING_DELETE_SUCCESSFUL = 'Delete Successful';
+    const FLASHBAG_HEADING_ADD_FAILED = 'Add Failed';
+
     private $auth;
     private $lilurl;
     private $qrIconPNG;
@@ -183,7 +186,7 @@ class GoController extends GoRouter {
         if (isset($_POST, $_POST['urlID'])) {
             $urlID = filter_input(INPUT_POST, 'urlID', FILTER_SANITIZE_URL);
             $this->lilurl->deleteURL($urlID, $this->auth->getUserId());
-            $this->flashBag->setParams('Delete Successful', '<p>Your URL has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+            $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_SUCCESSFUL, '<p>Your URL has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
             $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
         }
     }
@@ -194,7 +197,7 @@ class GoController extends GoRouter {
         if (isset($_POST, $_POST['groupID'])) {
             $groupID = filter_input(INPUT_POST, 'groupID', FILTER_SANITIZE_NUMBER_INT);
             $this->lilurl->deleteGroup($groupID, $this->auth->getUserId());
-            $this->flashBag->setParams('Delete Successful', '<p>Your group has been deleted.</p>');
+            $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_SUCCESSFUL, '<p>Your group has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_SUCCESS);
             $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_GROUPS));
         }
     }
@@ -231,12 +234,12 @@ class GoController extends GoRouter {
                     $msg = '<p>Your group has been added.</p>';
                     $type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
                 } else {
-                    $heading = 'Add Failed';
+                    $heading = self::FLASHBAG_HEADING_ADD_FAILED;
                     $msg = '<p>Your group has not been added.</p>';
                     $type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
                 }
             } elseif ($this->groupMode === self::MODE_EDIT && $this->groupId === $_POST['groupID']) {
-                if ($this->lilurl->updateGroup($_POST, $this->auth->getUserId())) {
+                if ($this->lilurl->isSameGroupName($groupName, $this->groupId, $error) || $this->lilurl->updateGroup($_POST, $this->auth->getUserId())) {
                     $heading = 'Update Successful';
                     $msg = '<p>Your group has been updated.</p>';
                     $type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
@@ -267,12 +270,12 @@ class GoController extends GoRouter {
                 $type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
                 $_POST['uid'] = NULL;
             } else {
-                $heading = 'Add Failed';
+                $heading = self::FLASHBAG_HEADING_ADD_FAILED;
                 $msg = '<p>User, ' . $this->uid . ' not added to group.</p>';
                 $type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
             }
         } else {
-            $heading = 'Add Failed';
+            $heading = self::FLASHBAG_HEADING_ADD_FAILED;
             $msg = '<p>' . $error . '</p>';
             $type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
         }
@@ -292,7 +295,7 @@ class GoController extends GoRouter {
     private function handleRouteGroupRemove() {
         if (!empty($this->groupId) && $this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
             if ($this->lilurl->deleteGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
-                $heading = 'Delete Successful';
+                $heading = self::FLASHBAG_HEADING_DELETE_SUCCESSFUL;
                 $msg = '<p>' . $this->uid . ' has been removed from group.</p>';
                 $type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
             } else {
@@ -331,7 +334,7 @@ class GoController extends GoRouter {
 
         if ($this->lilurl->userHasURLAccess($this->goId, $this->auth->getUserId())) {
             $this->lilurl->resetRedirectCount($this->goId, $this->auth->getUserId());
-            $this->flashBag->setParams('Reset Successful', '<p>Your Go URL redirect count has been reset.</p>');
+            $this->flashBag->setParams('Reset Successful', '<p>Your Go URL redirect count has been reset.</p>', $this->flashBag::FLASH_BAG_TYPE_SUCCESS);
         } else {
             $this->flashBag->setParams('Not Authorized', '<p>You are not the owner of the Go URL.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
         }

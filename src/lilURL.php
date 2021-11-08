@@ -726,6 +726,16 @@ class lilURL
         return empty($error);
     }
 
+    public function isSameGroupName($groupName, $groupID) {
+        $result = $this->db->run(
+            'SELECT count(*) AS isSameGroupCount FROM tblGroups WHERE groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID . ' AND groupName = ' . self::PDO_PLACEHOLDER_GROUP_NAME,
+            array(self::PDO_PLACEHOLDER_GROUP_ID => $groupID, self::PDO_PLACEHOLDER_GROUP_NAME => trim($groupName)),
+            TRUE
+        );
+
+        return $result->isSameGroupCount == 1;
+    }
+
     public function insertGroup($group, $uid)
     {
         if (!empty($uid) && !empty(trim($group['groupName']))) {
