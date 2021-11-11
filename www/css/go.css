@@ -209,6 +209,7 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
 
 .dcf-notice .dcf-notice-message input {
   color: var(--body);
+  width: 100%;
 }
 
 .dcf-notice .dcf-notice-message code {
