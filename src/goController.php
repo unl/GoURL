@@ -440,11 +440,11 @@ class GoController extends GoRouter {
     private function handleException(Exception $e) {
         switch ($e->getCode()) {
             case lilURL::ERR_INVALID_PROTOCOL:
-                $heading = 'hoops, Something Broke';
+                $heading = 'Whoops, Something Broke';
                 $msg = '<p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>';
                 break;
             case lilURL::ERR_INVALID_DOMAIN:
-                $heading = 'hoops, Something Broke';
+                $heading = 'Whoops, Something Broke';
                 $msg = '<p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>';
                 break;
             case lilURL::ERR_INVALID_ALIAS:

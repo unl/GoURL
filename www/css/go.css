@@ -211,6 +211,10 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
   color: var(--body);
 }
 
+.dcf-notice .dcf-notice-message code {
+  color: #f6e6e3;
+}
+
 .go_responsive_table thead th abbr {
   border-bottom: none;
 }
