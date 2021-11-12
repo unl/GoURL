@@ -2,12 +2,13 @@
     extract($viewParams);
     $mode = 'create';
     $formParams = array();
-    if (isset($_SESSION['errorPost'])) {
-        $formParams = $_SESSION['errorPost'];
-        $mode = !empty($formParams['mode']) ? $formParams['mode'] : 'create';
-    } elseif (!empty($goURL) && !empty($goURL['urlID'])) {
+    if (!empty($goURL) && !empty($goURL['urlID'])) {
+        $lilurl->clearErrorPOST();
         $formParams = $goURL;
         $mode = 'edit';
+    } elseif (isset($_SESSION['errorPost'])) {
+        $formParams = $_SESSION['errorPost'];
+        $mode = !empty($formParams['mode']) ? $formParams['mode'] : 'create';
     }
     $goURLForm = new goURLForm($formParams);
 
@@ -250,7 +251,7 @@
 
         private function mapFormvars(&$params) {
             $params['longURL'] = $params['theURL'];
-            $params['urlID'] = $params['theAlias'];
+            $params['urlID'] = !empty($params['theAlias']) ? $params['theAlias'] : $params['id'];
 
             if (!empty($params['gaSource'])) {
                 $this->hasGa = TRUE;
