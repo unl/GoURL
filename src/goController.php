@@ -440,39 +440,39 @@ class GoController extends GoRouter {
     private function handleException(Exception $e) {
         switch ($e->getCode()) {
             case lilURL::ERR_INVALID_PROTOCOL:
-                $heading = 'Whoops, Something Broke';
+                $heading = 'Invalid URL';
                 $msg = '<p>Your URL must begin with <code>http://</code>, <code>https://</code>.</p>';
                 break;
             case lilURL::ERR_INVALID_DOMAIN:
-                $heading = 'Whoops, Something Broke';
+                $heading = 'Action Denied';
                 $msg = '<p>You must sign in to create a URL for this domain: '.parse_url($_POST['theURL'], PHP_URL_HOST).'</p>';
                 break;
             case lilURL::ERR_INVALID_ALIAS:
-                $heading = 'Whoops, Something Broke';
+                $heading = 'Invalid URL Alias';
                 $msg = '<p>The custom Alias you provided should only contain letters, numbers, underscores (_), and dashes (-).</p>';
                 break;
             case lilURL::ERR_USED:
-                $heading = 'Whoops, this alias/URL pair already exists.';
+                $heading = 'This alias/URL pair already exists.';
                 $msg = '<p>The existing Go URL for this pair is: </p>';
                 break;
             case lilURL::ERR_ALIAS_EXISTS:
-                $heading = 'Whoops, This alias is already in use.';
+                $heading = 'This alias is already in use.';
                 $msg = '<p>Please use a different alias.</p>';
                 break;
             case lilURL::ERR_INVALID_GA_CAMPAIGN:
-                $heading = 'Whoops, Invalid Google Campaign.';
+                $heading = 'Invalid Google Campaign.';
                 $msg = '<p>Please provide all required campaign information.</p>';
                 break;
             case lilURL::ERR_INVALID_URL:
-                $heading = 'Whoops, Invalid URL.';
+                $heading = 'Invalid URL.';
                 $msg = '<p>Please verify the URL is correct.</p>';
                 break;
             case lilURL::ERR_MAX_RANDOM_ID_ATTEMPTS:
-                $heading = 'Whoops, Random Alias Error.';
+                $heading = 'Random Alias Error.';
                 $msg = '<p>'. $e->getMessage() . '</p>';
                 break;
             default:
-                $heading = 'Whoops, Something Broke';
+                $heading = 'Submission Error';
                 $msg = '<p>There was an error submitting your url. Check your steps.</p>';
         }
 
