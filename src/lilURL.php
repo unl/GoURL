@@ -227,6 +227,7 @@ class lilURL
 
     public function setErrorPOST() {
         $filterArgs = array(
+            'id' => FILTER_SANITIZE_STRING,
             'mode' => FILTER_SANITIZE_STRING,
             'theURL' => FILTER_SANITIZE_URL,
             'theAlias' => FILTER_SANITIZE_STRING,
