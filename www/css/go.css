@@ -169,6 +169,9 @@ table.dataTable tbody th.dt-body-nowrap,table.dataTable tbody td.dt-body-nowrap 
   visibility: hidden;
 }
 
+.dcf-notice {
+  margin-top: 1em;
+}
 
 @media screen and (max-width: 767px) {
 
