@@ -66,4 +66,3 @@ $siteNotice->containerID = 'dcf-main';
 $siteNotice->type = 'dcf-notice-info';
 $siteNotice->title = 'Maintenance Notice';
 $siteNotice->message = 'We will be performing site maintenance on February 4th from 4:30 to 5:00 pm CST.  This site may not be available during this time.';
-global $siteNotice;
