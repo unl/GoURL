@@ -83,17 +83,21 @@ $page->addStyleDeclaration(file_get_contents(__DIR__ . '/css/go.css'));
 $page->addHeadLink($lilurl->getBaseUrl(), 'home');
 
 $page->addScriptDeclaration("require(['jquery'], function(jq) {
-	jq(function($){
-	    var \$out = $('.dcf-notice input');
-	    \$out.attr('id', 'gourl_out');
-	    \$out.attr('class', 'dcf-input-text dcf-w-100%');
-	    \$out.attr('title', 'Your Go URL');
-	});
+    jq(function($){
+        var \$out = $('.dcf-notice input');
+        \$out.attr('id', 'gourl_out');
+        \$out.attr('class', 'dcf-input-text dcf-w-100%');
+        \$out.attr('title', 'Your Go URL');
+    });
 });");
 
 $page->appcontrols = $savvy->render(null,'navigation.php');
 $page->maincontentarea = $savvy->render(null,'flashBag.php');
 $page->maincontentarea .= $savvy->render(null, $controller->getViewTemplate());
 $page->doctitle = sprintf('<title>%s</title>', $page->doctitle);
+
+if (isset($siteNotice) && $siteNotice->display) {
+    $page->displayDCFNoticeMessage($siteNotice->title, $siteNotice->message, $siteNotice->type, $siteNotice->noticePath, $siteNotice->containerID);
+}
 
 echo $page;
