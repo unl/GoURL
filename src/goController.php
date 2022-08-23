@@ -7,6 +7,7 @@ use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
 use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 
 use Ramsey\Uuid\Uuid;
 
@@ -20,6 +21,7 @@ class GoController extends GoRouter {
     private $auth;
     private $lilurl;
     private $qrIconPNG;
+    private $qrIconSVG;
     private $flashBag;
 
     // Public State
@@ -30,10 +32,11 @@ class GoController extends GoRouter {
     public static $template;
     public static $templateVersion;
 
-    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG) {
+    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG) {
         $this->lilurl = $lilurl;
         $this->auth = $auth;
         $this->qrIconPNG = $qrIconPNG;
+        $this->qrIconSVG = $qrIconSVG;
         $this->flashBag = $flashBag;
 
         // See if already logged in via PHP CAS
@@ -119,8 +122,12 @@ class GoController extends GoRouter {
                 $this->handleRouteURLReset();
                 break;
 
-            case self::ROUTE_NAME_QR:
-                $this->handleRouteURLQRCode();
+            case self::ROUTE_NAME_QR_PNG:
+                $this->handleRouteURLQRCodePNG();
+                break;
+
+            case self::ROUTE_NAME_QR_SVG:
+                $this->handleRouteURLQRCodeSVG();
                 break;
 
             case self::ROUTE_NAME_LOOKUP:
@@ -350,7 +357,7 @@ class GoController extends GoRouter {
         $this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
     }
 
-    private function handleRouteURLQRCode() {
+    private function handleRouteURLQRCodePNG() {
         if (!$this->lilurl->getURL($this->goId)) {
             $this->handle404(FALSE);
         }
@@ -369,14 +376,14 @@ class GoController extends GoRouter {
                 ->setSize(1080)
                 ->setMargin(36)
                 ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-                ->setForegroundColor(new Color(0, 0, 0))
+                ->setForegroundColor(new Color(35, 31, 32))
                 ->setBackgroundColor(new Color(255, 255, 255));
 
             if (!empty($this->qrIconPNG) && file_exists($this->qrIconPNG)) {
                 // Create generic logo
                 $qrLogo = Logo::create($this->qrIconPNG)
-                ->setResizeToWidth(300);
-
+                ->setResizeToWidth(300)
+                ->setResizeToHeight(300);
 
                 $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
             }else{
@@ -385,14 +392,48 @@ class GoController extends GoRouter {
         }
 
         $out = imagecreatefrompng($qrCache);
-        // $qrIcon = !empty($this->qrIconPNG) && file_exists($this->qrIconPNG) ? $this->qrIconPNG : $pngPrefix . static::DEFAULT_QR_ICON_NAME;
-        // $n = imagecreatefrompng($qrIcon);
-
-        // imagecopy($out, $n, 422, 428, 0, 0, 235, 235);
-        // imagedestroy($n);
         header('Content-Type: image/png');
         imagepng($out);
         imagedestroy($out);
+        exit;
+    }
+
+    private function handleRouteURLQRCodeSVG() {
+        if (!$this->lilurl->getURL($this->goId)) {
+            $this->handle404(FALSE);
+        }
+
+        $shortURL = $this->lilurl->getShortURL($this->goId);
+        $svgPrefix = __DIR__ . '/../data/qr/';
+        $qrCache = $svgPrefix . 'cache/' . sha1($shortURL) . '.svg';
+
+        if (!file_exists($qrCache)) {
+            $writer = new SvgWriter();
+
+            // Create QR code
+            $qrCode = QrCode::create($shortURL)
+                ->setEncoding(new Encoding('UTF-8'))
+                ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                ->setSize(1080)
+                ->setMargin(36)
+                ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->setForegroundColor(new Color(35, 31, 32))
+                ->setBackgroundColor(new Color(255, 255, 255));
+
+            if (!empty($this->qrIconSVG) && file_exists($this->qrIconSVG)) {
+                // Create generic logo
+                $qrLogo = Logo::create($this->qrIconSVG)
+                    ->setResizeToWidth(300)
+                    ->setResizeToHeight(300);
+
+                $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
+            }else{
+                $writer->write($qrCode)->saveToFile($qrCache);
+            }
+        }
+
+        header('Content-Type: image/svg+xml');
+        include($qrCache);
         exit;
     }
 

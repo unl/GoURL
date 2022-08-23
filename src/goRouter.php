@@ -17,7 +17,8 @@ class GoRouter {
     const ROUTE_NAME_LOGOUT = 'logout';
     const ROUTE_NAME_LOOKUP = 'lookup';
     const ROUTE_NAME_MANAGE = 'manage';
-    const ROUTE_NAME_QR = 'qr';
+    const ROUTE_NAME_QR_PNG = 'qr-png';
+    const ROUTE_NAME_QR_SVG = 'qr-svg';
     const ROUTE_NAME_REDIRECT = 'redirect';
     const ROUTE_NAME_RESET = 'reset';
 
@@ -76,7 +77,10 @@ class GoRouter {
         } elseif ($this->pathInfo === self::ROUTE_PATH_API) {
             $this->route = self::ROUTE_NAME_API;
         } elseif (preg_match('#^([^/]+)\.png$#', $this->pathInfo, $matches)) {
-            $this->route = self::ROUTE_NAME_QR;
+            $this->route = self::ROUTE_NAME_QR_PNG;
+            $this->goId = $matches[1];
+        }elseif (preg_match('#^([^/]+)\.svg$#', $this->pathInfo, $matches)) {
+            $this->route = self::ROUTE_NAME_QR_SVG;
             $this->goId = $matches[1];
         }
 
