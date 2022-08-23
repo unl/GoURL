@@ -49,7 +49,7 @@
                     $lastRedirect = $lilurl->createDateTimeFromTimestamp($url->lastRedirect);
 
                     // Generate QR modal for each GoURL
-                    $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.qr', $appName);
+                    $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.png', $appName);
                     $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : $url->longURL;
                     ?>
                     <tr>

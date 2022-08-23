@@ -1,5 +1,13 @@
 <?php
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Label\Label;
+use Endroid\QrCode\Logo\Logo;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
+
 use Ramsey\Uuid\Uuid;
 
 class GoController extends GoRouter {
@@ -352,19 +360,36 @@ class GoController extends GoRouter {
         $qrCache = $pngPrefix . 'cache/' . sha1($shortURL) . '.png';
 
         if (!file_exists($qrCache)) {
-            $qrCode = new QrCode();
-            $qrCode->setText($shortURL)
+            $writer = new PngWriter();
+
+            // Create QR code
+            $qrCode = QrCode::create($shortURL)
+                ->setEncoding(new Encoding('UTF-8'))
+                ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
                 ->setSize(1080)
-                ->setPadding(36)
-                ->save($qrCache);
+                ->setMargin(36)
+                ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->setForegroundColor(new Color(0, 0, 0))
+                ->setBackgroundColor(new Color(255, 255, 255));
+
+            if (!empty($this->qrIconPNG) && file_exists($this->qrIconPNG)) {
+                // Create generic logo
+                $qrLogo = Logo::create($this->qrIconPNG)
+                ->setResizeToWidth(300);
+
+
+                $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
+            }else{
+                $writer->write($qrCode)->saveToFile($qrCache);
+            }
         }
 
         $out = imagecreatefrompng($qrCache);
-        $qrIcon = !empty($this->qrIconPNG) && file_exists($this->qrIconPNG) ? $this->qrIconPNG : $pngPrefix . static::DEFAULT_QR_ICON_NAME;
-        $n = imagecreatefrompng($qrIcon);
+        // $qrIcon = !empty($this->qrIconPNG) && file_exists($this->qrIconPNG) ? $this->qrIconPNG : $pngPrefix . static::DEFAULT_QR_ICON_NAME;
+        // $n = imagecreatefrompng($qrIcon);
 
-        imagecopy($out, $n, 422, 428, 0, 0, 235, 235);
-        imagedestroy($n);
+        // imagecopy($out, $n, 422, 428, 0, 0, 235, 235);
+        // imagedestroy($n);
         header('Content-Type: image/png');
         imagepng($out);
         imagedestroy($out);
