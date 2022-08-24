@@ -37,6 +37,7 @@ $auth = new \UNL\Templates\Auth\AuthCAS('2.0', 'shib.unl.edu', 443, '/idp/profil
 // Set QR icon for center of QR code,
 // icons are 300 x 300 and placed in center of QR code 
 // QR codes are 1080 x 1080 with 36 margin
+// If an icon is not provided we will default to a empty QR code
 $qrIconPng = __DIR__ . '/data/qr/icons/Nebraska_N_blk.png';
 $qrIconSvg = __DIR__ . '/data/qr/icons/Nebraska_N_blk.svg';
 
