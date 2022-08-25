@@ -52,8 +52,8 @@ $allowed_domains = array(
     'buros.org',
 );
 
-// Block users agents that contain any of these strings
-$block_user_agents = array(
+// block from counting redirect if client's users agent that contain any of these strings
+$bot_user_agents = array(
     'Googlebot',
     'BingPreview',
     'bingbot',

@@ -43,7 +43,7 @@ class lilURL
     const WHERE_UID = 'uid = ' . self::PDO_PLACEHOLDER_UID;
 
     // do not increment redirect if $_SERVER['HTTP_USER_AGENT'] contains anything in this list
-    protected $blocked_user_agents = [];
+    protected $bot_user_agents = [];
 
     protected $db;
     protected static $random_id_length = 4;
@@ -88,10 +88,10 @@ class lilURL
     *
     * @return void
     */
-    public function setBlockedUserAgents($userAgentsToBlock)
+    public function setBotUserAgents($userAgentsToBlock)
     {
         if (count($userAgentsToBlock)) {
-            $this->blocked_user_agents = (array) $userAgentsToBlock;
+            $this->bot_user_agents = (array) $userAgentsToBlock;
         }
         return $this;
     }
@@ -103,7 +103,7 @@ class lilURL
     * @return false if bot not found
     */
     protected function checkForBots(){
-        foreach ($this->blocked_user_agents as $user_agent) {
+        foreach ($this->bot_user_agents as $user_agent) {
             if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], $user_agent) != false) {
                 return true;
             }
