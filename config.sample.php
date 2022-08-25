@@ -52,6 +52,27 @@ $allowed_domains = array(
     'buros.org',
 );
 
+// Block users agents that contain any of these strings
+$block_user_agents = array(
+    'Googlebot',
+    'BingPreview',
+    'bingbot',
+    'SemrushBot',
+    'Slurp',
+    'DuckDuckBot',
+    'Baiduspider',
+    'YandexBot',
+    'Spider',
+    'Exabot',
+    'Konqueror',
+    'facebookexternalhit',
+    'facebot',
+    'ia_archiver',
+    'Google Web Preview',
+    'MsnBot',
+    'Twitterbot'
+);
+
 // uncomment the line below to skip the protocol check
 // $allowed_procotols = array();
 
