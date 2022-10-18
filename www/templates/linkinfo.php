@@ -91,9 +91,38 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                         <?php endif; ?>
                     </dd>
                     <?php endif; ?>
+
+                    <?php if (!isset($link->lastRedirect) || empty($link->lastRedirect)): ?>
+                        <?php printRemoveURLForm(); ?>
+                    <?php else:?>
+                        <?php 
+                            $lastRedirect = strtotime($link->lastRedirect);
+                            $twoYearsAgo = strtotime("-2 years"); 
+                        ?>
+
+                        <?php if($twoYearsAgo > $lastRedirect):?>
+                            <?php printRemoveURLForm(); ?>
+                        <?php else: ?>
+                            <p class="dcf-bg-white dcf-p-4 dcf-rounded">This Link has been used in the past two years so you will be unable to delete it for now.</p>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                    
                 </dl>
             </div>
             <?php endif; ?>
         </div>
     </div>
 </div>
+
+<?php
+
+function printRemoveURLForm(){
+    ?>
+        <form class="dcf-form" action="#" method="post">
+            <p class="dcf-bg-white dcf-p-4 dcf-rounded">
+                This Link has NOT been used in the past two years. You may delete it if you want but once its gone it is gone.
+                <input class="dcf-btn dcf-btn-primary dcf-mt-2" name="submit" type="submit" value="Delete This Go URL">
+            </p>
+        </form>
+    <?php
+}
