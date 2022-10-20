@@ -189,10 +189,10 @@ class GoController extends GoRouter {
             $deleted = $this->lilurl->deleteURL($urlID, $this->auth->getUserId());
 
             if ($deleted) {
-                $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_SUCCESSFUL, '<p>Your URL has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_SUCCESS);
+                $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_SUCCESSFUL, '<p>The URL &apos;' . htmlspecialchars($_POST['urlID']) . '&apos; has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_SUCCESS);
                 $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
             } else {
-                $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_FAILED, '<p>Your URL has NOT been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+                $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_FAILED, '<p>The URL &apos;' . htmlspecialchars($_POST['urlID']) . '&apos; has NOT been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
                 $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
             }
             
