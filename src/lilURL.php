@@ -634,7 +634,8 @@ class lilURL
         return $this->userOwnsURL($urlID, $uid) || $this->userHasGroupURLAccess($urlID, $uid);
     }
 
-    public function checkOldURL($urlID) {
+    public function checkOldURL($urlID)
+    {
         $result = $this->db->run(
             'SELECT count(*) AS oldURL FROM ' . self::TABLE_URLS . ' WHERE ' . self::WHERE_URL_ID . ' AND ((lastRedirect <= DATE_SUB(CURDATE(), INTERVAL ' . self::MIN_YEARS_OLD_LINK . ' YEAR)) OR (lastRedirect IS NULL AND submitDate <= DATE_SUB(CURDATE(), INTERVAL ' . self::MIN_YEARS_OLD_LINK . ' YEAR)));',
             array(self::PDO_PLACEHOLDER_URL_ID => $urlID),
