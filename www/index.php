@@ -19,9 +19,13 @@ if (!isset($qrIconPng) || empty($qrIconPng)) {
 if (!isset($qrIconSvg) || empty($qrIconSvg)) {
     $qrIconSvg = NULL;
 }
+// Use QR Code Icon PNG set, otherwise null it
+if (!isset($qrIconSize) || empty($qrIconSize)) {
+    $qrIconSize = 300;
+}
 
 $flashBag = new GoFlashBag();
-$controller = new GoController($lilurl, $auth, $flashBag, $qrIconPng, $qrIconSvg);
+$controller = new GoController($lilurl, $auth, $flashBag, $qrIconPng, $qrIconSvg, $qrIconSize);
 
 // do predispatch actions
 $controller->preDispatch();

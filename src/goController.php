@@ -32,11 +32,12 @@ class GoController extends GoRouter {
     public static $template;
     public static $templateVersion;
 
-    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG) {
+    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG, $qrIconSize) {
         $this->lilurl = $lilurl;
         $this->auth = $auth;
         $this->qrIconPNG = $qrIconPNG;
         $this->qrIconSVG = $qrIconSVG;
+        $this->qrIconSize = $qrIconSize;
         $this->flashBag = $flashBag;
 
         // See if already logged in via PHP CAS
@@ -382,8 +383,8 @@ class GoController extends GoRouter {
             if (!empty($this->qrIconPNG) && file_exists($this->qrIconPNG)) {
                 // Create generic logo
                 $qrLogo = Logo::create($this->qrIconPNG)
-                ->setResizeToWidth(300)
-                ->setResizeToHeight(300);
+                ->setResizeToWidth($this->qrIconSize)
+                ->setResizeToHeight($this->qrIconSize);
 
                 $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
             }else{
@@ -423,8 +424,8 @@ class GoController extends GoRouter {
             if (!empty($this->qrIconSVG) && file_exists($this->qrIconSVG)) {
                 // Create generic logo
                 $qrLogo = Logo::create($this->qrIconSVG)
-                    ->setResizeToWidth(300)
-                    ->setResizeToHeight(300);
+                    ->setResizeToWidth($this->qrIconSize)
+                    ->setResizeToHeight($this->qrIconSize);
 
                 $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
             }else{
