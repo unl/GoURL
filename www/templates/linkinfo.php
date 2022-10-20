@@ -103,7 +103,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                         </form>
                     <?php else:?>
                         <p class="dcf-bg-white dcf-p-4 dcf-rounded">
-                            This URL has been used or created in the past two years, so you will be unable to delete it for now, but you can always ask the person who created to delete it.
+                            This URL has been used or created in the past two years. You will be unable to delete it for now, but you can always ask the person who created the URL to delete it.
                         </p>
                     <?php endif; ?>
                     
