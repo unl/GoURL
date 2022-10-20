@@ -16,7 +16,7 @@
                 <h3 id=\"" . $modalId . "-heading\">". $appName . " QR Code for &apos;" . $id . "&apos;</h3>
                 <button class=\"dcf-btn-close-modal dcf-btn dcf-btn-tertiary dcf-absolute dcf-pin-top dcf-pin-right dcf-z-1\" type=\"button\" aria-label=\"Close\">Close</button>
             </div>
-            <div class=\"dcf-modal-content dcf-wrapper dcf-pb-4 dcf-d-flex dcf-flex-row dcf-ai-center dcf-jc-evenly\">
+            <div class=\"dcf-modal-content dcf-wrapper dcf-pb-4 dcf-d-flex dcf-flex-wrap dcf-flex-row dcf-gap-4 dcf-ai-center dcf-jc-evenly\">
                 <figure>
                     <img style=\"max-height: 10rem;\" src=\"" . htmlspecialchars($srcPNG) . "\" alt=\"". $appName . " QR Code for &apos;" . $id ."&apos;\">
                     <figcaption class=\"dcf-figcaption dcf-txt-center\">

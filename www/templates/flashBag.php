@@ -8,7 +8,7 @@
                     <?php if (isset($url) && !empty($url)): ?>
                         <div class="dcf-d-flex dcf-flex-col dcf-mt-4 dcf-gap-4">
                             <div><?php echo $msg;?></div>
-                            <div class="qrCode dcf-d-flex dcf-flex-row dcf-ai-center dcf-jc-evenly">
+                            <div class="qrCode dcf-d-flex dcf-flex-wrap dcf-flex-row dcf-gap-4 dcf-ai-center dcf-jc-evenly">
                             <figure>
                                 <img style="max-height: 10rem;" alt="QR Code for your Go URL" id="qrCode" src="<?php echo $lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.png') ?>" />
                                 <figcaption class="dcf-figcaption dcf-txt-center">
