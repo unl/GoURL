@@ -632,13 +632,17 @@ class lilURL
         return $this->userOwnsURL($urlID, $uid) || $this->userHasGroupURLAccess($urlID, $uid);
     }
 
-    public function deleteURL($urlID)
+    public function deleteURL($urlID, $uid)
     {
-        return $this->db->delete(
-            self::TABLE_URLS,
-            self::WHERE_URL_ID . ' LIMIT 1',
-            array(self::PDO_PLACEHOLDER_URL_ID => $urlID)
-        );
+        if ($this->userHasURLAccess($urlID, $uid)) {
+            return $this->db->delete(
+                self::TABLE_URLS,
+                self::WHERE_URL_ID . ' LIMIT 1',
+                array(self::PDO_PLACEHOLDER_URL_ID => $urlID)
+            );
+        }
+        
+        return false;
     }
 
     public function resetRedirectCount($id) {
