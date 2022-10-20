@@ -92,19 +92,19 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                     </dd>
                     <?php endif; ?>
 
-                    <?php if (!isset($link->lastRedirect) || empty($link->lastRedirect)): ?>
-                        <?php printRemoveURLForm(); ?>
-                    <?php else:?>
-                        <?php 
-                            $lastRedirect = strtotime($link->lastRedirect);
-                            $twoYearsAgo = strtotime("-2 years"); 
-                        ?>
 
-                        <?php if($twoYearsAgo > $lastRedirect):?>
-                            <?php printRemoveURLForm(); ?>
-                        <?php else: ?>
-                            <p class="dcf-bg-white dcf-p-4 dcf-rounded">This Link has been used in the past two years so you will be unable to delete it for now.</p>
-                        <?php endif; ?>
+                    <?php if ($lilurl->checkOldURL($link->urlID)): ?>
+                        <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')) ?>" method="post">
+                            <input type="hidden" name="urlID" value="<?php echo $link->urlID; ?>" />
+                            <p class="dcf-bg-white dcf-p-4 dcf-rounded">
+                                This Link has NOT been used or created in the past two years. You may delete it if you want but once its gone it is gone.
+                                <button class="dcf-btn dcf-btn-primary dcf-d-block dcf-mt-4" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo $link->urlID; ?>\'?');">Delete</button>
+                            </p>
+                        </form>
+                    <?php else:?>
+                        <p class="dcf-bg-white dcf-p-4 dcf-rounded">
+                            This Link has been used or created in the past two years so you will be unable to delete it for now.
+                        </p>
                     <?php endif; ?>
                     
                 </dl>
@@ -113,16 +113,3 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
         </div>
     </div>
 </div>
-
-<?php
-
-function printRemoveURLForm(){
-    ?>
-        <form class="dcf-form" action="#" method="post">
-            <p class="dcf-bg-white dcf-p-4 dcf-rounded">
-                This Link has NOT been used in the past two years. You may delete it if you want but once its gone it is gone.
-                <input class="dcf-btn dcf-btn-primary dcf-mt-2" name="submit" type="submit" value="Delete This Go URL">
-            </p>
-        </form>
-    <?php
-}
