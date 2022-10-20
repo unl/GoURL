@@ -23,6 +23,8 @@ class lilURL
     const MAX_RANDOM_ID_BUMP_LENGTH = 5;
     const MAX_RANDOM_ID_ATTEMPTS = 15000000;
 
+    const MIN_YEARS_OLD_LINK = 2;
+
     // Tables
     const TABLE_GROUPS = 'tblGroups';
     const TABLE_GROUP_USERS = 'tblGroupUsers';
@@ -632,9 +634,18 @@ class lilURL
         return $this->userOwnsURL($urlID, $uid) || $this->userHasGroupURLAccess($urlID, $uid);
     }
 
+    public function checkOldURL($urlID) {
+        $result = $this->db->run(
+            'SELECT count(*) AS oldURL FROM ' . self::TABLE_URLS . ' WHERE ' . self::WHERE_URL_ID . ' AND ((lastRedirect <= DATE_SUB(CURDATE(), INTERVAL ' . self::MIN_YEARS_OLD_LINK . ' YEAR)) OR (lastRedirect IS NULL AND submitDate <= DATE_SUB(CURDATE(), INTERVAL ' . self::MIN_YEARS_OLD_LINK . ' YEAR)));',
+            array(self::PDO_PLACEHOLDER_URL_ID => $urlID),
+            TRUE
+        );
+        return $result->oldURL > 0;
+    }
+
     public function deleteURL($urlID, $uid)
     {
-        if ($this->userHasURLAccess($urlID, $uid)) {
+        if ($this->userHasURLAccess($urlID, $uid) || $this->checkOldURL($urlID)) {
             return $this->db->delete(
                 self::TABLE_URLS,
                 self::WHERE_URL_ID . ' LIMIT 1',
