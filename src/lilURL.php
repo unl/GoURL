@@ -42,6 +42,9 @@ class lilURL
     const WHERE_URL_ID = 'urlID = ' . self::PDO_PLACEHOLDER_URL_ID;
     const WHERE_UID = 'uid = ' . self::PDO_PLACEHOLDER_UID;
 
+    // do not increment redirect if $_SERVER['HTTP_USER_AGENT'] contains anything in this list
+    protected $bot_user_agents = [];
+
     protected $db;
     protected static $random_id_length = 4;
     protected $allowed_protocols = [];
@@ -78,10 +81,43 @@ class lilURL
         return false;
     }
 
+    /**
+    * Set the list of allowed domains.
+    *
+    * @param array $domains domains to allow
+    *
+    * @return void
+    */
+    public function setBotUserAgents($userAgentsToBlock)
+    {
+        if (count($userAgentsToBlock)) {
+            $this->bot_user_agents = (array) $userAgentsToBlock;
+        }
+        return $this;
+    }
+
+    /**
+    * Checks user agent against list of blocked user agents
+    *
+    * @return true if bot was found
+    * @return false if bot not found
+    */
+    protected function checkForBots(){
+        foreach ($this->bot_user_agents as $user_agent) {
+            if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], $user_agent) != false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected function trackHit($id)
     {
-        // track system redirect
-        $this->incrementRedirectCount($id);
+        if (!$this->checkForBots()) {
+            // track system redirect
+            $this->incrementRedirectCount($id);
+        }
 
         $accountId = $this->getGaAccount();
         if (!$accountId) {
@@ -596,13 +632,17 @@ class lilURL
         return $this->userOwnsURL($urlID, $uid) || $this->userHasGroupURLAccess($urlID, $uid);
     }
 
-    public function deleteURL($urlID)
+    public function deleteURL($urlID, $uid)
     {
-        return $this->db->delete(
-            self::TABLE_URLS,
-            self::WHERE_URL_ID . ' LIMIT 1',
-            array(self::PDO_PLACEHOLDER_URL_ID => $urlID)
-        );
+        if ($this->userHasURLAccess($urlID, $uid)) {
+            return $this->db->delete(
+                self::TABLE_URLS,
+                self::WHERE_URL_ID . ' LIMIT 1',
+                array(self::PDO_PLACEHOLDER_URL_ID => $urlID)
+            );
+        }
+        
+        return false;
     }
 
     public function resetRedirectCount($id) {
