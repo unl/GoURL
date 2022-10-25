@@ -448,7 +448,7 @@ class GoController extends GoRouter {
         }
 
         header('Content-Type: image/svg+xml');
-        include($qrCache);
+        include_once($qrCache);
         exit;
     }
 
