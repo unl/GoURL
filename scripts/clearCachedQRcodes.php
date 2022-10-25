@@ -42,7 +42,7 @@ if (in_array("--all", $argv) || in_array("-a", $argv)) {
     fclose($handle);
     $fileToDelete = "*";
 } else {
-    $fileToDelete = sha1($argv[1]);
+    $fileToDelete = hash("sha512", $argv[1]);
 }
 
 // Folder path to be flushed

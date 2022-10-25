@@ -379,7 +379,7 @@ class GoController extends GoRouter {
 
         $shortURL = $this->lilurl->getShortURL($this->goId);
         $pngPrefix = __DIR__ . '/../data/qr/';
-        $qrCache = $pngPrefix . 'cache/' . sha1($shortURL) . '.png';
+        $qrCache = $pngPrefix . 'cache/' . hash("sha512", $shortURL) . '.png';
 
         if (!file_exists($qrCache)) {
             $writer = new PngWriter();
@@ -420,7 +420,7 @@ class GoController extends GoRouter {
 
         $shortURL = $this->lilurl->getShortURL($this->goId);
         $svgPrefix = __DIR__ . '/../data/qr/';
-        $qrCache = $svgPrefix . 'cache/' . sha1($shortURL) . '.svg';
+        $qrCache = $svgPrefix . 'cache/' . hash("sha512", $shortURL) . '.svg';
 
         if (!file_exists($qrCache)) {
             $writer = new SvgWriter();
