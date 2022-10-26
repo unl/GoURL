@@ -33,7 +33,7 @@ class GoController extends GoRouter {
     public static $template;
     public static $templateVersion;
 
-    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG, $qrIconSize) 
+    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG, $qrIconSize)
     {
         $this->lilurl = $lilurl;
         $this->auth = $auth;
@@ -212,7 +212,7 @@ class GoController extends GoRouter {
                 $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_FAILED, '<p>Your URL has NOT been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
                 $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
             }
-            
+
         }
     }
 
@@ -373,7 +373,7 @@ class GoController extends GoRouter {
         $this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
     }
 
-    private function handleRouteURLQRCodePNG() 
+    private function handleRouteURLQRCodePNG()
     {
         if (!$this->lilurl->getURL($this->goId)) {
             $this->handle404(FALSE);
