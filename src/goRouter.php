@@ -76,6 +76,9 @@ class GoRouter {
             $this->route = self::ROUTE_NAME_HOME;
         } elseif ($this->pathInfo === self::ROUTE_PATH_API) {
             $this->route = self::ROUTE_NAME_API;
+        } elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
+            $this->route = self::ROUTE_NAME_QR_PNG;
+            $this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\.png$#', $this->pathInfo, $matches)) {
             $this->route = self::ROUTE_NAME_QR_PNG;
             $this->goId = $matches[1];
