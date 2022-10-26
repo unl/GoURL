@@ -33,9 +33,9 @@ if (in_array("--help", $argv) || in_array("-h", $argv)) {
 
 if (in_array("--all", $argv) || in_array("-a", $argv)) {
     echo "Are you sure you want to delete all cached files?  Type 'yes' to continue: ";
-    $handle = fopen ("php://stdin","r");
+    $handle = fopen("php://stdin", "r");
     $line = fgets($handle);
-    if(trim($line) != 'yes'){
+    if (trim($line) != 'yes') {
         echo "ABORTING!\n";
         exit;
     }
@@ -70,4 +70,3 @@ foreach ($files as $file) {
 }
 
 echo "Complete!" . PHP_EOL;
-?>

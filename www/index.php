@@ -14,11 +14,11 @@ if (defined('GA_ACCOUNT')) {
 
 // Use QR Code Icon PNG set, otherwise null it
 if (!isset($qrIconPng) || empty($qrIconPng)) {
-    $qrIconPng = NULL;
+    $qrIconPng = null;
 }
 // Use QR Code Icon PNG set, otherwise null it
 if (!isset($qrIconSvg) || empty($qrIconSvg)) {
-    $qrIconSvg = NULL;
+    $qrIconSvg = null;
 }
 // Use QR Code Icon PNG set, otherwise null it
 if (!isset($qrIconSize) || empty($qrIconSize)) {

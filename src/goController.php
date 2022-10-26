@@ -33,7 +33,8 @@ class GoController extends GoRouter {
     public static $template;
     public static $templateVersion;
 
-    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG, $qrIconSize) {
+    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG, $qrIconSize) 
+    {
         $this->lilurl = $lilurl;
         $this->auth = $auth;
         $this->qrIconPNG = $qrIconPNG;
@@ -372,7 +373,8 @@ class GoController extends GoRouter {
         $this->redirect($this->lilurl->getBaseUrl() . self::ROUTE_PATH_LINKS);
     }
 
-    private function handleRouteURLQRCodePNG() {
+    private function handleRouteURLQRCodePNG() 
+    {
         if (!$this->lilurl->getURL($this->goId)) {
             $this->handle404(FALSE);
         }
@@ -401,7 +403,7 @@ class GoController extends GoRouter {
                 ->setResizeToHeight($this->qrIconSize);
 
                 $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
-            }else{
+            } else {
                 $writer->write($qrCode)->saveToFile($qrCache);
             }
         }
@@ -413,9 +415,10 @@ class GoController extends GoRouter {
         exit;
     }
 
-    private function handleRouteURLQRCodeSVG() {
+    private function handleRouteURLQRCodeSVG()
+    {
         if (!$this->lilurl->getURL($this->goId)) {
-            $this->handle404(FALSE);
+            $this->handle404(false);
         }
 
         $shortURL = $this->lilurl->getShortURL($this->goId);
@@ -442,7 +445,7 @@ class GoController extends GoRouter {
                     ->setResizeToHeight($this->qrIconSize);
 
                 $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
-            }else{
+            } else {
                 $writer->write($qrCode)->saveToFile($qrCache);
             }
         }
