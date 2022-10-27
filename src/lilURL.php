@@ -179,11 +179,11 @@ class lilURL
         //Start by gathering all the GA items
         if (isset($_POST['with-ga-campaign'])) {
             $utmData =[
-                'utm_source' => filter_input(INPUT_POST, 'gaSource', FILTER_SANITIZE_STRING),
-                'utm_medium' => filter_input(INPUT_POST, 'gaMedium', FILTER_SANITIZE_STRING),
-                'utm_term' => filter_input(INPUT_POST, 'gaTerm', FILTER_SANITIZE_STRING),
-                'utm_content' => filter_input(INPUT_POST, 'gaContent', FILTER_SANITIZE_STRING),
-                'utm_campaign' => filter_input(INPUT_POST, 'gaName', FILTER_SANITIZE_STRING),
+                'utm_source'   => htmlspecialchars($_POST['gaSource'] ?? ''),
+                'utm_medium'   => htmlspecialchars($_POST['gaMedium'] ?? ''),
+                'utm_term'     => htmlspecialchars($_POST['gaTerm'] ?? ''),
+                'utm_content'  => htmlspecialchars($_POST['gaContent'] ?? ''),
+                'utm_campaign' => htmlspecialchars($_POST['gaName'] ?? ''),
             ];
 
             /*
@@ -265,18 +265,18 @@ class lilURL
 
     public function setErrorPOST() {
         $filterArgs = array(
-            'id' => FILTER_SANITIZE_STRING,
-            'mode' => FILTER_SANITIZE_STRING,
-            'theURL' => FILTER_SANITIZE_URL,
-            'theAlias' => FILTER_SANITIZE_STRING,
-            'with-ga-campaign' => FILTER_SANITIZE_NUMBER_INT,
-            'gaName' => FILTER_SANITIZE_STRING,
-            'gaMedium' => FILTER_SANITIZE_STRING,
-            'gaSource' => FILTER_SANITIZE_STRING,
-            'gaTerm' => FILTER_SANITIZE_STRING,
-            'gaContent'=> FILTER_SANITIZE_STRING
+            'id'               => htmlspecialchars($_POST['id'] ?? ''),
+            'mode'             => htmlspecialchars($_POST['mode'] ?? ''),
+            'theURL'           => filter_input(INPUT_POST, 'theURL', FILTER_SANITIZE_URL),
+            'theAlias'         => htmlspecialchars($_POST['theAlias'] ?? ''),
+            'with-ga-campaign' => filter_input(INPUT_POST, 'with-ga-campaign', FILTER_SANITIZE_NUMBER_INT),
+            'gaName'           => htmlspecialchars($_POST['gaName'] ?? ''),
+            'gaMedium'         => htmlspecialchars($_POST['gaMedium'] ?? ''),
+            'gaSource'         => htmlspecialchars($_POST['gaSource'] ?? ''),
+            'gaTerm'           => htmlspecialchars($_POST['gaTerm'] ?? ''),
+            'gaContent'        => htmlspecialchars($_POST['gaContent'] ?? '')
         );
-        $_SESSION['errorPost'] = filter_input_array(INPUT_POST, $filterArgs);
+        $_SESSION['errorPost'] = $filterArgs;
     }
 
     public function getShortURL($id)

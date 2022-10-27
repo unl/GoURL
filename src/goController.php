@@ -183,7 +183,7 @@ class GoController extends GoRouter {
         $this->viewTemplate = 'linkinfo.php';
 
         if (isset($_POST, $_POST['lookupTerm'])) {
-            $lookupTerm = filter_input(INPUT_POST, 'lookupTerm', FILTER_SANITIZE_STRING);
+            $lookupTerm = htmlspecialchars($_POST['lookupTerm'] ?? '');
             $link = $this->lilurl->getLinkRow($lookupTerm, NULL, PDO::FETCH_OBJ);
             if (!$link) {
                 $this->flashBag->setParams('Not Found', '<p>&apos;' . $lookupTerm . '&apos; is not in use and available.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
@@ -251,7 +251,7 @@ class GoController extends GoRouter {
         $error = '';
         $msg = '';
         $type = '';
-        $groupName = filter_input(INPUT_POST, 'groupName', FILTER_SANITIZE_STRING);
+        $groupName = htmlspecialchars($_POST['groupName'] ?? '');
 
         if (!$this->lilurl->isValidGroupName($groupName, $this->groupId, $error)) {
             $heading = 'Invalid Group';
@@ -503,7 +503,8 @@ class GoController extends GoRouter {
     }
 
     private function sanitizeURLPost(&$mode, &$userId, &$alias) {
-        $mode = filter_input(INPUT_POST, 'mode', FILTER_SANITIZE_STRING) === static::MODE_EDIT ? static::MODE_EDIT : static::MODE_CREATE;
+        $mode_filtered = htmlspecialchars($_POST['mode'] ?? '');
+        $mode = $mode_filtered === static::MODE_EDIT ? static::MODE_EDIT : static::MODE_CREATE;
         $userId = $alias = null;
 
         if ($this->auth->isAuthenticated()) {
@@ -511,11 +512,11 @@ class GoController extends GoRouter {
 
             if ($mode === static::MODE_EDIT) {
                 if (!empty($_POST['id'])) {
-                    $alias = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_STRING);
+                    $alias = htmlspecialchars($_POST['id'] ?? '');
                 }
             } else {
                 if (!empty($_POST['theAlias'])) {
-                    $alias = filter_input(INPUT_POST, 'theAlias', FILTER_SANITIZE_STRING);
+                    $alias = htmlspecialchars($_POST['theAlias'] ?? '');
                 }
             }
         }

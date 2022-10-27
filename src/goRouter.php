@@ -112,7 +112,7 @@ class GoRouter {
         } elseif (preg_match('/^a\/group-user-add\/(\d+)$/', $this->pathInfo, $matches)) {
             $this->route = self::ROUTE_NAME_GROUP_USER_ADD;
             $this->groupId = $matches[1];
-            $this->uid = filter_input(INPUT_POST, 'uid', FILTER_SANITIZE_STRING);
+            $this->uid = htmlspecialchars($_POST['uid'] ?? '');
         } elseif (preg_match('/^a\/group-user-remove\/(\d+)-([\w\-\.]+)$/', $this->pathInfo, $matches)) {
             $this->route = self::ROUTE_NAME_GROUP_USER_REMOVE;
             $this->groupId = $matches[1];
