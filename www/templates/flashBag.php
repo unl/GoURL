@@ -14,12 +14,12 @@
                                         style="max-height: 10rem;"
                                         alt="QR Code for your Go URL"
                                         id="qrCode"
-                                        src="<?php echo htmlspecialchars($lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.png')) ?>"
+                                        src="<?php echo $lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.png') ?>"
                                     />
                                     <figcaption class="dcf-figcaption dcf-txt-center">
                                         <a
                                             download="<?php echo substr(strrchr($url, '/'), 1) . '.png'; ?>"
-                                            href="<?php echo htmlspecialchars($lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.png')) ?>"
+                                            href="<?php echo $lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.png') ?>"
                                             title="Download PNG Version"
                                         >
                                             PNG Version
@@ -31,12 +31,12 @@
                                         style="max-height: 10rem;"
                                         alt="QR Code for your Go URL"
                                         id="qrCode"
-                                        src="<?php echo htmlspecialchars($lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.svg')) ?>"
+                                        src="<?php echo $lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.svg') ?>"
                                     />
                                     <figcaption class="dcf-figcaption dcf-txt-center">
                                         <a
                                             download="<?php echo substr(strrchr($url, '/'), 1) . '.svg'; ?>"
-                                            href="<?php echo htmlspecialchars($lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.svg')) ?>"
+                                            href="<?php echo $lilurl->getBaseUrl(substr(strrchr($url, '/'), 1) . '.svg') ?>"
                                             title="Download SVG Version"
                                         >
                                             SVG Version
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                     <?php else: ?>
-                        <?php echo $msg ?>
+                        <?php echo $msg; ?>
                     <?php endif; ?>
                 </div>
             </div>

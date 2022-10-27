@@ -6,10 +6,10 @@ $appName = !empty(goController::$appName) ? goController::$appName : 'short url'
 <!doctype html>
 <html lang="en">
 <head>
-	<title>Page Not Found<?php echo $institutionPart; ?></title>
+	<title>Page Not Found<?php echo htmlspecialchars($institutionPart ?? ''); ?></title>
 </head>
 <body>
 	<h1>Something's wrong here&hellip;</h1>
-	<p>Uh no, we could not find a link for the <?php echo $appName; ?> you clicked.</p>
+	<p>Uh no, we could not find a link for the <?php echo htmlspecialchars($appName ?? ''); ?> you clicked.</p>
 </body>
 </html>

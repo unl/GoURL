@@ -206,10 +206,10 @@ class GoController extends GoRouter {
             $deleted = $this->lilurl->deleteURL($urlID, $this->auth->getUserId());
 
             if ($deleted) {
-                $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_SUCCESSFUL, '<p>The URL &apos;' . htmlspecialchars($_POST['urlID']) . '&apos; has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_SUCCESS);
+                $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_SUCCESSFUL, '<p>The URL &apos;' . htmlspecialchars($_POST['urlID'] ?? '') . '&apos; has been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_SUCCESS);
                 $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
             } else {
-                $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_FAILED, '<p>The URL &apos;' . htmlspecialchars($_POST['urlID']) . '&apos; has NOT been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
+                $this->flashBag->setParams(self::FLASHBAG_HEADING_DELETE_FAILED, '<p>The URL &apos;' . htmlspecialchars($_POST['urlID'] ?? '') . '&apos; has NOT been deleted.</p>', $this->flashBag::FLASH_BAG_TYPE_ERROR);
                 $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LINKS));
             }
 
@@ -297,12 +297,12 @@ class GoController extends GoRouter {
         if ($this->lilurl->isValidGroupUser($this->uid, $error)) {
             if ($this->lilurl->insertGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
                 $heading = 'Add Successful';
-                $msg = '<p>User, ' . $this->uid . ' added to group.</p>';
+                $msg = '<p>User, ' . htmlspecialchars($this->uid ?? '') . ' added to group.</p>';
                 $type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
                 $_POST['uid'] = NULL;
             } else {
                 $heading = self::FLASHBAG_HEADING_ADD_FAILED;
-                $msg = '<p>User, ' . $this->uid . ' not added to group.</p>';
+                $msg = '<p>User, ' . htmlspecialchars($this->uid ?? '') . ' not added to group.</p>';
                 $type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
             }
         } else {
@@ -327,11 +327,11 @@ class GoController extends GoRouter {
         if (!empty($this->groupId) && $this->lilurl->isGroupMember($this->groupId, $this->auth->getUserId())) {
             if ($this->lilurl->deleteGroupUser($this->groupId, $this->uid, $this->auth->getUserId())) {
                 $heading = self::FLASHBAG_HEADING_DELETE_SUCCESSFUL;
-                $msg = '<p>' . $this->uid . ' has been removed from group.</p>';
+                $msg = '<p>' . htmlspecialchars($this->uid ?? '') . ' has been removed from group.</p>';
                 $type = $this->flashBag::FLASH_BAG_TYPE_SUCCESS;
             } else {
                 $heading = self::FLASHBAG_HEADING_DELETE_FAILED;
-                $msg = '<p>Unable to remove ' . $this->uid . ' from group.</p>';
+                $msg = '<p>Unable to remove ' . htmlspecialchars($this->uid ?? '') . ' from group.</p>';
                 $type = $this->flashBag::FLASH_BAG_TYPE_ERROR;
             }
 
@@ -483,7 +483,7 @@ class GoController extends GoRouter {
                 $this->flashBag->clearParams();
 
                 if (!empty($url)) {
-                    echo htmlspecialchars($url);
+                    echo htmlspecialchars($url ?? '');
                     exit;
                 }
 

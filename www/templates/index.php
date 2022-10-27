@@ -16,9 +16,9 @@
     $disabledAlias = $mode === 'edit' ? ' disabled ' : '';
 ?>
 <div class="dcf-bleed dcf-wrapper dcf-pt-8 dcf-pb-8 dcf-d-flex dcf-jc-center">
-    <form class="dcf-form dcf-w-max-lg" id="shorten-form" action="<?php echo htmlspecialchars($lilurl->getBaseUrl()) ?>" method="post">
-        <input type="hidden" name="mode" value="<?php echo $mode; ?>">
-        <input type="hidden" name="id" value="<?php echo $goURLForm->getID(); ?>">
+    <form class="dcf-form dcf-w-max-lg" id="shorten-form" action="<?php echo $lilurl->getBaseUrl(); ?>" method="post">
+        <input type="hidden" name="mode" value="<?php echo htmlspecialchars($mode ?? ''); ?>">
+        <input type="hidden" name="id" value="<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>">
         <div class="dcf-mb-5">
             <label for="theURL">Enter the <abbr class="dcf-txt-sm" title="Uniform Resource Locator">URL</abbr> that you want to shorten <small class="dcf-required">Required</small></label>
             <div class="dcf-input-group">
@@ -31,15 +31,15 @@
                 <legend class="dcf-bold dcf-txt-lg">Custom Alias</legend>
                 <div class="dcf-form-group">
                     <label for="theAlias">Alias <small class="dcf-pl-1 dcf-txt-xs dcf-italic">Optional</small></label>
-                        <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo $goURLForm->getID(); ?>" <?php echo $disabledAlias; ?>>
-                        <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <em><?php echo htmlspecialchars($_SERVER['HTTP_HOST']); ?>/admissions</em> <strong>(letters, numbers, underscores and dashes only)</strong></span>
+                        <input id="theAlias" name="theAlias" type="text" aria-labelledby="theAliasLabel" aria-describedby="theAliasDesc" value="<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>" <?php echo $disabledAlias; ?>>
+                        <span class="dcf-form-help" id="theAliasDesc" tabindex="-1">For example, <em>admissions</em> for <em><?php echo htmlspecialchars($_SERVER['HTTP_HOST'] ?? ''); ?>/admissions</em> <strong>(letters, numbers, underscores and dashes only)</strong></span>
                         <?php if ($mode === 'edit') : ?>
                         <span class="dcf-form-help">Note: The Custom Alias is an identifier and can not be edited.  If you need to update the alias you must delete URL and recreate with new alias.</span>
                         <?php endif ?>
                         <?php if (!empty($goURLForm->getCreatedBy() && !empty($goURLForm->getSubmitDate()))) {
                             $createDate = new DateTime($goURLForm->getSubmitDate());
                         ?>
-                            <span class="dcf-form-help dcf-mt-4">Created by <?php echo $goURLForm->getCreatedBy(); ?> on <?php echo $createDate->format('F j, Y'); ?></span>
+                            <span class="dcf-form-help dcf-mt-4">Created by <?php echo htmlspecialchars($goURLForm->getCreatedBy() ?? ''); ?> on <?php echo $createDate->format('F j, Y'); ?></span>
                         <?php } ?>
                 </div>
             </fieldset>
@@ -54,7 +54,7 @@
                             foreach ($groups as $group) {
                                 $selected = $group->groupID === $goURLForm->getGroupID() ? ' selected=selected ' : '';
                         ?>
-                        <option value="<?php echo $group->groupID; ?>"<?php echo $selected; ?>><?php echo $group->groupName; ?></option>
+                        <option value="<?php echo htmlspecialchars($group->groupID ?? ''); ?>"<?php echo $selected; ?>><?php echo htmlspecialchars($group->groupName ?? ''); ?></option>
                         <?php } ?>
                     </select>
                     <span class="dcf-form-help">Note: The User Group allows the users of the group to have admin access to the URL. Only groups which you belong to are options.</span>
@@ -71,35 +71,35 @@
                         <div class="dcf-form-group">
                             <label id="gaNameLabel" for="gaName">Campaign Name <small class="dcf-required">Required</small></label>
                             <span>
-                                <input class="ga-required" id="gaName" name="gaName" type="text" aria-labelledby="gaNameLabel" aria-describedby="gaNameDesc" value="<?php echo $goURLForm->getGaName(); ?>">
+                                <input class="ga-required" id="gaName" name="gaName" type="text" aria-labelledby="gaNameLabel" aria-describedby="gaNameDesc" value="<?php echo htmlspecialchars($goURLForm->getGaName() ?? ''); ?>">
                                 <span class="dcf-form-help" id="gaNameDesc" tabindex="-1">Product, promo code or slogan</span>
                             </span>
                         </div>
                         <div class="dcf-form-group">
                             <label id="gaMediumLabel" for="gaMedium">Medium <small class="dcf-required">Required</small></label>
                             <span>
-                                <input class="ga-required" id="gaMedium" name="gaMedium" type="text" aria-labelledby="gaMediumLabel" aria-describedby="gaMediumDesc" value="<?php echo $goURLForm->getGaMedium(); ?>">
+                                <input class="ga-required" id="gaMedium" name="gaMedium" type="text" aria-labelledby="gaMediumLabel" aria-describedby="gaMediumDesc" value="<?php echo htmlspecialchars($goURLForm->getGaMedium() ?? ''); ?>">
                                 <span class="dcf-form-help" id="gaMediumDesc" tabindex="-1">Marketing medium: email, web, banner</span>
                             </span>
                         </div>
                         <div class="dcf-form-group">
                             <label id="gaSourceLabel" for="gaSource">Source <small class="dcf-required">Required</small></label>
                             <span>
-                                <input class="ga-required" id="gaSource" name="gaSource" type="text" aria-labelledby="gaSourceLabel" aria-describedby="gaSourceDesc" value="<?php echo $goURLForm->getGaSource(); ?>">
+                                <input class="ga-required" id="gaSource" name="gaSource" type="text" aria-labelledby="gaSourceLabel" aria-describedby="gaSourceDesc" value="<?php echo htmlspecialchars($goURLForm->getGaSource() ?? ''); ?>">
                                 <span class="dcf-form-help" id="gaSourceDesc" tabindex="-1">Referrer: Google, Facebook, Twitter</span>
                             </span>
                         </div>
                         <div class="dcf-form-group">
                             <label id="gaTermLabel" for="gaTerm">Term</label>
                             <span>
-                                <input id="gaTerm" name="gaTerm" type="text" aria-labelledby="gaTermLabel" aria-describedby="gaTermDesc" value="<?php echo $goURLForm->getGaTerm(); ?>">
+                                <input id="gaTerm" name="gaTerm" type="text" aria-labelledby="gaTermLabel" aria-describedby="gaTermDesc" value="<?php echo htmlspecialchars($goURLForm->getGaTerm() ?? ''); ?>">
                                 <span class="dcf-form-help" id="gaTermDesc" tabindex="-1">Identify the keywords</span>
                             </span>
                         </div>
                         <div class="dcf-form-group">
                             <label id="gaContentLabel" for="gaContent">Content</label>
                             <span>
-                                <input id="gaContent" name="gaContent" type="text" aria-labelledby="gaContentLabel" aria-describedby="gaContentDesc" value="<?php echo $goURLForm->getGaContent(); ?>">
+                                <input id="gaContent" name="gaContent" type="text" aria-labelledby="gaContentLabel" aria-describedby="gaContentDesc" value="<?php echo htmlspecialchars($goURLForm->getGaContent() ?? ''); ?>">
                                 <span class="dcf-form-help" id="gaContentDesc" tabindex="-1">Use to differentiate ads (A/B testing)</span>
                             </span>
                         </div>
@@ -119,17 +119,17 @@
                 </ul>
             </div>
         <?php endif ?>
-        <input class="dcf-mt-6 dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit" value="<?php echo $submitBtnLabel; ?>">
+        <input class="dcf-mt-6 dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit" value="<?php echo htmlspecialchars($submitBtnLabel ?? ''); ?>">
         <?php if ($mode === 'edit') : ?>
-            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($goURLForm->getID() . '/reset')) ?>" title="Reset redirect count for <?php echo $goURLForm->getID(); ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $goURLForm->getID(); ?>\'?');">Reset Redirects</a>
-            <button class="dcf-btn dcf-btn-secondary dcf-mt-1" type="button" onclick="return confirm('Are you for sure you want to delete \'<?php echo $goURLForm->getID(); ?>\'?') && submitDelete();">Delete</button>
+            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($goURLForm->getID() . '/reset'); ?>" title="Reset redirect count for <?php echo htmlspecialchars($goURLForm->getID()?? ''); ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>\'?');">Reset Redirects</a>
+            <button class="dcf-btn dcf-btn-secondary dcf-mt-1" type="button" onclick="return confirm('Are you for sure you want to delete \'<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>\'?') && submitDelete();">Delete</button>
         <?php endif ?>
         <span class="dcf-d-block dcf-mt-6 dcf-form-help"><?php echo GoController::URL_AUTO_PURGE_NOTICE; ?></span>
         </div>
     </form>
     <?php if ($mode === 'edit') : ?>
-    <form id="delete-form" class="dcf-form" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')) ?>" method="post">
-        <input type="hidden" name="urlID" value="<?php echo $goURLForm->getID(); ?>" />
+    <form id="delete-form" class="dcf-form" action="<?php echo $lilurl->getBaseUrl('a/links'); ?>" method="post">
+        <input type="hidden" name="urlID" value="<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>" />
     </form>
     <script>
         function submitDelete() {
