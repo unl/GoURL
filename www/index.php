@@ -14,11 +14,19 @@ if (defined('GA_ACCOUNT')) {
 
 // Use QR Code Icon PNG set, otherwise null it
 if (!isset($qrIconPng) || empty($qrIconPng)) {
-    $qrIconPng = NULL;
+    $qrIconPng = null;
+}
+// Use QR Code Icon PNG set, otherwise null it
+if (!isset($qrIconSvg) || empty($qrIconSvg)) {
+    $qrIconSvg = null;
+}
+// Use QR Code Icon PNG set, otherwise null it
+if (!isset($qrIconSize) || empty($qrIconSize)) {
+    $qrIconSize = 300;
 }
 
 $flashBag = new GoFlashBag();
-$controller = new GoController($lilurl, $auth, $flashBag, $qrIconPng);
+$controller = new GoController($lilurl, $auth, $flashBag, $qrIconPng, $qrIconSvg, $qrIconSize);
 
 // do predispatch actions
 $controller->preDispatch();

@@ -8,7 +8,7 @@
     $institutionPart = !empty($institution) ? ' | ' . $institution : '';
     $page->doctitle = 'Your URLs' . $appPart . $institutionPart;
 
-    function generateQRModal($id, $src, $appName) {
+    function generateQRModal($id, $srcPNG, $srcSVG, $appName) {
         $modalId = "qr-modal-" . $id;
         return "<div class=\"dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
         <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
@@ -16,8 +16,19 @@
                 <h3 id=\"" . $modalId . "-heading\">". $appName . " QR Code for &apos;" . $id . "&apos;</h3>
                 <button class=\"dcf-btn-close-modal dcf-btn dcf-btn-tertiary dcf-absolute dcf-pin-top dcf-pin-right dcf-z-1\" type=\"button\" aria-label=\"Close\">Close</button>
             </div>
-            <div class=\"dcf-modal-content dcf-wrapper dcf-pb-4\">
-                <img style=\"max-height: 60vh;\" src=\"" . htmlspecialchars($src) . "\" alt=\"". $appName . " QR Code for &apos;" . $id ."&apos;\">
+            <div class=\"dcf-modal-content dcf-wrapper dcf-pb-4 dcf-mt-4 dcf-d-flex dcf-flex-wrap dcf-flex-row dcf-ai-center dcf-jc-evenly\">
+                <figure class=\"dcf-mb-4\">
+                    <img style=\"max-height: 10rem;\" src=\"" . htmlspecialchars($srcPNG) . "\" alt=\"". $appName . " QR Code for &apos;" . $id ."&apos;\">
+                    <figcaption class=\"dcf-figcaption dcf-txt-center\">
+                        <a download=\"" . $id . ".png\" href=\"" . htmlspecialchars($srcPNG) . "\" title=\"Download PNG Version\"> PNG Version </a>
+                    </figcaption>
+                </figure>
+                <figure class=\"dcf-mb-4\">
+                    <img style=\"max-height: 10rem;\" src=\"" . htmlspecialchars($srcSVG) . "\" alt=\"". $appName . " QR Code for &apos;" . $id ."&apos;\">
+                    <figcaption class=\"dcf-figcaption dcf-txt-center\">
+                    <a download=\"" . $id . ".svg\" href=\"" . htmlspecialchars($srcSVG) . "\" title=\"Download SVG Version\" > SVG Version </a>
+                    </figcaption>
+                </figure>
             </div>
         </div>
     </div>";
@@ -49,7 +60,7 @@
                     $lastRedirect = $lilurl->createDateTimeFromTimestamp($url->lastRedirect);
 
                     // Generate QR modal for each GoURL
-                    $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.qr', $appName);
+                    $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.png', $lilurl->getBaseUrl($url->urlID). '.svg', $appName);
                     $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : $url->longURL;
                     ?>
                     <tr>

@@ -34,8 +34,13 @@ if ($useTheme === 'dcf') {
 define('CAS_CA_FILE', '/etc/pki/tls/cert.pem');
 $auth = new \UNL\Templates\Auth\AuthCAS('2.0', 'shib.unl.edu', 443, '/idp/profile/cas', CAS_CA_FILE);
 
-// Set QR icon for center of QR code (expects 235x235 png), defaults to blank icon
-$qrIconPng = __DIR__ . '/data/qr/icons/unl_qr_235.png';
+// Set QR icon for center of QR code,
+// Square icons are placed in center of QR code at specified size
+// QR codes are 1080 x 1080 with 36 margin
+// If an icon is not provided we will default to a empty QR code
+$qrIconPng  = __DIR__ . '/data/qr/icons/UNL.png';
+$qrIconSvg  = __DIR__ . '/data/qr/icons/UNL.svg';
+$qrIconSize = 500;
 
 // allow urls that begin with these strings
 $allowed_protocols = array('http://', 'https://');
