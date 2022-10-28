@@ -16,7 +16,7 @@
     $disabledAlias = $mode === 'edit' ? ' disabled ' : '';
 ?>
 <div class="dcf-bleed dcf-wrapper dcf-pt-8 dcf-pb-8 dcf-d-flex dcf-jc-center">
-    <form class="dcf-form dcf-w-max-lg" id="shorten-form" action="<?php echo $lilurl->getBaseUrl(); ?>" method="post">
+    <form class="dcf-form dcf-w-max-lg" id="shorten-form" action="<?php echo htmlspecialchars($lilurl->getBaseUrl()); ?>" method="post">
         <input type="hidden" name="mode" value="<?php echo htmlspecialchars($mode ?? ''); ?>">
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>">
         <div class="dcf-mb-5">
@@ -121,14 +121,14 @@
         <?php endif ?>
         <input class="dcf-mt-6 dcf-btn dcf-btn-primary" id="submit" name="submit" type="submit" value="<?php echo htmlspecialchars($submitBtnLabel ?? ''); ?>">
         <?php if ($mode === 'edit') : ?>
-            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo $lilurl->getBaseUrl($goURLForm->getID() . '/reset'); ?>" title="Reset redirect count for <?php echo htmlspecialchars($goURLForm->getID()?? ''); ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>\'?');">Reset Redirects</a>
+            <a class="dcf-btn dcf-btn-secondary dcf-mt-1" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($goURLForm->getID() . '/reset')); ?>" title="Reset redirect count for <?php echo htmlspecialchars($goURLForm->getID()?? ''); ?> Go URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>\'?');">Reset Redirects</a>
             <button class="dcf-btn dcf-btn-secondary dcf-mt-1" type="button" onclick="return confirm('Are you for sure you want to delete \'<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>\'?') && submitDelete();">Delete</button>
         <?php endif ?>
         <span class="dcf-d-block dcf-mt-6 dcf-form-help"><?php echo GoController::URL_AUTO_PURGE_NOTICE; ?></span>
         </div>
     </form>
     <?php if ($mode === 'edit') : ?>
-    <form id="delete-form" class="dcf-form" action="<?php echo $lilurl->getBaseUrl('a/links'); ?>" method="post">
+    <form id="delete-form" class="dcf-form" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')); ?>" method="post">
         <input type="hidden" name="urlID" value="<?php echo htmlspecialchars($goURLForm->getID() ?? ''); ?>" />
     </form>
     <script>

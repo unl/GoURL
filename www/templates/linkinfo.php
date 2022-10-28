@@ -17,7 +17,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
         <div class="dcf-grid-full dcf-grid-halves@md dcf-col-gap-8 dcf-row-gap-8">
             <div>
                 <h2 class="dcf-txt-h4"><?php echo htmlspecialchars($appName ?? ''); ?> Lookup</h2>
-                <form class="dcf-form" id="lookup-form" method="post" action="<?php echo $lilurl->getBaseUrl('a/lookup') ?>">
+                <form class="dcf-form" id="lookup-form" method="post" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/lookup')); ?>">
                     <label for="lookupTerm">Short <abbr title="Uniform Resource Locator">URL</abbr></label>
                     <div class="dcf-input-group">
                         <input id="lookupTerm" name="lookupTerm" type="text" value="<?php echo htmlspecialchars(trim($lookupTerm) ?? ''); ?>" required >
@@ -27,7 +27,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                 </form>
             </div>
             <?php if (!empty($link)) :
-                $shorURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($link->urlID);
+                $shorURL = $http . $_SERVER['SERVER_NAME'] . htmlspecialchars($lilurl->getBaseUrl($link->urlID));
             ?>
             <div>
                 <h2 class="dcf-txt-h4">Details for &apos;<?php echo htmlspecialchars($link->urlID ?? '') ?>&apos;</h2>
@@ -94,7 +94,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
 
 
                     <?php if ($lilurl->checkOldURL($link->urlID)): ?>
-                        <form class="dcf-form dcf-mb-0" action="<?php echo $lilurl->getBaseUrl('a/links'); ?>" method="post">
+                        <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')); ?>" method="post">
                             <input type="hidden" name="urlID" value="<?php echo htmlspecialchars($link->urlID ?? ''); ?>" />
                             <p class="dcf-bg-white dcf-p-4 dcf-rounded">
                                 This URL has NOT been used or created in the past two years. You may delete this URL if you would like to use it for a different purpose.

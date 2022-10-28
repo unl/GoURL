@@ -64,8 +64,8 @@
                     $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : htmlspecialchars($url->longURL);
                     ?>
                     <tr>
-                        <td data-header="Short URL"><a href="<?php echo $lilurl->getBaseUrl($url->urlID); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($url->urlID ?? ''); ?></a></td>
-                        <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($url->longURL); ?>" title="Full URL: <?php echo htmlspecialchars($url->longURL ?? ''); ?>"><?php echo $longURLDisplay; ?></a></td>
+                        <td data-header="Short URL"><a href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID)); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($url->urlID ?? ''); ?></a></td>
+                        <td data-header="Long URL"><a href="<?php echo htmlspecialchars($lilurl->escapeURL($url->longURL)); ?>" title="Full URL: <?php echo htmlspecialchars($url->longURL ?? ''); ?>"><?php echo $longURLDisplay; ?></a></td>
                         <td data-header="Group"><?php echo !empty($url->groupName) ? htmlspecialchars($url->groupName) : 'N/A'; ?></td>
                         <td data-header="Redirects"><?php echo htmlspecialchars($url->redirects ?? ''); ?></td>
                         <td data-header="LastRedirect"<?php if ($lastRedirect): ?> data-search="<?php echo $lastRedirect->format('M j, Y m/d/Y') ?>" data-order="<?php echo $lastRedirect->format('U') ?>"<?php endif; ?>>
@@ -77,9 +77,9 @@
                         <td class="dcf-txt-sm">
                             <div class="dcf-d-flex dcf-flex-wrap dcf-col-gap-1 dcf-row-gap-1">
                                 <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal" data-toggles-modal="qr-modal-<?php echo htmlspecialchars($url->urlID ?? ''); ?>" type="button" title="QR Code for <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL"><span class="qrImage"></span> QR Code®</button>
-                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo $lilurl->getBaseUrl($url->urlID . '/edit') ?>" title="Edit <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL" >Edit</a>
-                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo $lilurl->getBaseUrl($url->urlID . '/reset') ?>" title="Reset redirect count for <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');">Reset Redirects</a>
-                                <form class="dcf-form dcf-mb-0" action="<?php echo $lilurl->getBaseUrl('a/links') ?>" method="post">
+                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/edit')); ?>" title="Edit <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL" >Edit</a>
+                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/reset')); ?>" title="Reset redirect count for <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');">Reset Redirects</a>
+                                <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')); ?>" method="post">
                                     <input type="hidden" name="urlID" value="<?php echo htmlspecialchars($url->urlID ?? ''); ?>" />
                                     <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');">Delete</button>
                                 </form>
@@ -93,7 +93,7 @@
             <p>You haven't created any Go URLs, yet.</p>
         <?php endif;?>
         <div class="dcf-mt-6 dcf-mb-6">
-            <a class="dcf-btn dcf-btn-primary dcf-mr-6" href="<?php echo $lilurl->getBaseUrl(); ?>">Add URL</a>
+            <a class="dcf-btn dcf-btn-primary dcf-mr-6" href="<?php echo htmlspecialchars($lilurl->getBaseUrl()); ?>">Add URL</a>
             <span class="dcf-d-inline-block dcf-mt-6 dcf-mt-0@md dcf-form-help"><?php echo GoController::URL_AUTO_PURGE_NOTICE; ?></span>
         </div>
     </div>

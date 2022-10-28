@@ -29,7 +29,7 @@
 
         <?php if (isset($group->users)) { ?>
             <h2 class="dcf-mt-6 dcf-txt-h5">Group Users</h2>
-            <form class="dcf-form dcf-w-max-lg" id="user-form" method="post" action="<?php echo $lilurl->getBaseUrl(goController::ROUTE_PATH_GROUP_USER_ADD) . '/' . urlencode($groupID ?? ''); ?>">
+            <form class="dcf-form dcf-w-max-lg" id="user-form" method="post" action="<?php echo htmlspecialchars($lilurl->getBaseUrl(goController::ROUTE_PATH_GROUP_USER_ADD) . '/' . urlencode($groupID ?? '')); ?>">
                 <input type="hidden" name="formName" value="user-form">
                 <input type="hidden" name="groupID" value="<?php echo htmlspecialchars($groupID ?? ''); ?>">
                 <label for="uid">Username <small class="dcf-required">Required</small></label>
@@ -45,7 +45,7 @@
                     &nbsp;
                     <a 
                         class="dcf-btn dcf-btn-secondary dcf-txt-3xs" 
-                        href="<?php echo $lilurl->getBaseUrl(goController::ROUTE_PATH_GROUP_USER_REMOVE . '/' . urlencode($groupID ?? '') . '-'. urlencode($user->uid ?? '')); ?>" 
+                        href="<?php echo htmlspecialchars($lilurl->getBaseUrl(goController::ROUTE_PATH_GROUP_USER_REMOVE . '/' . urlencode($groupID ?? '') . '-'. urlencode($user->uid ?? ''))); ?>" 
                         title="Remove <?php echo htmlspecialchars($user->uid ?? ''); ?> from <?php echo htmlspecialchars($group->groupName ?? ''); ?>" 
                     >
                         &times;
