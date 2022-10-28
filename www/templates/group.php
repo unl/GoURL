@@ -43,10 +43,10 @@
                 <li class="dcf-p-2">
                     <?php echo htmlspecialchars($user->uid ?? ''); ?>
                     &nbsp;
-                    <a 
-                        class="dcf-btn dcf-btn-secondary dcf-txt-3xs" 
-                        href="<?php echo htmlspecialchars($lilurl->getBaseUrl(goController::ROUTE_PATH_GROUP_USER_REMOVE . '/' . urlencode($groupID ?? '') . '-'. urlencode($user->uid ?? ''))); ?>" 
-                        title="Remove <?php echo htmlspecialchars($user->uid ?? ''); ?> from <?php echo htmlspecialchars($group->groupName ?? ''); ?>" 
+                    <a
+                        class="dcf-btn dcf-btn-secondary dcf-txt-3xs"
+                        href="<?php echo htmlspecialchars($lilurl->getBaseUrl(goController::ROUTE_PATH_GROUP_USER_REMOVE . '/' . urlencode($groupID ?? '') . '-'. urlencode($user->uid ?? ''))); ?>"
+                        title="Remove <?php echo htmlspecialchars($user->uid ?? ''); ?> from <?php echo htmlspecialchars($group->groupName ?? ''); ?>"
                     >
                         &times;
                     </a>

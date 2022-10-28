@@ -503,8 +503,8 @@ class GoController extends GoRouter {
     }
 
     private function sanitizeURLPost(&$mode, &$userId, &$alias) {
-        $mode_filtered = htmlspecialchars($_POST['mode'] ?? '');
-        $mode = $mode_filtered === static::MODE_EDIT ? static::MODE_EDIT : static::MODE_CREATE;
+        $modeFiltered = htmlspecialchars($_POST['mode'] ?? '');
+        $mode = $modeFiltered === static::MODE_EDIT ? static::MODE_EDIT : static::MODE_CREATE;
         $userId = $alias = null;
 
         if ($this->auth->isAuthenticated()) {
