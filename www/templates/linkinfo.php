@@ -92,7 +92,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                     </dd>
                     <?php endif; ?>
 
-
+                    <?php /*
                     <?php if ($lilurl->checkOldURL($link->urlID)): ?>
                         <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')) ?>" method="post">
                             <input type="hidden" name="urlID" value="<?php echo $link->urlID; ?>" />
@@ -101,12 +101,13 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                                 <button class="dcf-btn dcf-btn-primary dcf-d-block dcf-mt-4" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo $link->urlID; ?>\'?');">Delete</button>
                             </p>
                         </form>
-                    <?php else:?>
+                    <?php //else:?>
                         <p class="dcf-bg-white dcf-p-4 dcf-rounded">
                             This URL has been used or created in the past two years. You will be unable to delete it for now, but you can always ask the person who created the URL to delete it.
                         </p>
-                    <?php endif; ?>
-                    
+                    <?php //endif; ?>
+                    */?>             
+                           
                 </dl>
             </div>
             <?php endif; ?>
