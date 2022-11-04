@@ -646,7 +646,7 @@ class lilURL
 
     public function deleteURL($urlID, $uid)
     {
-        if ($this->userHasURLAccess($urlID, $uid) || $this->checkOldURL($urlID)) {
+        if ($this->userHasURLAccess($urlID, $uid) /*|| $this->checkOldURL($urlID) */) {
             return $this->db->delete(
                 self::TABLE_URLS,
                 self::WHERE_URL_ID . ' LIMIT 1',
