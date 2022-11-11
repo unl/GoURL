@@ -64,7 +64,11 @@ class PdoDB extends PDO {
             }
         }
         foreach ($bind as $key => $val) {
-            $bind[$key] = stripslashes($val);
+            if (isset($val)) {
+                $bind[$key] = stripslashes($val);
+            } else {
+                $bind[$key] = $val;
+            }
         }
         return $bind;
     }

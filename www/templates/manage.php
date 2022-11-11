@@ -13,18 +13,18 @@
         return "<div class=\"dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
         <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
             <div class=\"dcf-modal-header dcf-wrapper dcf-pt-4 dcf-sticky dcf-pin-top\">
-                <h3 id=\"" . $modalId . "-heading\">". $appName . " QR Code for &apos;" . $id . "&apos;</h3>
+                <h3 id=\"" . $modalId . "-heading\">". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) . "&apos;</h3>
                 <button class=\"dcf-btn-close-modal dcf-btn dcf-btn-tertiary dcf-absolute dcf-pin-top dcf-pin-right dcf-z-1\" type=\"button\" aria-label=\"Close\">Close</button>
             </div>
             <div class=\"dcf-modal-content dcf-wrapper dcf-pb-4 dcf-mt-4 dcf-d-flex dcf-flex-wrap dcf-flex-row dcf-ai-center dcf-jc-evenly\">
                 <figure class=\"dcf-mb-4\">
-                    <img style=\"max-height: 10rem;\" src=\"" . htmlspecialchars($srcPNG) . "\" alt=\"". $appName . " QR Code for &apos;" . $id ."&apos;\">
+                    <img style=\"max-height: 10rem;\" src=\"" . htmlspecialchars($srcPNG) . "\" alt=\"". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) ."&apos;\">
                     <figcaption class=\"dcf-figcaption dcf-txt-center\">
                         <a download=\"" . $id . ".png\" href=\"" . htmlspecialchars($srcPNG) . "\" title=\"Download PNG Version\"> PNG Version </a>
                     </figcaption>
                 </figure>
                 <figure class=\"dcf-mb-4\">
-                    <img style=\"max-height: 10rem;\" src=\"" . htmlspecialchars($srcSVG) . "\" alt=\"". $appName . " QR Code for &apos;" . $id ."&apos;\">
+                    <img style=\"max-height: 10rem;\" src=\"" . htmlspecialchars($srcSVG) . "\" alt=\"". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) ."&apos;\">
                     <figcaption class=\"dcf-figcaption dcf-txt-center\">
                     <a download=\"" . $id . ".svg\" href=\"" . htmlspecialchars($srcSVG) . "\" title=\"Download SVG Version\" > SVG Version </a>
                     </figcaption>
@@ -61,13 +61,13 @@
 
                     // Generate QR modal for each GoURL
                     $qrModals .= generateQRModal($url->urlID, $lilurl->getBaseUrl($url->urlID). '.png', $lilurl->getBaseUrl($url->urlID). '.svg', $appName);
-                    $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : $url->longURL;
+                    $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : htmlspecialchars($url->longURL);
                     ?>
                     <tr>
-                        <td data-header="Short URL"><a href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID)); ?>" target="_blank" rel="noopener"><?php echo $url->urlID; ?></a></td>
-                        <td data-header="Long URL"><a href="<?php echo $lilurl->escapeURL($url->longURL); ?>" title="Full URL: <?php echo $url->longURL; ?>"><?php echo $longURLDisplay; ?></a></td>
-                        <td data-header="Group"><?php echo !empty($url->groupName) ? $url->groupName : 'N/A' ?></td>
-                        <td data-header="Redirects"><?php echo $url->redirects ?></td>
+                        <td data-header="Short URL"><a href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID)); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($url->urlID ?? ''); ?></a></td>
+                        <td data-header="Long URL"><a href="<?php echo htmlspecialchars($lilurl->escapeURL($url->longURL)); ?>" title="Full URL: <?php echo htmlspecialchars($url->longURL ?? ''); ?>"><?php echo $longURLDisplay; ?></a></td>
+                        <td data-header="Group"><?php echo !empty($url->groupName) ? htmlspecialchars($url->groupName) : 'N/A'; ?></td>
+                        <td data-header="Redirects"><?php echo htmlspecialchars($url->redirects ?? ''); ?></td>
                         <td data-header="LastRedirect"<?php if ($lastRedirect): ?> data-search="<?php echo $lastRedirect->format('M j, Y m/d/Y') ?>" data-order="<?php echo $lastRedirect->format('U') ?>"<?php endif; ?>>
                             <?php echo !empty($lastRedirect) ? $lastRedirect->format('M j, Y') : 'Never'; ?>
                         </td>
@@ -76,12 +76,12 @@
                         </td>
                         <td class="dcf-txt-sm">
                             <div class="dcf-d-flex dcf-flex-wrap dcf-col-gap-1 dcf-row-gap-1">
-                                <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal" data-toggles-modal="qr-modal-<?php echo $url->urlID; ?>" type="button" title="QR Code for <?php echo $url->urlID; ?> URL"><span class="qrImage"></span> QR Code®</button>
-                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/edit')) ?>" title="Edit <?php echo $url->urlID; ?> URL" >Edit</a>
-                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/reset')) ?>" title="Reset redirect count for <?php echo $url->urlID; ?> URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo $url->urlID; ?>\'?');">Reset Redirects</a>
-                                <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')) ?>" method="post">
-                                    <input type="hidden" name="urlID" value="<?php echo $url->urlID; ?>" />
-                                    <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo $url->urlID; ?>\'?');">Delete</button>
+                                <button class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal" data-toggles-modal="qr-modal-<?php echo htmlspecialchars($url->urlID ?? ''); ?>" type="button" title="QR Code for <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL"><span class="qrImage"></span> QR Code®</button>
+                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/edit')); ?>" title="Edit <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL" >Edit</a>
+                                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/reset')); ?>" title="Reset redirect count for <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL" onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');">Reset Redirects</a>
+                                <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')); ?>" method="post">
+                                    <input type="hidden" name="urlID" value="<?php echo htmlspecialchars($url->urlID ?? ''); ?>" />
+                                    <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');">Delete</button>
                                 </form>
                             </div>
                         </td>

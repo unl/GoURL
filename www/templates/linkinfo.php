@@ -16,30 +16,30 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
     <div class="dcf-wrapper">
         <div class="dcf-grid-full dcf-grid-halves@md dcf-col-gap-8 dcf-row-gap-8">
             <div>
-                <h2 class="dcf-txt-h4"><?php echo $appName; ?> Lookup</h2>
-                <form class="dcf-form" id="lookup-form" method="post" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/lookup')) ?>">
+                <h2 class="dcf-txt-h4"><?php echo htmlspecialchars($appName ?? ''); ?> Lookup</h2>
+                <form class="dcf-form" id="lookup-form" method="post" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/lookup')); ?>">
                     <label for="lookupTerm">Short <abbr title="Uniform Resource Locator">URL</abbr></label>
                     <div class="dcf-input-group">
-                        <input id="lookupTerm" name="lookupTerm" type="text" value="<?php echo trim($lookupTerm); ?>" required >
+                        <input id="lookupTerm" name="lookupTerm" type="text" value="<?php echo htmlspecialchars(trim($lookupTerm) ?? ''); ?>" required >
                         <button class="dcf-btn dcf-btn-primary" id="lookup-submit" name="submit" type="submit">Search</button>
                     </div>
-                    <span class="dcf-form-help">Lookup only searches against short <abbr title="Uniform Resource Locators">URLs</abbr> with exact match. To lookup <em><?php echo htmlspecialchars($exampleURL); ?></em>, search for <em><?php echo htmlspecialchars($exampleURLID); ?></em>.</span>
+                    <span class="dcf-form-help">Lookup only searches against short <abbr title="Uniform Resource Locators">URLs</abbr> with exact match. To lookup <em><?php echo htmlspecialchars($exampleURL ?? ''); ?></em>, search for <em><?php echo htmlspecialchars($exampleURLID ?? ''); ?></em>.</span>
                 </form>
             </div>
             <?php if (!empty($link)) :
-                $shorURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($link->urlID);
+                $shorURL = $http . $_SERVER['SERVER_NAME'] . htmlspecialchars($lilurl->getBaseUrl($link->urlID));
             ?>
             <div>
-                <h2 class="dcf-txt-h4">Details for &apos;<?php echo $link->urlID ?>&apos;</h2>
+                <h2 class="dcf-txt-h4">Details for &apos;<?php echo htmlspecialchars($link->urlID ?? '') ?>&apos;</h2>
                 <dl class="dcf-txt-sm">
-                    <dt><?php echo $appName; ?></dt>
-                    <dd class="dcf-pl-6"><a href="<?php echo htmlspecialchars($shorURL); ?>" target="_blank" rel="noopener"><?php echo htmlspecialchars($shorURL); ?></a></dd>
+                    <dt><?php echo htmlspecialchars($appName ?? ''); ?></dt>
+                    <dd class="dcf-pl-6"><a href="<?php echo $shorURL; ?>" target="_blank" rel="noopener"><?php echo $shorURL; ?></a></dd>
 
                     <dt>Long URL</dt>
-                    <dd class="dcf-pl-6"><a href="<?php echo htmlspecialchars($lilurl->escapeURL($link->longURL)) ?>" target="_blank" rel="noopener"><?php echo $lilurl->escapeURL($link->longURL) ?></a></dd>
+                    <dd class="dcf-pl-6"><a href="<?php echo $lilurl->escapeURL($link->longURL) ?>" target="_blank" rel="noopener"><?php echo $lilurl->escapeURL($link->longURL) ?></a></dd>
 
                     <dt>Redirect Count</dt>
-                    <dd class="dcf-pl-6"><?php echo $link->redirects ?></dd>
+                    <dd class="dcf-pl-6"><?php echo htmlspecialchars($link->redirects ?? ''); ?></dd>
 
                     <dt>Last Redirect</dt>
                     <dd class="dcf-pl-6"><?php
@@ -71,7 +71,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                     <dt>Group</dt>
                     <dd class="dcf-pl-6">
                     <?php if (!empty($group)): ?>
-                    <?php echo $group->groupName ?>
+                    <?php echo htmlspecialchars($group->groupName ?? '') ?>
                     <?php else: ?>
                         None
                     <?php endif; ?>
@@ -83,7 +83,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                         <?php if (!empty($group->users)): ?>
                         <ul class="dcf-list-bare">
                         <?php foreach($group->users as $index => $user): ?>
-                            <li><?php echo $user->uid; ?></li>
+                            <li><?php echo htmlspecialchars($user->uid ?? ''); ?></li>
                         <?php endforeach; ?>
                         </ul>
                         <?php else: ?>
@@ -94,11 +94,11 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
 
                     <?php /*
                     <?php if ($lilurl->checkOldURL($link->urlID)): ?>
-                        <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')) ?>" method="post">
-                            <input type="hidden" name="urlID" value="<?php echo $link->urlID; ?>" />
+                        <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')); ?>" method="post">
+                            <input type="hidden" name="urlID" value="<?php echo htmlspecialchars($link->urlID ?? ''); ?>" />
                             <p class="dcf-bg-white dcf-p-4 dcf-rounded">
                                 This URL has NOT been used or created in the past two years. You may delete this URL if you would like to use it for a different purpose.
-                                <button class="dcf-btn dcf-btn-primary dcf-d-block dcf-mt-4" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo $link->urlID; ?>\'?');">Delete</button>
+                                <button class="dcf-btn dcf-btn-primary dcf-d-block dcf-mt-4" type="submit" onclick="return confirm('Are you for sure you want to delete \'<?php echo htmlspecialchars($link->urlID); ?>\'?');">Delete</button>
                             </p>
                         </form>
                     <?php //else:?>

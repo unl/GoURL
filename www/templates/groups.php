@@ -20,13 +20,13 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
         <tbody>
         <?php foreach ($groups as $group): ?>
           <tr>
-            <td data-header="Group"><?php echo $group->groupName; ?></td>
+            <td data-header="Group"><?php echo htmlspecialchars($group->groupName ?? ''); ?></td>
             <td class="dcf-txt-sm">
               <div class="dcf-d-flex dcf-flex-wrap dcf-col-gap-1 dcf-row-gap-1">
-                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/group/' . $group->groupID)) ?>" title="Edit <?php echo $group->groupID; ?> Go URL" >Edit</a>
-                <form class="dcf-form dcf-d-inline" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/groups')) ?>" method="post">
-                  <input type="hidden" name="groupID" value="<?php echo $group->groupID; ?>" />
-                  <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure you want to delete group, \'<?php echo $group->groupName; ?>\'?');">Delete</button>
+                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/group/' . urlencode($group->groupID ?? ''))); ?>" title="Edit <?php echo htmlspecialchars($group->groupID ?? ''); ?> Go URL" >Edit</a>
+                <form class="dcf-form dcf-d-inline" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/groups')); ?>" method="post">
+                  <input type="hidden" name="groupID" value="<?php echo htmlspecialchars($group->groupID ?? ''); ?>" />
+                  <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure you want to delete group, \'<?php echo htmlspecialchars($group->groupName ?? ''); ?>\'?');">Delete</button>
                 </form>
               </div>
             </td>
