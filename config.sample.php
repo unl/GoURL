@@ -32,7 +32,8 @@ if ($useTheme === 'dcf') {
 // Define Auth
 // Path to system trusted certificates
 define('CAS_CA_FILE', '/etc/pki/tls/cert.pem');
-$auth = new \UNL\Templates\Auth\AuthCAS('2.0', 'shib.unl.edu', 443, '/idp/profile/cas', CAS_CA_FILE);
+$siteURL = "https://local-go.unl.edu";
+$auth = new \UNL\Templates\Auth\AuthCAS('2.0', 'shib.unl.edu', 443, '/idp/profile/cas', $siteURL, CAS_CA_FILE);
 
 // Set QR icon for center of QR code,
 // Square icons are placed in center of QR code at specified size
