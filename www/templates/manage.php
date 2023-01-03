@@ -69,7 +69,11 @@
                         <img
                             style=\"max-height: 10rem;\"
                             data-src=\"" . htmlspecialchars($srcPNG) . "\"
-                            alt=\"". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) ."&apos;\"
+                            alt=\"".
+                                htmlspecialchars($appName) .
+                                " QR Code for &apos;" .
+                                htmlspecialchars($id) .
+                                "&apos;\"
                         >
                         <figcaption class=\"dcf-figcaption dcf-txt-center\">
                             <a
@@ -85,7 +89,11 @@
                         <img
                             style=\"max-height: 10rem;\"
                             data-src=\"" . htmlspecialchars($srcSVG) . "\"
-                            alt=\"". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) ."&apos;\"
+                            alt=\"".
+                                htmlspecialchars($appName) .
+                                " QR Code for &apos;" .
+                                htmlspecialchars($id) .
+                                "&apos;\"
                         >
                         <figcaption class=\"dcf-figcaption dcf-txt-center\">
                             <a
@@ -139,7 +147,8 @@
                         $lilurl->getBaseUrl($url->urlID). '.svg',
                         $appName
                     );
-                    $longURLDisplay = strlen($url->longURL) > 30 ? substr($url->longURL,0,30)."..." : htmlspecialchars($url->longURL);
+                    $longURLDisplay = strlen($url->longURL) > 30 ?
+                        substr($url->longURL,0,30)."..." : htmlspecialchars($url->longURL);
                     ?>
                     <tr>
                         <td data-header="Short URL">
@@ -204,8 +213,11 @@
                                 <a
                                     class="dcf-btn dcf-btn-secondary"
                                     href="<?php echo htmlspecialchars($lilurl->getBaseUrl($url->urlID . '/reset')); ?>"
-                                    title="Reset redirect count for <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL"
-                                    onclick="return confirm('Are you sure you want to reset the redirect count for \'<?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');"
+                                    title="Reset redirect count for <?php
+                                        echo htmlspecialchars($url->urlID ?? '');
+                                        ?> URL"
+                                    onclick="return confirm('Are you sure you want to reset the redirect count for \'
+                                        <?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');"
                                 >
                                     Reset Redirects
                                 </a>
@@ -222,7 +234,8 @@
                                     <button
                                         class="dcf-btn dcf-btn-primary"
                                         type="submit"
-                                        onclick="return confirm('Are you for sure you want to delete \'<?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');"
+                                        onclick="return confirm('Are you for sure you want to delete \'
+                                            <?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');"
                                     >
                                         Delete
                                     </button>
