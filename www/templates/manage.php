@@ -10,7 +10,7 @@
 
     function generateQRModal($id, $srcPNG, $srcSVG, $appName) {
         $modalId = "qr-modal-" . $id;
-        return "<div class=\"dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
+        return "<div class=\"go-qr-modal dcf-modal dcf-bg-overlay-dark dcf-fixed dcf-pin-top dcf-pin-left dcf-h-100% dcf-w-100% dcf-d-flex dcf-ai-center dcf-jc-center dcf-opacity-0 dcf-pointer-events-none dcf-invisible\" id=\"" . $modalId . "\" aria-labelledby=\"" . $modalId . "-heading\" aria-hidden=\"true\" role=\"dialog\" tabindex=\"-1\">
         <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
             <div class=\"dcf-modal-header dcf-wrapper dcf-pt-4 dcf-sticky dcf-pin-top\">
                 <h3 id=\"" . $modalId . "-heading\">". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) . "&apos;</h3>
@@ -18,15 +18,15 @@
             </div>
             <div class=\"dcf-modal-content dcf-wrapper dcf-pb-4 dcf-mt-4 dcf-d-flex dcf-flex-wrap dcf-flex-row dcf-ai-center dcf-jc-evenly\">
                 <figure class=\"dcf-mb-4\">
-                    <img style=\"max-height: 10rem;\" src=\"" . htmlspecialchars($srcPNG) . "\" alt=\"". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) ."&apos;\">
+                    <img style=\"max-height: 10rem;\" data-src=\"" . htmlspecialchars($srcPNG) . "\" alt=\"". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) ."&apos;\">
                     <figcaption class=\"dcf-figcaption dcf-txt-center\">
                         <a download=\"" . $id . ".png\" href=\"" . htmlspecialchars($srcPNG) . "\" title=\"Download PNG Version\"> PNG Version </a>
                     </figcaption>
                 </figure>
                 <figure class=\"dcf-mb-4\">
-                    <img style=\"max-height: 10rem;\" src=\"" . htmlspecialchars($srcSVG) . "\" alt=\"". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) ."&apos;\">
+                    <img style=\"max-height: 10rem;\" data-src=\"" . htmlspecialchars($srcSVG) . "\" alt=\"". htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) ."&apos;\">
                     <figcaption class=\"dcf-figcaption dcf-txt-center\">
-                    <a download=\"" . $id . ".svg\" href=\"" . htmlspecialchars($srcSVG) . "\" title=\"Download SVG Version\" > SVG Version </a>
+                        <a download=\"" . $id . ".svg\" href=\"" . htmlspecialchars($srcSVG) . "\" title=\"Download SVG Version\" > SVG Version </a>
                     </figcaption>
                 </figure>
             </div>
@@ -99,6 +99,20 @@
     </div>
 </div>
 <?php
+$page->addScriptDeclaration("
+    // get all the modals
+    document.querySelectorAll('.go-qr-modal').forEach((modal) => {
+
+        // when the modal opens
+        document.addEventListener('ModalOpenEvent_' + modal.id, (e) => {
+
+            // load any images that have not been loaded yet
+            modal.querySelectorAll(`[data-src]:not([src])`).forEach((img) => {
+                img.src = img.dataset.src;
+            });
+        });
+    });
+");
 $page->addScriptDeclaration("
 require(['jquery', '/js/datatables-1.10.21.min.js'], function(jq) {
     jq(function($) {
