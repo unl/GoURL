@@ -148,7 +148,7 @@
                         $appName
                     );
                     $longURLDisplay = strlen($url->longURL) > 30 ?
-                        substr($url->longURL,0,30)."..." : htmlspecialchars($url->longURL);
+                        substr($url->longURL, 0, 30)."..." : htmlspecialchars($url->longURL);
                     ?>
                     <tr>
                         <td data-header="Short URL">
