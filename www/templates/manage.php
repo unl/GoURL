@@ -162,7 +162,7 @@
                         </td>
                         <td data-header="Long URL">
                             <a
-                                href="<?php echo htmlspecialchars($url->longURL) ?>"
+                                href="<?php echo $lilurl->escapeURL($url->longURL) ?>"
                                 title="Full URL: <?php echo htmlspecialchars($url->longURL ?? ''); ?>"
                             >
                                 <?php echo $longURLDisplay; ?>
