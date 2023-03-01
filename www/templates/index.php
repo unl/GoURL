@@ -235,9 +235,14 @@
             if (isset($urlParts['scheme']) && isset($urlParts['host'])) {
                 $query = isset($urlParts['query']) ? $urlParts['query'] : null;
                 $path = isset($urlParts['path']) ? $urlParts['path'] : '';
+                $port = isset($urlParts['port']) ? $urlParts['port'] : '';
 
                 $nonGAQueryString = $this->parseQueryString($query);
-                $this->longURL = $urlParts['scheme'] . '://' . $urlParts['host'] . $path;
+                $this->longURL = $urlParts['scheme'] . '://' . $urlParts['host'];
+                if (!empty($port)) {
+                    $this->longURL .= ":" . $port;
+                }
+                $this->longURL .= $path;
                 if (!empty($nonGAQueryString)) {
                     $this->longURL .= '?' . substr($nonGAQueryString, 0, -1);
                 }
