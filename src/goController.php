@@ -23,6 +23,7 @@ class GoController extends GoRouter {
     private $lilurl;
     private $qrIconPNG;
     private $qrIconSVG;
+    private $qrIconSize;
     private $flashBag;
 
     // Public State
