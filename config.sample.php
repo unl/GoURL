@@ -32,6 +32,9 @@ if ($useTheme === 'dcf') {
 // Defines the Hosts that can use the API and keys associated with them
 // Referer Host Name => API Key
 // "*" is used when no host name is provided
+//
+// Sample js code for using api
+// `const go_response = await fetch("https://go.unl.edu/api/links?token=${API_KEY}", { credentials: "include" });`
 $api_access_tokens = array(
     "*" => "",
     "local-events.unl.edu" => "test",
