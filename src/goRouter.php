@@ -6,6 +6,7 @@ class GoRouter {
 
     // route names
     const ROUTE_NAME_API  = 'api';
+    const ROUTE_NAME_LINKS_API = 'link_api';
     const ROUTE_NAME_EDIT  = 'edit';
     const ROUTE_NAME_GROUP = 'group';
     const ROUTE_NAME_GROUP_USER_ADD = 'group-user-add';
@@ -25,6 +26,7 @@ class GoRouter {
     // route paths
     const ROUTE_PATH_A = 'a/';
     const ROUTE_PATH_API = 'api/';
+    const ROUTE_PATH_LINKS_API = 'api/links';
     const ROUTE_PATH_GROUP = 'a/group';
     const ROUTE_PATH_GROUP_USER_ADD = 'a/group-user-add';
     const ROUTE_PATH_GROUP_USER_REMOVE = 'a/group-user-remove';
@@ -49,6 +51,7 @@ class GoRouter {
     protected function routeRequiresLogin(): bool
     {
         return in_array($this->route, array(
+            self::ROUTE_NAME_LINKS_API,
             self::ROUTE_NAME_EDIT,
             self::ROUTE_NAME_GROUP,
             self::ROUTE_NAME_GROUP_USER_ADD,
@@ -58,6 +61,21 @@ class GoRouter {
             self::ROUTE_NAME_LOOKUP,
             self::ROUTE_NAME_MANAGE,
             self::ROUTE_NAME_RESET
+        ));
+    }
+
+    protected function routeNoRedirect(): bool
+    {
+        return in_array($this->route, array(
+            self::ROUTE_NAME_LINKS_API,
+        ));
+    }
+
+    protected function routeRequiresCredentials(): bool
+    {
+        return in_array($this->route, array(
+            self::ROUTE_NAME_LINKS_API,
+            self::ROUTE_NAME_API,
         ));
     }
 
@@ -76,7 +94,9 @@ class GoRouter {
             $this->route = self::ROUTE_NAME_HOME;
         } elseif ($this->pathInfo === self::ROUTE_PATH_API) {
             $this->route = self::ROUTE_NAME_API;
-        } elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
+        } elseif ($this->pathInfo === self::ROUTE_PATH_LINKS_API) {
+            $this->route = self::ROUTE_NAME_LINKS_API;
+        }elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
             $this->route = self::ROUTE_NAME_QR_PNG;
             $this->goId = $matches[1];
         } elseif (preg_match('#^([^/]+)\.png$#', $this->pathInfo, $matches)) {
@@ -151,6 +171,10 @@ class GoRouter {
             header('Access-Control-Allow-Origin: ' . $allowedCORSDomain);
             header('Access-Control-Allow-Methods: GET, POST');
             header('Access-Control-Allow-Headers: X-Requested-With');
+
+            if ($this->routeRequiresCredentials()) {
+                header('Access-Control-Allow-Credentials: true');
+            }
         }
     }
 

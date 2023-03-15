@@ -24,6 +24,7 @@ class GoController extends GoRouter {
     private $qrIconPNG;
     private $qrIconSVG;
     private $qrIconSize;
+    private $apiAccessTokens;
     private $flashBag;
 
     // Public State
@@ -34,13 +35,14 @@ class GoController extends GoRouter {
     public static $template;
     public static $templateVersion;
 
-    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG, $qrIconSize)
+    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG, $qrIconSize, $apiAccessTokens)
     {
         $this->lilurl = $lilurl;
         $this->auth = $auth;
         $this->qrIconPNG = $qrIconPNG;
         $this->qrIconSVG = $qrIconSVG;
         $this->qrIconSize = $qrIconSize;
+        $this->apiAccessTokens = $apiAccessTokens;
         $this->flashBag = $flashBag;
 
         // See if already logged in via PHP CAS
@@ -52,6 +54,13 @@ class GoController extends GoRouter {
 
     private function loginCheck() {
         if ($this->routeRequiresLogin() && !$this->auth->isAuthenticated()) {
+            if ($this->routeNoRedirect()) {
+                $this->sendCORSHeaders();
+                header('Content-Type: application/json; charset=utf-8');
+                header('HTTP/1.1 403 Forbidden');
+                echo '{ "message": "Forbidden" }';
+                exit;
+            }
             $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LOGIN));
         }
     }
@@ -113,6 +122,10 @@ class GoController extends GoRouter {
         }
 
         switch($this->route) {
+            case self::ROUTE_NAME_LINKS_API:
+                $this->handleRouteLinksAPI();
+                break;
+
             case self::ROUTE_NAME_API:
             case self::ROUTE_NAME_HOME:
                 $this->handleRouteHomePage();
@@ -501,6 +514,38 @@ class GoController extends GoRouter {
             echo 'You need a URL!';
             exit;
         }
+    }
+
+    private function handleRouteLinksAPI(): void
+    {
+        $this->sendCORSHeaders();
+        header('Content-Type: application/json; charset=utf-8');
+
+        if (!$this->auth->isAuthenticated()) {
+            header('HTTP/1.1 403 Forbidden');
+            echo '{"message": "Not Logged In"}';
+            exit;
+        }
+
+        $referer = (string) (parse_url($_SERVER['HTTP_REFERER'] ?? "", PHP_URL_HOST) ?? "*");
+        $token = (string) ($_GET['token'] ?? "");
+        $uid = (string) ($this->auth->getUserId() ?? ""); // This could be a url param maybe
+
+        if (!isset($this->apiAccessTokens[$referer]) || $this->apiAccessTokens[$referer] != $token) {
+            header('HTTP/1.1 400 Bad Request');
+            echo '{"message": "Invalid Token"}';
+            exit;
+        }
+
+        if (empty($uid)) {
+            header('HTTP/1.1 400 Bad Request');
+            echo '{"message": "You need a UID!", "referer": "' . $referer . '"}';
+            exit;
+        }
+
+        $urls = $this->lilurl->getUserURLs($uid);
+        echo json_encode($urls);
+        exit;
     }
 
     private function sanitizeURLPost(&$mode, &$userId, &$alias) {

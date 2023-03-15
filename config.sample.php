@@ -29,6 +29,14 @@ if ($useTheme === 'dcf') {
     GoController::$templateVersion = UNL\Templates\Templates::VERSION_5_3;
 }
 
+// Defines the Hosts that can use the API and keys associated with them
+// Referer Host Name => API Key
+// "*" is used when no host name is provided
+$api_access_tokens = array(
+    "*" => "",
+    "local-events.unl.edu" => "test",
+);
+
 // Define Auth
 // Path to system trusted certificates
 define('CAS_CA_FILE', '/etc/pki/tls/cert.pem');

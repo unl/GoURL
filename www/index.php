@@ -26,7 +26,7 @@ if (!isset($qrIconSize) || empty($qrIconSize)) {
 }
 
 $flashBag = new GoFlashBag();
-$controller = new GoController($lilurl, $auth, $flashBag, $qrIconPng, $qrIconSvg, $qrIconSize);
+$controller = new GoController($lilurl, $auth, $flashBag, $qrIconPng, $qrIconSvg, $qrIconSize, $api_access_tokens);
 
 // do predispatch actions
 $controller->preDispatch();
