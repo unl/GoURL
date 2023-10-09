@@ -8,6 +8,7 @@ $lilurl = new lilURL(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB);
 $lilurl->setAllowedProtocols($allowed_protocols);
 $lilurl->setAllowedDomains($allowed_domains);
 $lilurl->setBotUserAgents($bot_user_agents);
+$lilurl->setVirusTotalValues($virusTotalAPIURL ?? "", $virusTotalAPIKey ?? "");
 if (defined('GA_ACCOUNT')) {
     $lilurl->setGaAccount(GA_ACCOUNT);
 }

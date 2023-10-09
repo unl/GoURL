@@ -18,6 +18,7 @@ class lilURL
     const ERR_INVALID_URL = -8;
     const ERR_MAX_RANDOM_ID_ATTEMPTS = -9;
     const ERR_ACCESS_DENIED = -10;
+    const ERR_MALICIOUS_URL = -11;
 
     const RANDOM_ID_ATTEMPTS_THERSHOLD = 1000000;
     const MAX_RANDOM_ID_BUMP_LENGTH = 5;
@@ -46,6 +47,9 @@ class lilURL
 
     // do not increment redirect if $_SERVER['HTTP_USER_AGENT'] contains anything in this list
     protected $bot_user_agents = [];
+
+    protected $virusTotalAPIURL = null;
+    protected $virusTotalAPIKey = null;
 
     protected $db;
     protected static $random_id_length = 4;
@@ -228,6 +232,12 @@ class lilURL
                 $this->setErrorPOST();
                 throw new Exception('Invalid domain.', self::ERR_INVALID_DOMAIN);
             }
+        } else {
+            // We only need to check if the user is authenticated since if they are not it will need to be a NU domain
+            if (!$this->validateMaliciousURL($longurl)) {
+                $this->setErrorPOST();
+                throw new Exception('Detected Malicious URL.', self::ERR_MALICIOUS_URL);
+            }
         }
 
         //validate the alias if specified (data integrity)
@@ -369,6 +379,56 @@ class lilURL
         }
 
         return preg_match('/(?:^|\\.)(?:' . implode('|', $escapedDomains) . ')$/', $attemptedHostName);
+    }
+
+    /**
+     * Uses Virus Total's API to validate the URL against many sources
+     * 
+     * @param string $url URL to validate
+     * @return bool True if it is not malicious and false if it is
+     */
+    protected function validateMaliciousURL(string $url): bool
+    {
+        if (!isset($this->virusTotalAPIKey) || empty($this->virusTotalAPIKey)) {
+            return true;
+        }
+
+        // For some reason this needs the base64 encoded URL
+        $base64_encode_url = base64_encode($url);
+
+        // Calls virus total's API
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $this->virusTotalAPIURL . "urls/" . $base64_encode_url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => [
+                "accept: application/json",
+                "x-apikey: " . $this->virusTotalAPIKey
+            ],
+        ]);
+
+        // Decodes the response and check for errors
+        $response = json_decode(curl_exec($curl));
+        $err = curl_error($curl);
+        curl_close($curl);
+        if ($err || !isset($response) ||empty($response)) {
+            return true;
+        }
+
+        // Checks the number of malicious/suspicious reports
+        $number_of_malicious = intval($response->data->attributes->last_analysis_stats->malicious);
+        $number_of_suspicious = intval($response->data->attributes->last_analysis_stats->suspicious);
+        if ($number_of_malicious >= 1 || $number_of_suspicious >= 1) {
+            return false;
+        }
+
+        // If we are clean then we let them through
+        return true;
     }
 
     /**
@@ -564,6 +624,25 @@ class lilURL
             $this->allowed_domains = (array) $domains;
         }
         return $this;
+    }
+
+    /**
+     * Sets the values for the virtus total API
+     * If $virusTotalAPIKey is not set it will not set either value
+     * 
+     * @param string $virusTotalAPIURL URL of virtus total's version 3 API
+     * @param string $virusTotalAPIKey API Key for virus total's API
+     * 
+     * @return void
+     */
+    public function setVirusTotalValues(string $virusTotalAPIURL, string $virusTotalAPIKey): void
+    {
+        if (empty($virusTotalAPIKey)) {
+            return;
+        }
+
+        $this->virusTotalAPIURL = $virusTotalAPIURL;
+        $this->virusTotalAPIKey = $virusTotalAPIKey;
     }
 
     /**

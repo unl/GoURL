@@ -79,6 +79,11 @@ $bot_user_agents = array(
     'Twitterbot'
 );
 
+// Virus Total's version 3 API for validating malicious URLs
+// These both should always be strings
+$virusTotalAPIURL = "https://www.virustotal.com/api/v3/"; // TRAILING SLASH
+$virusTotalAPIKey = "";                                   // Keep this empty for no validating
+
 // uncomment the line below to skip the protocol check
 // $allowed_procotols = array();
 

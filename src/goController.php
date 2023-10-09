@@ -557,6 +557,10 @@ class GoController extends GoRouter {
                 $heading = 'Random Alias Error.';
                 $msg = '<p>'. $e->getMessage() . '</p>';
                 break;
+            case lilURL::ERR_MALICIOUS_URL:
+                    $heading = 'The URL you submitted has been deemed malicious.';
+                    $msg = '<p>If you think this is an error reach out to dxg@unl.edu</p>';
+                    break;
             default:
                 $heading = 'Submission Error';
                 $msg = '<p>There was an error submitting your url. Check your steps.</p>';
