@@ -383,7 +383,7 @@ class lilURL
 
     /**
      * Uses Virus Total's API to validate the URL against many sources
-     * 
+     *
      * @param string $url URL to validate
      * @return bool True if it is not malicious and false if it is
      */
@@ -629,10 +629,10 @@ class lilURL
     /**
      * Sets the values for the virtus total API
      * If $virusTotalAPIKey is not set it will not set either value
-     * 
+     *
      * @param string $virusTotalAPIURL URL of virtus total's version 3 API
      * @param string $virusTotalAPIKey API Key for virus total's API
-     * 
+     *
      * @return void
      */
     public function setVirusTotalValues(string $virusTotalAPIURL, string $virusTotalAPIKey): void
@@ -737,7 +737,7 @@ class lilURL
                 array(self::PDO_PLACEHOLDER_URL_ID => $urlID)
             );
         }
-        
+
         return false;
     }
 
