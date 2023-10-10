@@ -561,7 +561,7 @@ class GoController extends GoRouter {
                     $heading = 'The URL you submitted has been deemed malicious.';
                     $msg = '
                         <p>
-                            If you think this is an error reach out to <a href="mailto:wdn@unl.edu">wdn@unl.edu</a>
+                            If you think this is an error reach out to <a href="mailto:dxg@lists.nebraska.edu">dxg@lists.nebraska.edu</a>
                         </p>
                     ';
                     break;
