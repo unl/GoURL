@@ -81,6 +81,7 @@ $bot_user_agents = array(
 
 // Virus Total's version 3 API for validating malicious URLs
 // These both should always be strings
+$checkForMaliciousURLs = false;
 $virusTotalAPIURL = "https://www.virustotal.com/api/v3/"; // TRAILING SLASH
 $virusTotalAPIKey = "";                                   // Keep this empty for no validating
 
