@@ -28,11 +28,13 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
   `createdBy` varchar(25) DEFAULT NULL,
   `redirects` int(11) unsigned DEFAULT 0,
   `lastRedirect` timestamp NULL,
+  `maliciousCheck` enum('checked', 'unchecked', 'protected')NOT NULL DEFAULT 'unchecked',
   PRIMARY KEY (`urlID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- ALTER TABLE `tblURLs` ADD COLUMN `groupID` int(10) unsigned NULL AFTER `urlID`;
 -- ALTER TABLE `tblURLs` ADD COLUMN `lastRedirect` timestamp NULL AFTER `redirects`;
+-- ALTER TABLE `tblURLs` ADD COLUMN `maliciousCheck` enum('checked', 'unchecked', 'protected') NOT NULL DEFAULT 'unchecked' AFTER `lastRedirect`;
 
 DROP TABLE IF EXISTS `tblGroups`;
 CREATE TABLE IF NOT EXISTS `tblGroups` (

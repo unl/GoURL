@@ -135,14 +135,29 @@ class GoController extends GoRouter {
                 break;
 
             case self::ROUTE_NAME_LOOKUP:
+                // If get an error trying to update/create something
+                // Then try to do something else it will recall the last error
+                // This causes funkiness
+                $this->lilurl->clearErrorPOST();
+
                 $this->handleRouteLookup();
                 break;
 
             case self::ROUTE_NAME_MANAGE:
+                // If get an error trying to update/create something
+                // Then try to do something else it will recall the last error
+                // This causes funkiness
+                $this->lilurl->clearErrorPOST();
+
                 $this->handleRouteManage();
                 break;
 
             case self::ROUTE_NAME_GROUPS:
+                // If get an error trying to update/create something
+                // Then try to do something else it will recall the last error
+                // This causes funkiness
+                $this->lilurl->clearErrorPOST();
+
                 $this->handleRouteGroups();
                 break;
 
@@ -557,6 +572,14 @@ class GoController extends GoRouter {
                 $heading = 'Random Alias Error.';
                 $msg = '<p>'. $e->getMessage() . '</p>';
                 break;
+            case lilURL::ERR_MALICIOUS_URL:
+                    $heading = 'The URL you submitted has been deemed malicious.';
+                    $msg = '
+                        <p>
+                            If you think this is an error reach out to <a href="mailto:dxg@lists.nebraska.edu">dxg@lists.nebraska.edu</a>
+                        </p>
+                    ';
+                    break;
             default:
                 $heading = 'Submission Error';
                 $msg = '<p>There was an error submitting your url. Check your steps.</p>';
