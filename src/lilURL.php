@@ -243,7 +243,7 @@ class lilURL
             if ($malicious_check === 'bad') {
                 $this->setErrorPOST();
                 throw new Exception('Detected Malicious URL.', self::ERR_MALICIOUS_URL);
-            } else if ($malicious_check === 'checked') {
+            } elseif ($malicious_check === 'checked') {
                 $malicious_check_value = 'checked';
             }
         }
