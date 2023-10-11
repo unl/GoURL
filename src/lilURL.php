@@ -39,6 +39,7 @@ class lilURL
     const PDO_PLACEHOLDER_GROUP_ID = ':groupID';
     const PDO_PLACEHOLDER_GROUP_NAME = ':groupName';
     const PDO_PLACEHOLDER_UID = ':uid';
+    const PDO_PLACEHOLDER_MALICIOUS_CHECK = ':maliciousCheck';
 
     // Common where string segements
     const WHERE_GROUP_ID = 'groupID = ' . self::PDO_PLACEHOLDER_GROUP_ID;
@@ -164,6 +165,9 @@ class lilURL
     {
         $this->clearErrorPOST();
 
+        // This is set later but this is the default value
+        $malicious_check_value = 'unchecked';
+
         $longurl = trim(filter_input(INPUT_POST,'theURL', FILTER_SANITIZE_URL));
 
         // Hack to handle url passed via url=referer query string not handled by filter_input above
@@ -228,15 +232,19 @@ class lilURL
 
         // Check to see if user domain is valid
         if (!$user) {
+            $malicious_check_value = 'protected';
             if (!$this->urlIsAllowedDomain($longurl)) {
                 $this->setErrorPOST();
                 throw new Exception('Invalid domain.', self::ERR_INVALID_DOMAIN);
             }
         } else {
             // We only need to check if the user is authenticated since if they are not it will need to be a NU domain
-            if (!$this->validateMaliciousURL($longurl)) {
+            $malicious_check = $this->validateMaliciousURL($longurl);
+            if ($malicious_check === 'bad') {
                 $this->setErrorPOST();
                 throw new Exception('Detected Malicious URL.', self::ERR_MALICIOUS_URL);
+            } else if ($malicious_check === 'checked') {
+                $malicious_check_value = 'checked';
             }
         }
 
@@ -262,10 +270,10 @@ class lilURL
 
         // add the url to the database
         if ($mode === 'edit') {
-            $this->updateURL($longurl, $id, $user, $groupID);
+            $this->updateURL($longurl, $id, $user, $groupID, $malicious_check_value);
             return $this->getShortURL($id);
         } else {
-            if ($id = $this->addURL($longurl, $id, $user, $groupID)) {
+            if ($id = $this->addURL($longurl, $id, $user, $groupID, $malicious_check_value)) {
                 return $this->getShortURL($id);
             }
         }
@@ -385,12 +393,12 @@ class lilURL
      * Uses Virus Total's API to validate the URL against many sources
      *
      * @param string $url URL to validate
-     * @return bool True if it is not malicious and false if it is
+     * @return string state of the URL (checked, unchecked, bad)
      */
-    protected function validateMaliciousURL(string $url): bool
+    protected function validateMaliciousURL(string $url): string
     {
         if (!isset($this->virusTotalAPIKey) || empty($this->virusTotalAPIKey)) {
-            return true;
+            return 'unchecked';
         }
 
         // For some reason this needs the base64 encoded URL
@@ -416,19 +424,19 @@ class lilURL
         $response = json_decode(curl_exec($curl));
         $err = curl_error($curl);
         curl_close($curl);
-        if ($err || !isset($response) ||empty($response)) {
-            return true;
+        if ($err || !isset($response) || empty($response)) {
+            return 'unchecked';
         }
 
         // Checks the number of malicious/suspicious reports
         $number_of_malicious = intval($response->data->attributes->last_analysis_stats->malicious);
         $number_of_suspicious = intval($response->data->attributes->last_analysis_stats->suspicious);
         if ($number_of_malicious >= 1 || $number_of_suspicious >= 1) {
-            return false;
+            return 'bad';
         }
 
         // If we are clean then we let them through
-        return true;
+        return 'checked';
     }
 
     /**
@@ -537,7 +545,7 @@ class lilURL
     * @param string $url URL to add
     * @return bool
     */
-    public function addURL($url, $id = null, $user = null, $groupID = null)
+    public function addURL($url, $id = null, $user = null, $groupID = null, $malicious_check='unchecked')
     {
         if (!$id) {
             // if the url is already in here, return true
@@ -555,7 +563,8 @@ class lilURL
 
         $data = array(
             ltrim(self::PDO_PLACEHOLDER_URL_ID, ':') => $id,
-            ltrim(self::PDO_PLACEHOLDER_LONG_URL, ':') => $url
+            ltrim(self::PDO_PLACEHOLDER_LONG_URL, ':') => $url,
+            ltrim(self::PDO_PLACEHOLDER_MALICIOUS_CHECK, ':') => $malicious_check,
         );
 
         if (!empty($user)) {
@@ -576,7 +585,7 @@ class lilURL
     * @param string $url URL to add
     * @return bool
     */
-    public function updateURL($url, $id = null, $uid = null, $groupID = null)
+    public function updateURL($url, $id = null, $uid = null, $groupID = null, $malicious_check='unchecked')
     {
         if (!$this->userHasURLAccess($id, $uid)) {
             return FALSE;
@@ -587,7 +596,8 @@ class lilURL
             self::TABLE_URLS,
             array(
                 ltrim(self::PDO_PLACEHOLDER_LONG_URL, ':') => $url,
-                ltrim(self::PDO_PLACEHOLDER_GROUP_ID, ':') => $groupID
+                ltrim(self::PDO_PLACEHOLDER_GROUP_ID, ':') => $groupID,
+                ltrim(self::PDO_PLACEHOLDER_MALICIOUS_CHECK, ':') => $malicious_check,
             ),
             self::WHERE_URL_ID,
             array(self::PDO_PLACEHOLDER_URL_ID => $id)
