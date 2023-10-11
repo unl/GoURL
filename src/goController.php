@@ -135,14 +135,29 @@ class GoController extends GoRouter {
                 break;
 
             case self::ROUTE_NAME_LOOKUP:
+                // If get an error trying to update/create something
+                // Then try to do something else it will recall the last error
+                // This causes funkiness
+                $this->lilurl->clearErrorPOST();
+
                 $this->handleRouteLookup();
                 break;
 
             case self::ROUTE_NAME_MANAGE:
+                // If get an error trying to update/create something
+                // Then try to do something else it will recall the last error
+                // This causes funkiness
+                $this->lilurl->clearErrorPOST();
+
                 $this->handleRouteManage();
                 break;
 
             case self::ROUTE_NAME_GROUPS:
+                // If get an error trying to update/create something
+                // Then try to do something else it will recall the last error
+                // This causes funkiness
+                $this->lilurl->clearErrorPOST();
+
                 $this->handleRouteGroups();
                 break;
 
