@@ -460,7 +460,19 @@ class GoController extends GoRouter {
                     ->setResizeToWidth($this->qrIconSize)
                     ->setResizeToHeight($this->qrIconSize);
 
-                $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
+                // Get the string version of the SVG QR code
+                $result = $writer->write($qrCode, $qrLogo)->getString();
+
+                // Get the SVG icon and prep it for preg_replace with back reference
+                $svg_file = file_get_contents($this->qrIconSVG);
+                $svg_file = str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $svg_file);
+                $svg_file = str_replace('<svg', '<svg x="$1" y="$2" width="$3" height="$4"', $svg_file);
+
+                // Replace image with SVG icon, use back reference to get the variables we need
+                $result = preg_replace('/<image x="([0-9]+)" y="([0-9]+)" width="([0-9]+)" height="([0-9]+)".*\/>/', $svg_file, $result);
+
+                // Write the files to the cache
+                file_put_contents($qrCache, $result);
             } else {
                 $writer->write($qrCode)->saveToFile($qrCache);
             }
