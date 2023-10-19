@@ -92,6 +92,25 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                     </dd>
                     <?php endif; ?>
 
+                    <?php
+                        echo $savvy->render((object) array(
+                            "id" => $link->urlID,
+                            "srcPNG" => $lilurl->getBaseUrl($link->urlID). '.png',
+                            "srcSVG" => $lilurl->getBaseUrl($link->urlID). '.svg',
+                            "appName" => $appName,
+                        ), "qrCodeModal.php");
+                    ?>
+
+                    <button
+                        class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal"
+                        data-toggles-modal="qr-modal-<?php echo htmlspecialchars($link->urlID ?? ''); ?>"
+                        type="button"
+                        title="QR Code for <?php echo htmlspecialchars($link->urlID ?? ''); ?> URL"
+                    >
+                        <span class="qrImage"></span>
+                        QR Code®
+                    </button>
+
                     <?php /*
                     <?php if ($lilurl->checkOldURL($link->urlID)): ?>
                         <form class="dcf-form dcf-mb-0" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/links')); ?>" method="post">
@@ -106,8 +125,8 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                             This URL has been used or created in the past two years. You will be unable to delete it for now, but you can always ask the person who created the URL to delete it.
                         </p>
                     <?php //endif; ?>
-                    */?>             
-                           
+                    */?>
+
                 </dl>
             </div>
             <?php endif; ?>
