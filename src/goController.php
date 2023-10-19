@@ -469,7 +469,11 @@ class GoController extends GoRouter {
                 $svg_file = str_replace('<svg', '<svg x="$1" y="$2" width="$3" height="$4"', $svg_file);
 
                 // Replace image with SVG icon, use back reference to get the variables we need
-                $result = preg_replace('/<image x="([0-9]+)" y="([0-9]+)" width="([0-9]+)" height="([0-9]+)".*\/>/', $svg_file, $result);
+                $result = preg_replace(
+                    '/<image x="([\d]+)" y="([\d]+)" width="([\d]+)" height="([\d]+)".*\/>/',
+                    $svg_file,
+                    $result
+                );
 
                 // Write the files to the cache
                 file_put_contents($qrCache, $result);
