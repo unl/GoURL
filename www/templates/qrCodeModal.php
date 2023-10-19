@@ -27,7 +27,8 @@
     <div class="dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto" role="document">
         <div class="dcf-modal-header dcf-wrapper dcf-pt-4 dcf-sticky dcf-pin-top">
             <h3 id="<?php echo $modalId ?>-heading">
-                <?php echo htmlspecialchars($context->appName); ?> QR Code for &apos;<?php echo htmlspecialchars($context->id); ?>&apos;
+                <?php echo htmlspecialchars($context->appName); ?>
+                QR Code for &apos;<?php echo htmlspecialchars($context->id); ?>&apos;
             </h3>
             <button
                 class="
@@ -83,7 +84,7 @@
                     alt="
                         <?php echo htmlspecialchars($context->appName); ?>
                         QR Code for &apos;
-                        <?php htmlspecialchars($context->id); ?>
+                        <?php echo htmlspecialchars($context->id); ?>
                         &apos;"
                 >
                 <figcaption class="dcf-figcaption dcf-txt-center">
