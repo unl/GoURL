@@ -1,115 +1,11 @@
 <?php
     extract($viewParams);
-    $qrModals = '';
     if (!isset($appName)) {
         $appName = GoController::$appName;
     }
     $appPart = !empty($appName) ? ' - ' . $appName : '';
     $institutionPart = !empty($institution) ? ' | ' . $institution : '';
     $page->doctitle = 'Your URLs' . $appPart . $institutionPart;
-
-    function generateQRModal($id, $srcPNG, $srcSVG, $appName) {
-        $modalId = "qr-modal-" . $id;
-        return "
-        <div
-            class=\"
-                go-qr-modal
-                dcf-modal
-                dcf-bg-overlay-dark
-                dcf-fixed
-                dcf-pin-top
-                dcf-pin-left
-                dcf-h-100%
-                dcf-w-100%
-                dcf-d-flex
-                dcf-ai-center
-                dcf-jc-center
-                dcf-opacity-0
-                dcf-pointer-events-none
-                dcf-invisible\"
-            id=\"" . $modalId . "\"
-            aria-labelledby=\"" . $modalId . "-heading\"
-            aria-hidden=\"true\"
-            role=\"dialog\"
-            tabindex=\"-1\"
-        >
-            <div class=\"dcf-modal-wrapper dcf-relative dcf-h-auto dcf-overflow-y-auto\" role=\"document\">
-                <div class=\"dcf-modal-header dcf-wrapper dcf-pt-4 dcf-sticky dcf-pin-top\">
-                    <h3 id=\"" . $modalId . "-heading\">"
-                        . htmlspecialchars($appName) . " QR Code for &apos;" . htmlspecialchars($id) . "&apos;
-                    </h3>
-                    <button
-                        class=\"
-                            dcf-btn-close-modal
-                            dcf-btn
-                            dcf-btn-tertiary
-                            dcf-absolute
-                            dcf-pin-top
-                            dcf-pin-right
-                            dcf-z-1\"
-                        type=\"button\"
-                        aria-label=\"Close\"
-                    >
-                        Close
-                    </button>
-                </div>
-                <div
-                    class=\"
-                        dcf-modal-content
-                        dcf-wrapper
-                        dcf-pb-4
-                        dcf-mt-4
-                        dcf-d-flex
-                        dcf-flex-wrap
-                        dcf-flex-row
-                        dcf-ai-center
-                        dcf-jc-evenly\"
-                >
-                    <figure class=\"dcf-mb-4\">
-                        <img
-                            style=\"max-height: 10rem;\"
-                            data-src=\"" . htmlspecialchars($srcPNG) . "\"
-                            alt=\"".
-                                htmlspecialchars($appName) .
-                                " QR Code for &apos;" .
-                                htmlspecialchars($id) .
-                                "&apos;\"
-                        >
-                        <figcaption class=\"dcf-figcaption dcf-txt-center\">
-                            <a
-                                download=\"" . $id . ".png\"
-                                href=\"" . htmlspecialchars($srcPNG) . "\"
-                                title=\"Download PNG Version\"
-                            >
-                                PNG Version
-                            </a>
-                        </figcaption>
-                    </figure>
-                    <figure class=\"dcf-mb-4\">
-                        <img
-                            style=\"max-height: 10rem;\"
-                            data-src=\"" . htmlspecialchars($srcSVG) . "\"
-                            alt=\"".
-                                htmlspecialchars($appName) .
-                                " QR Code for &apos;" .
-                                htmlspecialchars($id) .
-                                "&apos;\"
-                        >
-                        <figcaption class=\"dcf-figcaption dcf-txt-center\">
-                            <a
-                                download=\"" . $id . ".svg\"
-                                href=\"" . htmlspecialchars($srcSVG) . "\"
-                                title=\"Download SVG Version\"
-                            >
-                                SVG Version
-                            </a>
-                        </figcaption>
-                    </figure>
-                </div>
-            </div>
-        </div>
-        ";
-    }
 ?>
 
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
@@ -140,13 +36,13 @@
                     $submitDate = $lilurl->createDateTimeFromTimestamp($url->submitDate);
                     $lastRedirect = $lilurl->createDateTimeFromTimestamp($url->lastRedirect);
 
-                    // Generate QR modal for each GoURL
-                    $qrModals .= generateQRModal(
-                        $url->urlID,
-                        $lilurl->getBaseUrl($url->urlID). '.png',
-                        $lilurl->getBaseUrl($url->urlID). '.svg',
-                        $appName
-                    );
+                    echo $savvy->render((object) array(
+                        "id" => $url->urlID,
+                        "srcPNG" => $lilurl->getBaseUrl($url->urlID). '.png',
+                        "srcSVG" => $lilurl->getBaseUrl($url->urlID). '.svg',
+                        "appName" => $appName,
+                    ), "qrCodeModal.php");
+
                     $longURLDisplay = strlen($url->longURL) > 30 ?
                         substr($url->longURL, 0, 30)."..." : htmlspecialchars($url->longURL);
                     ?>
@@ -264,20 +160,6 @@
 </div>
 <?php
 $page->addScriptDeclaration("
-    // get all the modals
-    document.querySelectorAll('.go-qr-modal').forEach((modal) => {
-
-        // when the modal opens
-        document.addEventListener('ModalOpenEvent_' + modal.id, (e) => {
-
-            // load any images that have not been loaded yet
-            modal.querySelectorAll(`[data-src]:not([src])`).forEach((img) => {
-                img.src = img.dataset.src;
-            });
-        });
-    });
-");
-$page->addScriptDeclaration("
 require(['jquery', '/js/datatables-1.10.21.min.js'], function(jq) {
     jq(function($) {
         // do not place in dom
@@ -325,9 +207,4 @@ require(['jquery', '/js/datatables-1.10.21.min.js'], function(jq) {
         $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
     });
 });");
-?>
-
-<?php
-// Display QR Modal Markup
-echo $qrModals;
 ?>
