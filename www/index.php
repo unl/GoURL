@@ -28,8 +28,13 @@ if (!isset($qrIconSize) || empty($qrIconSize)) {
     $qrIconSize = 300;
 }
 
+// Use QR Code Icon PNG set, otherwise null it
+if (!isset($qrCachePrefix) || empty($qrCachePrefix)) {
+    $qrCachePrefix = '';
+}
+
 $flashBag = new GoFlashBag();
-$controller = new GoController($lilurl, $auth, $flashBag, $qrIconPng, $qrIconSvg, $qrIconSize);
+$controller = new GoController($lilurl, $auth, $flashBag, $qrIconPng, $qrIconSvg, $qrIconSize, $qrCachePrefix);
 
 // do predispatch actions
 $controller->preDispatch();
