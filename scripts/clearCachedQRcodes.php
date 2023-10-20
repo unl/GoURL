@@ -55,14 +55,14 @@ $files = glob($folder_path . '/' . $fileToDelete . '.{png,svg}', GLOB_BRACE);
 if (count($files) == 0) {
     echo "Error: No files to remove" . PHP_EOL;
     exit(1);
-    
+
 } else {
     echo "Removing " . count($files) . " files" . PHP_EOL;
 }
 
 // Deleting all the files in the list
 foreach ($files as $file) {
-    
+
     if (is_file($file)) {
         // Delete the given file
         unlink($file);
