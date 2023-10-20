@@ -115,8 +115,7 @@
                                     title="Reset redirect count for <?php
                                         echo htmlspecialchars($url->urlID ?? '');
                                         ?> URL"
-                                    onclick="return confirm('Are you sure you want to reset the redirect count for \'
-                                        <?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');"
+                                    onclick=" return confirm('Are you sure you want to reset the redirect count for \'<?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');"
                                 >
                                     Reset Redirects
                                 </a>
