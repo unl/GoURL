@@ -24,6 +24,7 @@ class GoController extends GoRouter {
     private $qrIconPNG;
     private $qrIconSVG;
     private $qrIconSize;
+    private $qrCachePrefix = '';
     private $flashBag;
 
     // Public State
@@ -34,13 +35,14 @@ class GoController extends GoRouter {
     public static $template;
     public static $templateVersion;
 
-    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG, $qrIconSize)
+    public function __construct($lilurl, $auth, $flashBag, $qrIconPNG, $qrIconSVG, $qrIconSize, $qrCachePrefix='')
     {
         $this->lilurl = $lilurl;
         $this->auth = $auth;
         $this->qrIconPNG = $qrIconPNG;
         $this->qrIconSVG = $qrIconSVG;
         $this->qrIconSize = $qrIconSize;
+        $this->qrCachePrefix = $qrCachePrefix;
         $this->flashBag = $flashBag;
 
         // See if already logged in via PHP CAS
@@ -397,7 +399,17 @@ class GoController extends GoRouter {
 
         $shortURL = $this->lilurl->getShortURL($this->goId);
         $pngPrefix = __DIR__ . '/../data/qr/';
-        $qrCache = $pngPrefix . 'cache/' . hash("sha512", $shortURL) . '.png';
+        $qrCodeHash = hash("sha512", $shortURL);
+        $qrCache = $pngPrefix . 'cache/' . $this->qrCachePrefix . hash("sha512", $shortURL) . '.png';
+
+        // Remove any old cached files
+        $files = glob($pngPrefix . 'cache/*' . $qrCodeHash . '.png', GLOB_BRACE);
+        foreach ($files as $file) {
+            // Check the current cachePrefix is not in there before deleting
+            if (strpos($file, $this->qrCachePrefix) === false) {
+                unlink($file);
+            }
+        }
 
         if (!file_exists($qrCache)) {
             $writer = new PngWriter();
@@ -439,7 +451,17 @@ class GoController extends GoRouter {
 
         $shortURL = $this->lilurl->getShortURL($this->goId);
         $svgPrefix = __DIR__ . '/../data/qr/';
-        $qrCache = $svgPrefix . 'cache/' . hash("sha512", $shortURL) . '.svg';
+        $qrCodeHash = hash("sha512", $shortURL);
+        $qrCache = $svgPrefix . 'cache/' . $this->qrCachePrefix . hash("sha512", $shortURL) . '.svg';
+
+        // Remove any old cached files
+        $files = glob($svgPrefix . 'cache/*' . $qrCodeHash . '.svg', GLOB_BRACE);
+        foreach ($files as $file) {
+            // Check the current cachePrefix is not in there before deleting
+            if (strpos($file, $this->qrCachePrefix) === false) {
+                unlink($file);
+            }
+        }
 
         if (!file_exists($qrCache)) {
             $writer = new SvgWriter();
@@ -460,7 +482,23 @@ class GoController extends GoRouter {
                     ->setResizeToWidth($this->qrIconSize)
                     ->setResizeToHeight($this->qrIconSize);
 
-                $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
+                // Get the string version of the SVG QR code
+                $result = $writer->write($qrCode, $qrLogo)->getString();
+
+                // Get the SVG icon and prep it for preg_replace with back reference
+                $svg_file = file_get_contents($this->qrIconSVG);
+                $svg_file = str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $svg_file);
+                $svg_file = str_replace('<svg', '<svg x="$1" y="$2" width="$3" height="$4"', $svg_file);
+
+                // Replace image with SVG icon, use back reference to get the variables we need
+                $result = preg_replace(
+                    '/<image x="([\d]+)" y="([\d]+)" width="([\d]+)" height="([\d]+)".*\/>/',
+                    $svg_file,
+                    $result
+                );
+
+                // Write the files to the cache
+                file_put_contents($qrCache, $result);
             } else {
                 $writer->write($qrCode)->saveToFile($qrCache);
             }

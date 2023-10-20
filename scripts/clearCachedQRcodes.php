@@ -48,9 +48,9 @@ if (in_array("--all", $argv) || in_array("-a", $argv)) {
 // Folder path to be flushed
 $folder_path = dirname(__DIR__) . '/data/qr/cache';
 
-// List of name of files inside
-// specified folder
-$files = glob($folder_path . '/' . $fileToDelete . '.{png,svg}', GLOB_BRACE);
+// List of name of files inside of a specified folder
+// This will get all the files no matter the cache prefix
+$files = glob($folder_path . '/*' . $fileToDelete . '.{png,svg}', GLOB_BRACE);
 
 if (count($files) == 0) {
     echo "Error: No files to remove" . PHP_EOL;

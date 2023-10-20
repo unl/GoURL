@@ -42,6 +42,7 @@ $auth = new \UNL\Templates\Auth\AuthCAS('2.0', 'shib.unl.edu', 443, '/idp/profil
 $qrIconPng  = __DIR__ . '/data/qr/icons/UNL.png';
 $qrIconSvg  = __DIR__ . '/data/qr/icons/UNL.svg';
 $qrIconSize = 500;
+$qrCachePrefix = '20231019a_';
 
 // allow urls that begin with these strings
 $allowed_protocols = array('http://', 'https://');
