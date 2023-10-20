@@ -125,6 +125,9 @@ class lilURL
         if (!$this->checkForBots()) {
             // track system redirect
             $this->incrementRedirectCount($id);
+            if (isset($_GET['qr'])) {
+                $this->incrementQRCodeScanCount($id);
+            }
         }
 
         $accountId = $this->getGaAccount();
@@ -984,6 +987,12 @@ class lilURL
 
     private function incrementRedirectCount($id) {
         return $this->db->run('UPDATE ' . self::TABLE_URLS . ' SET redirects = redirects + 1, lastRedirect = now() WHERE ' . self::WHERE_URL_ID,
+            array(self::PDO_PLACEHOLDER_URL_ID => $id)
+        );
+    }
+
+    private function incrementQRCodeScanCount($id) {
+        return $this->db->run('UPDATE ' . self::TABLE_URLS . ' SET qrCodeScans = qrCodeScans + 1 WHERE ' . self::WHERE_URL_ID,
             array(self::PDO_PLACEHOLDER_URL_ID => $id)
         );
     }
