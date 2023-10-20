@@ -24,7 +24,7 @@
                         <th scope="col">Short URL</th>
                         <th scope="col">Long URL</th>
                         <th scope="col">Group</th>
-                        <th scope="col">Redirects</th>
+                        <th scope="col">QR Code Scans</th>
                         <th scope="col">Last Redirect</th>
                         <th scope="col">Created&nbsp;on</th>
                         <th scope="col" data-searchable="false" data-orderable="false">Actions</th>
@@ -69,6 +69,9 @@
                         </td>
                         <td data-header="Redirects">
                             <?php echo htmlspecialchars($url->redirects ?? ''); ?>
+                        </td>
+                        <td data-header="QR Code Scans">
+                            <?php echo htmlspecialchars($url->qrCodeScans ?? ''); ?>
                         </td>
                         <td
                             data-header="LastRedirect"
