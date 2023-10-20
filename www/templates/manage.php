@@ -24,6 +24,7 @@
                         <th scope="col">Short URL</th>
                         <th scope="col">Long URL</th>
                         <th scope="col">Group</th>
+                        <th scope="col">Redirects*</th>
                         <th scope="col">QR Code Scans</th>
                         <th scope="col">Last Redirect</th>
                         <th scope="col">Created&nbsp;on</th>
@@ -67,7 +68,7 @@
                         <td data-header="Group">
                                 <?php echo !empty($url->groupName) ? htmlspecialchars($url->groupName) : 'N/A'; ?>
                         </td>
-                        <td data-header="Redirects">
+                        <td data-header="Redirects*">
                             <?php echo htmlspecialchars($url->redirects ?? ''); ?>
                         </td>
                         <td data-header="QR Code Scans">
@@ -156,6 +157,9 @@
             </a>
             <span class="dcf-d-inline-block dcf-mt-6 dcf-mt-0@md dcf-form-help">
                 <?php echo GoController::URL_AUTO_PURGE_NOTICE; ?>
+                <br>
+                * "Redirects" is the total number of redirects this includes the
+                "QR Codes Scans" as well as normal redirects.
             </span>
         </div>
     </div>
