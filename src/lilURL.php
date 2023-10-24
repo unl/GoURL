@@ -992,7 +992,11 @@ class lilURL
     }
 
     private function incrementQRCodeScanCount($id) {
-        return $this->db->run('UPDATE ' . self::TABLE_URLS . ' SET qrCodeScans = qrCodeScans + 1 WHERE ' . self::WHERE_URL_ID,
+        return $this->db->run(
+            'UPDATE '
+            . self::TABLE_URLS
+            . ' SET qrCodeScans = qrCodeScans + 1 WHERE '
+            . self::WHERE_URL_ID,
             array(self::PDO_PLACEHOLDER_URL_ID => $id)
         );
     }
