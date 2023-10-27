@@ -416,7 +416,7 @@ class GoController extends GoRouter {
 
             // Create QR code
             $qrCode = QrCode::create($shortURL)
-                ->setEncoding(new Encoding('UTF-8'))
+                ->setEncoding(new Encoding('ISO-8859-1'))
                 ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
                 ->setSize(1080)
                 ->setMargin(36)
@@ -468,7 +468,7 @@ class GoController extends GoRouter {
 
             // Create QR code
             $qrCode = QrCode::create($shortURL)
-                ->setEncoding(new Encoding('UTF-8'))
+                ->setEncoding(new Encoding('ISO-8859-1'))
                 ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
                 ->setSize(1080)
                 ->setMargin(36)
