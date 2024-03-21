@@ -87,7 +87,7 @@
                                     "srcPNG" => $lilurl->getBaseUrl($url->urlID). '.png',
                                     "srcSVG" => $lilurl->getBaseUrl($url->urlID). '.svg',
                                     "appName" => $appName,
-                                    ), "qrCodeModal.php"); 
+                                    ), "qrCodeModal.php");
                                 ?>
                                 <button
                                     class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal"
