@@ -35,14 +35,6 @@
                     <?php
                     $submitDate = $lilurl->createDateTimeFromTimestamp($url->submitDate);
                     $lastRedirect = $lilurl->createDateTimeFromTimestamp($url->lastRedirect);
-
-                    echo $savvy->render((object) array(
-                        "id" => $url->urlID,
-                        "srcPNG" => $lilurl->getBaseUrl($url->urlID). '.png',
-                        "srcSVG" => $lilurl->getBaseUrl($url->urlID). '.svg',
-                        "appName" => $appName,
-                    ), "qrCodeModal.php");
-
                     $longURLDisplay = strlen($url->longURL) > 30 ?
                         substr($url->longURL, 0, 30)."..." : htmlspecialchars($url->longURL);
                     ?>
@@ -90,6 +82,13 @@
                         </td>
                         <td class="dcf-txt-sm">
                             <div class="dcf-d-flex dcf-flex-wrap dcf-col-gap-1 dcf-row-gap-1">
+                                <?php echo $savvy->render((object) array(
+                                    "id" => $url->urlID,
+                                    "srcPNG" => $lilurl->getBaseUrl($url->urlID). '.png',
+                                    "srcSVG" => $lilurl->getBaseUrl($url->urlID). '.svg',
+                                    "appName" => $appName,
+                                    ), "qrCodeModal.php");
+                                ?>
                                 <button
                                     class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal"
                                     data-toggles-modal="qr-modal-<?php echo htmlspecialchars($url->urlID ?? ''); ?>"
