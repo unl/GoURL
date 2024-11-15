@@ -44,7 +44,9 @@ class GoController extends GoRouter {
         $this->qrIconSize = $qrIconSize;
         $this->qrCachePrefix = $qrCachePrefix;
         $this->flashBag = $flashBag;
+    }
 
+    private function checkAuth() {
         // See if already logged in via PHP CAS
         if ($this->auth->getAuthType() === $this->auth::AUTH_TYPE_CAS && array_key_exists('unl_sso', $_COOKIE) && !$this->auth->isAuthenticated()) {
             // Run PHPCAS checkAuthentication
@@ -53,8 +55,11 @@ class GoController extends GoRouter {
     }
 
     private function loginCheck() {
-        if ($this->routeRequiresLogin() && !$this->auth->isAuthenticated()) {
-            $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LOGIN));
+        if ($this->routeRequiresLogin()) {
+            $this->checkAuth();
+            if (!$this->auth->isAuthenticated()) {
+                $this->redirect($this->lilurl->getBaseUrl(self::ROUTE_PATH_LOGIN));
+            }
         }
     }
 
