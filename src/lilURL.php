@@ -36,6 +36,7 @@ class lilURL
     const PDO_PLACEHOLDER_LONG_URL = ':longURL';
     const PDO_PLACEHOLDER_CREATED_BY = ':createdBy';
     const PDO_PLACEHOLDER_REDIRECTS = ':redirects';
+    const PDO_PLACEHOLDER_QR_CODE_SCANS = ':qrCodeScans';
     const PDO_PLACEHOLDER_GROUP_ID = ':groupID';
     const PDO_PLACEHOLDER_GROUP_NAME = ':groupName';
     const PDO_PLACEHOLDER_UID = ':uid';
@@ -124,6 +125,9 @@ class lilURL
         if (!$this->checkForBots()) {
             // track system redirect
             $this->incrementRedirectCount($id);
+            if (isset($_GET['qr'])) {
+                $this->incrementQRCodeScanCount($id);
+            }
         }
 
         $accountId = $this->getGaAccount();
@@ -754,7 +758,10 @@ class lilURL
     public function resetRedirectCount($id) {
         return $this->db->update(
             self::TABLE_URLS,
-            array(ltrim(self::PDO_PLACEHOLDER_REDIRECTS, ':') => 0),
+            array(
+                ltrim(self::PDO_PLACEHOLDER_REDIRECTS, ':') => 0,
+                ltrim(self::PDO_PLACEHOLDER_QR_CODE_SCANS, ':') => 0,
+            ),
             self::WHERE_URL_ID,
             array(self::PDO_PLACEHOLDER_URL_ID => $id)
         );
@@ -980,6 +987,16 @@ class lilURL
 
     private function incrementRedirectCount($id) {
         return $this->db->run('UPDATE ' . self::TABLE_URLS . ' SET redirects = redirects + 1, lastRedirect = now() WHERE ' . self::WHERE_URL_ID,
+            array(self::PDO_PLACEHOLDER_URL_ID => $id)
+        );
+    }
+
+    private function incrementQRCodeScanCount($id) {
+        return $this->db->run(
+            'UPDATE '
+            . self::TABLE_URLS
+            . ' SET qrCodeScans = qrCodeScans + 1 WHERE '
+            . self::WHERE_URL_ID,
             array(self::PDO_PLACEHOLDER_URL_ID => $id)
         );
     }
