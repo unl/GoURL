@@ -119,9 +119,18 @@ class lilURL
         return false;
     }
 
+    /**
+     * Checks to see if the request is a get request
+     * @return bool True for get request and false for all other types
+     */
+    protected function checkForGetRequest()
+    {
+        return $_SERVER['REQUEST_METHOD'] === 'GET';
+    }
+
     protected function trackHit($id)
     {
-        if (!$this->checkForBots()) {
+        if (!$this->checkForBots() && $this->checkForGetRequest()) {
             // track system redirect
             $this->incrementRedirectCount($id);
         }
