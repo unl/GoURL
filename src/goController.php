@@ -402,7 +402,7 @@ class GoController extends GoRouter {
             $this->handle404(FALSE);
         }
 
-        $shortURL = $this->lilurl->getShortURL($this->goId);
+        $shortURL = $this->lilurl->getShortURL($this->goId) . '?qr';
         $pngPrefix = __DIR__ . '/../data/qr/';
         $qrCodeHash = hash("sha512", $shortURL);
         $qrCache = $pngPrefix . 'cache/' . $this->qrCachePrefix . hash("sha512", $shortURL) . '.png';
@@ -454,7 +454,7 @@ class GoController extends GoRouter {
             $this->handle404(false);
         }
 
-        $shortURL = $this->lilurl->getShortURL($this->goId);
+        $shortURL = $this->lilurl->getShortURL($this->goId) . '?qr';
         $svgPrefix = __DIR__ . '/../data/qr/';
         $qrCodeHash = hash("sha512", $shortURL);
         $qrCache = $svgPrefix . 'cache/' . $this->qrCachePrefix . hash("sha512", $shortURL) . '.svg';
