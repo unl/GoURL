@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `tblURLs`;
 CREATE TABLE IF NOT EXISTS `tblURLs` (
   `urlID` varchar(255) NOT NULL,
   `groupID` int(10) unsigned NULL,
-  `longURL` varchar(1000) NOT NULL,
+  `longURL` varchar(2048) NOT NULL,
   `submitDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createdBy` varchar(25) DEFAULT NULL,
   `redirects` int(11) unsigned DEFAULT 0,
