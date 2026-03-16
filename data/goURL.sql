@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
   `submitDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createdBy` varchar(25) DEFAULT NULL,
   `redirects` int(11) unsigned DEFAULT 0,
+  `qrCodeScans` int(11) unsigned DEFAULT 0,
   `lastRedirect` timestamp NULL,
   `maliciousCheck` enum('checked', 'unchecked', 'protected')NOT NULL DEFAULT 'unchecked',
   PRIMARY KEY (`urlID`)
@@ -35,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `tblURLs` (
 -- ALTER TABLE `tblURLs` ADD COLUMN `groupID` int(10) unsigned NULL AFTER `urlID`;
 -- ALTER TABLE `tblURLs` ADD COLUMN `lastRedirect` timestamp NULL AFTER `redirects`;
 -- ALTER TABLE `tblURLs` ADD COLUMN `maliciousCheck` enum('checked', 'unchecked', 'protected') NOT NULL DEFAULT 'unchecked' AFTER `lastRedirect`;
+-- ALTER TABLE `tblURLs` ADD COLUMN `qrCodeScans` int(11) unsigned DEFAULT 0 AFTER `redirects`;
 
 DROP TABLE IF EXISTS `tblGroups`;
 CREATE TABLE IF NOT EXISTS `tblGroups` (

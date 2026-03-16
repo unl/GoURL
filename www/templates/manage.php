@@ -25,6 +25,7 @@
                         <th scope="col">Long URL</th>
                         <th scope="col">Group</th>
                         <th scope="col">Redirects</th>
+                        <th scope="col">QR Code Scans</th>
                         <th scope="col">Last Redirect</th>
                         <th scope="col">Created&nbsp;on</th>
                         <th scope="col" data-searchable="false" data-orderable="false">Actions</th>
@@ -61,6 +62,9 @@
                         </td>
                         <td data-header="Redirects">
                             <?php echo htmlspecialchars($url->redirects ?? ''); ?>
+                        </td>
+                        <td data-header="QR Code Scans">
+                            <?php echo htmlspecialchars($url->qrCodeScans ?? ''); ?>
                         </td>
                         <td
                             data-header="LastRedirect"
@@ -111,8 +115,7 @@
                                     title="Reset redirect count for <?php
                                         echo htmlspecialchars($url->urlID ?? '');
                                         ?> URL"
-                                    onclick="return confirm('Are you sure you want to reset the redirect count for \'
-                                        <?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');"
+                                    onclick=" return confirm('Are you sure you want to reset the redirect count for \'<?php echo htmlspecialchars($url->urlID ?? ''); ?>\'?');"
                                 >
                                     Reset Redirects
                                 </a>
@@ -151,8 +154,21 @@
             >
                 Add URL
             </a>
-            <span class="dcf-d-inline-block dcf-mt-6 dcf-mt-0@md dcf-form-help">
-                <?php echo GoController::URL_AUTO_PURGE_NOTICE; ?>
+        </div>
+        <div>
+            <span class="dcf-d-inline-block dcf-m-0 dcf-form-help">
+                Note:
+                <ul>
+                    <li><?php echo GoController::URL_AUTO_PURGE_NOTICE; ?></li>
+                    <li>
+                        "Redirects" is the total number of redirects, this includes the
+                        "QR Codes Scans" as well as normal redirects.
+                    </li>
+                    <li>
+                        Any QR Codes downloaded before October 2023 will not be counted in "QR Codes Scans",
+                        please replace your old QR Codes to be able to take advantage of this metric.
+                    </li>
+                </ul>
             </span>
         </div>
     </div>

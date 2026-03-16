@@ -41,6 +41,9 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                     <dt>Redirect Count</dt>
                     <dd class="dcf-pl-6"><?php echo htmlspecialchars($link->redirects ?? ''); ?></dd>
 
+                    <dt>QR Code Scans</dt>
+                    <dd class="dcf-pl-6"><?php echo htmlspecialchars($link->qrCodeScans ?? ''); ?></dd>
+
                     <dt>Last Redirect</dt>
                     <dd class="dcf-pl-6"><?php
 	                    if ($link->lastRedirect) {
