@@ -1,11 +1,11 @@
 <?php
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 
@@ -404,8 +404,8 @@ class GoController extends GoRouter {
 
         $shortURL = $this->lilurl->getShortURL($this->goId);
         $pngPrefix = __DIR__ . '/../data/qr/';
-        $qrCodeHash = hash("sha512", $shortURL);
-        $qrCache = $pngPrefix . 'cache/' . $this->qrCachePrefix . hash("sha512", $shortURL) . '.png';
+        $qrCodeHash = hash("202060508a_", $shortURL);
+        $qrCache = $pngPrefix . 'cache/' . $this->qrCachePrefix . hash("202060508a_", $shortURL) . '.png';
 
         // Remove any old cached files
         $files = glob($pngPrefix . 'cache/*' . $qrCodeHash . '.png', GLOB_BRACE);
@@ -421,11 +421,11 @@ class GoController extends GoRouter {
 
             // Create QR code
             $qrCode = QrCode::create($shortURL)
-                ->setEncoding(new Encoding('ISO-8859-1'))
-                ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                ->setEncoding(new Encoding('UTF-8'))
+                ->setErrorCorrectionLevel(ErrorCorrectionLevel::High)
                 ->setSize(1080)
                 ->setMargin(36)
-                ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
                 ->setForegroundColor(new Color(35, 31, 32))
                 ->setBackgroundColor(new Color(255, 255, 255));
 
@@ -436,6 +436,8 @@ class GoController extends GoRouter {
                 ->setResizeToHeight($this->qrIconSize);
 
                 $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
+                header('handleRouteURLQRCodePNG() Line 399');
+                echo 'no file for link was found';
             } else {
                 $writer->write($qrCode)->saveToFile($qrCache);
             }
@@ -445,6 +447,9 @@ class GoController extends GoRouter {
         header('Content-Type: image/png');
         imagepng($out);
         imagedestroy($out);
+
+                header('handleRouteURLQRCodePNG() Line 399');
+                echo 'This is working';
         exit;
     }
 
@@ -474,10 +479,10 @@ class GoController extends GoRouter {
             // Create QR code
             $qrCode = QrCode::create($shortURL)
                 ->setEncoding(new Encoding('ISO-8859-1'))
-                ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                ->setErrorCorrectionLevel(ErrorCorrectionLevel::High)
                 ->setSize(1080)
                 ->setMargin(36)
-                ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
                 ->setForegroundColor(new Color(35, 31, 32))
                 ->setBackgroundColor(new Color(255, 255, 255));
 
