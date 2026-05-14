@@ -90,8 +90,8 @@
                                     ), "qrCodeModal.php");
                                 ?>
                                 <button
-                                    class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal"
-                                    data-toggles-modal="qr-modal-<?php echo htmlspecialchars($url->urlID ?? ''); ?>"
+                                    class="dcf-btn dcf-btn-secondary dcf-btn-toggle-dialog"
+                                    data-controls="qr-modal-<?php echo htmlspecialchars($url->urlID ?? ''); ?>"
                                     type="button"
                                     title="QR Code for <?php echo htmlspecialchars($url->urlID ?? ''); ?> URL"
                                 >

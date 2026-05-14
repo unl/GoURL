@@ -102,8 +102,8 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                     ?>
 
                     <button
-                        class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal"
-                        data-toggles-modal="qr-modal-<?php echo htmlspecialchars($link->urlID ?? ''); ?>"
+                        class="dcf-btn dcf-btn-secondary dcf-btn-toggle-dialog"
+                        data-controls="qr-modal-<?php echo htmlspecialchars($link->urlID ?? ''); ?>"
                         type="button"
                         title="QR Code for <?php echo htmlspecialchars($link->urlID ?? ''); ?> URL"
                     >

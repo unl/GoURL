@@ -2,7 +2,7 @@
 <?php if (!empty($type) &&!empty($heading) && !empty($msg)) : ?>
     <div class="dcf-bleed">
         <div class="dcf-wrapper dcf-mt-4">
-            <div class="dcf-notice <?php echo $type;?>" hidden>
+            <div class="dcf-notice <?php echo $type;?>" >
                 <h2><?php echo $heading;?></h2>
                 <div>
                     <?php if (isset($url) && !empty($url)): ?>

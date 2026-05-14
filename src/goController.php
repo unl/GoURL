@@ -404,8 +404,8 @@ class GoController extends GoRouter {
 
         $shortURL = $this->lilurl->getShortURL($this->goId);
         $pngPrefix = __DIR__ . '/../data/qr/';
-        $qrCodeHash = hash("202060508a_", $shortURL);
-        $qrCache = $pngPrefix . 'cache/' . $this->qrCachePrefix . hash("202060508a_", $shortURL) . '.png';
+        $qrCodeHash = hash("sha512", $shortURL);
+        $qrCache = $pngPrefix . 'cache/' . $this->qrCachePrefix . hash("sha512", $shortURL) . '.png';
 
         // Remove any old cached files
         $files = glob($pngPrefix . 'cache/*' . $qrCodeHash . '.png', GLOB_BRACE);
@@ -436,8 +436,6 @@ class GoController extends GoRouter {
                 ->setResizeToHeight($this->qrIconSize);
 
                 $writer->write($qrCode, $qrLogo)->saveToFile($qrCache);
-                header('handleRouteURLQRCodePNG() Line 399');
-                echo 'no file for link was found';
             } else {
                 $writer->write($qrCode)->saveToFile($qrCache);
             }
@@ -448,8 +446,6 @@ class GoController extends GoRouter {
         imagepng($out);
         imagedestroy($out);
 
-                header('handleRouteURLQRCodePNG() Line 399');
-                echo 'This is working';
         exit;
     }
 

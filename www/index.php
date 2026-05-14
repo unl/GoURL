@@ -74,20 +74,21 @@ if ($theme->isCustomTheme()) {
 } else {
     // UNL Theme
     $theme->setWDNIncludePath(__DIR__);
-    if (file_exists($theme->getWDNIncludePath() . '/wdn/templates_5.3')) {
+    if (file_exists($theme->getWDNIncludePath() . '/wdn/templates_6.0')) {
         $page->setLocalIncludePath($theme->getWDNIncludePath());
     }
 
     $page->contactinfo = $theme->renderThemeTemplate(null, 'localfooter.tpl.php');
 
     $page->addScriptDeclaration(sprintf(<<<EOD
-    require(['wdn'], function(WDN) {
-        WDN.initializePlugin('notice');
-        WDN.setPluginParam('idm', 'login', '%s');
-        WDN.setPluginParam('idm', 'logout', '%s');
-    });
-EOD
-        , $lilurl->getBaseUrl('a/login'), $lilurl->getBaseUrl('a/logout')));
+    window.UNL.idm.pushConfig('loginRoute', '%s');
+    window.UNL.idm.pushConfig('logoutRoute', '%s');
+    window.UNL.idm.pushConfig('serverUser', '%s');
+EOD,
+        $lilurl->getBaseUrl('a/login'),
+        $lilurl->getBaseUrl('a/logout'),
+        $auth->isAuthenticated() ? $auth->getUserId() : ''
+    ), '', true);
 }
 
 // Shared Items
