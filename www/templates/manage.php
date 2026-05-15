@@ -157,53 +157,75 @@
         </div>
     </div>
 </div>
-<?php
-$page->addScriptDeclaration("
-require(['jquery', '/js/datatables-1.10.21.min.js'], function(jq) {
-    jq(function($) {
-        // do not place in dom
-        var \$entities = $('<textarea />');
 
-        //https://datatables.net/reference/option/columnDefs
-        //https://datatables.net/reference/option/columns.data
+<script src="/wdn/templates_6.0/js/auto-loader.js" type="module"></script>
 
-        $('#go-urls').DataTable({
-            'oLanguage': {
-                'sSearch': 'Search'
+<script type="module">
+    import * as datatables from '/wdn/templates_6.0/js/plugins/plugin.datatables.js';
+
+    const $ = await datatables.initialize();
+
+    $('#go-urls').DataTable({
+        responsive: true,
+
+        // Sort by "Last Redirect" column descending by default
+        order: [[4, 'desc']],
+
+        columnDefs: [
+            // Last Redirect column
+            {
+                targets: 4,
+                type: 'date'
             },
-            'columnDefs': [
-                {
-                    'targets': 1,
-                    'data': function (row, type, val, meta) {
-                        if (type === 'set') {
-                            row.d = val;
-                            row.d_display = val;
 
-                            // DOM parser will decode any entities in the url ( like &amp; )
-                            // strip 'Full URL:' from the search text if present
-                            \$entities.html(/^(?:full\s*url\s*:\s*)?(.*)$/i.exec($(val).attr('title'))[1]);
+            // Created On column
+            {
+                targets: 5,
+                type: 'date'
+            },
 
-                            row.d_filter = \$entities.val();
-                            return;
+            // Actions column should not be sortable/searchable
+            {
+                targets: 6,
+                orderable: false,
+                searchable: false
+            },
 
-                        } else if (type === 'display') {
-                            return row.d_display;
+            // Center redirect counts
+            {
+                targets: 3,
+                className: 'dt-center'
+            }
+        ],
 
-                        } else if (type === 'filter') {
-                            return row.d_filter;
+        buttons: [
+            {
+                extend: 'csvHtml5',
+                text: 'Download CSV',
+                title: 'your_go_urls',
+                bom: true,
 
-                        }
-
-                        return row.d;
-                    }
+                // Exclude Actions column from export
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5]
                 }
-            ]
-        });
-        $('.dataTables_length label').addClass('dcf-label');
-        $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
-        $('.dataTables_filter label').addClass('dcf-label');
-        $('.dataTables_filter label input').addClass('dcf-d-inline dcf-input-text dcf-txt-sm');
-        $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
+            }
+        ],
+
+        layout: {
+            topStart: 'pageLength',
+            topEnd: ['search', 'buttons'],
+            bottomStart: 'info',
+            bottomEnd: 'paging'
+        },
+
+        pageLength: 25,
+
+        language: {
+            search: 'Search:',
+            lengthMenu: 'Show _MENU_ URLs per page',
+            info: 'Showing _START_ to _END_ of _TOTAL_ URLs',
+            emptyTable: 'No URLs found'
+        }
     });
-});");
-?>
+</script>

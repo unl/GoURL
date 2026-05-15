@@ -80,15 +80,17 @@ if ($theme->isCustomTheme()) {
 
     $page->contactinfo = $theme->renderThemeTemplate(null, 'localfooter.tpl.php');
 
-    $page->addScriptDeclaration(sprintf(<<<EOD
-    window.UNL.idm.pushConfig('loginRoute', '%s');
-    window.UNL.idm.pushConfig('logoutRoute', '%s');
-    window.UNL.idm.pushConfig('serverUser', '%s');
-EOD,
-        $lilurl->getBaseUrl('a/login'),
-        $lilurl->getBaseUrl('a/logout'),
-        $auth->isAuthenticated() ? $auth->getUserId() : ''
-    ), '', true);
+    if ($auth->isAuthenticated()){
+        $page->addScriptDeclaration(sprintf(<<<EOD
+            window.UNL.idm.pushConfig('loginRoute', '%s');
+            window.UNL.idm.pushConfig('logoutRoute', '%s');
+            window.UNL.idm.pushConfig('serverUser', '%s');
+        EOD,
+                $lilurl->getBaseUrl('a/login'),
+                $lilurl->getBaseUrl('a/logout'),
+                $auth->isAuthenticated() ? $auth->getUserId() : ''
+            ), '', true);
+    }
 }
 
 // Shared Items
@@ -99,15 +101,6 @@ $page->titlegraphic = '<a href="/" class="dcf-txt-h5">' . $appName . '</a>';
 
 $page->addStyleDeclaration(file_get_contents(__DIR__ . '/css/go.css'));
 $page->addHeadLink($lilurl->getBaseUrl(), 'home');
-
-$page->addScriptDeclaration("require(['jquery'], function(jq) {
-    jq(function($){
-        var \$out = $('.dcf-notice input');
-        \$out.attr('id', 'gourl_out');
-        \$out.attr('class', 'dcf-input-text dcf-w-100%');
-        \$out.attr('title', 'Your Go URL');
-    });
-});");
 
 $page->appcontrols = $savvy->render(null,'navigation.php');
 $page->maincontentarea = $savvy->render(null,'flashBag.php');

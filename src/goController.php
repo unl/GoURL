@@ -445,7 +445,6 @@ class GoController extends GoRouter {
         header('Content-Type: image/png');
         imagepng($out);
         imagedestroy($out);
-
         exit;
     }
 

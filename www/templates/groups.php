@@ -42,20 +42,3 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
     </div>
   </div>
 </div>
-<?php
-$page->addScriptDeclaration("
-  require(['jquery', '/js/datatables-1.10.21.min.js'], function(jq) {
-    jq(document).ready(function ($) {
-      $('#groups').DataTable({
-        'oLanguage': {
-          'sSearch': 'Search'
-        }
-      });
-      $('.dataTables_length label').addClass('dcf-label');
-      $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
-      $('.dataTables_filter label').addClass('dcf-label');
-      $('.dataTables_filter label input').addClass('dcf-d-inline dcf-input-text dcf-txt-sm');
-      $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
-    });
-  });");
-?>

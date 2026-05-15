@@ -81,7 +81,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                     <dt>Group Users</dt>
                     <dd class="dcf-pl-6">
                         <?php if (!empty($group->users)): ?>
-                        <ul role=”list”>
+                        <ul role="list">
                         <?php foreach($group->users as $index => $user): ?>
                             <li><?php echo htmlspecialchars($user->uid ?? ''); ?></li>
                         <?php endforeach; ?>

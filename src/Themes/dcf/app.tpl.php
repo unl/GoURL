@@ -112,7 +112,7 @@
 <footer class="dcf-footer" id="dcf-footer" role="contentinfo">
     <div class="dcf-relative">
         <div class="dcf-wrapper dcf-pb-7">
-            <div class="dcf-grid-cols-2@md dcf-grid-cols-12 dcf-col-gap-vw dcf-ai-baseline dcf-pt-4 dcf-bt-1 dcf-bt-solid">
+            <div class="dcf-grid-halves@sm dcf-col-gap-vw dcf-ai-baseline dcf-pt-4 dcf-bt-1 dcf-bt-solid"></div>
                 <div>
                     <a class="dcf-institution-title dcf-d-inline-block dcf-txt-xs dcf-txt-decor-hover" href="#">
                         <span class="dcf-uppercase">University</span> <span class="dcf-italic">of</span><span> </span><span class="dcf-uppercase">Nebraska–Lincoln</span>
@@ -156,7 +156,7 @@
   // DCF Notices
   require(['dcf/dcf-notice'], function(DCFNoticeModule) {
     const noticeTheme = new DCFNoticeModule.DCFNoticeTheme();
-    noticeTheme.setThemeVariable('noticeContainerClassList', [ 'dcf-d-grid', 'dcf-max-w-xl', 'dcf-ml-auto', 'dcf-mr-auto', 'dcf-mb-6', 'dcf-rounded' ]);
+    noticeTheme.setThemeVariable('noticeContainerClassList', [ 'dcf-d-grid', 'dcf-w-max-xl', 'dcf-ml-auto', 'dcf-mr-auto', 'dcf-mb-6', 'dcf-rounded' ]);
     noticeTheme.setThemeVariable('closeNoticeInfoIconInnerHTML', '<svg class="dcf-h-100% dcf-w-100%" aria-hidden="true" focusable="false" height="24" width="24" viewBox="0 0 24 24"><path fill="#fefdfa" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm-.5 4.8c.7 0 1.2.6 1.2 1.2s-.6 1.2-1.2 1.2-1.3-.5-1.3-1.2.6-1.2 1.3-1.2zM15 19.2H9c-.4 0-.8-.3-.8-.8s.3-.8.8-.8h2.2v-7.5H10c-.4 0-.8-.3-.8-.8s.4-.5.8-.5h2c.2 0 .4.1.5.2.1.1.2.3.2.5v8.2H15c.4 0 .8.3.8.8s-.4.7-.8.7z"/></svg>');
     noticeTheme.setThemeVariable('closeNoticeSuccessIconInnerHTML', '<svg class="dcf-h-100% dcf-w-100%" aria-hidden="true" focusable="false" height="24" width="24" viewBox="0 0 24 24"><path fill="#fefdfa" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm5.5 9L10 16c-.1.1-.3.2-.5.2s-.4-.1-.5-.2l-2.5-2.5c-.1-.1-.2-.3-.2-.5s.1-.4.2-.5c.3-.3.8-.3 1.1 0l2 2 7-6.5c.1-.1.3-.2.5-.2s.4.1.5.2c.2.3.2.8-.1 1z"/></svg>');
     noticeTheme.setThemeVariable('closeNoticeWarningIconInnerHTML', '<svg class="dcf-h-100% dcf-w-100%" aria-hidden="true" focusable="false" height="24" width="24" viewBox="0 0 24 24"><path fill="#fefdfa" d="M22.9 22.3l-11-22c-.2-.3-.7-.3-.9 0l-11 22c-.1.3.1.7.5.7h22c.4 0 .6-.4.4-.7zM10.8 8.1c0-.4.3-.7.8-.7.2 0 .4.1.5.2.1.1.2.3.2.5v7.7c0 .2-.1.4-.2.5-.1.1-.3.2-.5.2-.4 0-.7-.3-.8-.7V8.1zm.7 12.2c-.7 0-1.2-.5-1.2-1.2s.5-1.2 1.2-1.2 1.2.5 1.2 1.2-.5 1.2-1.2 1.2z"/></svg>');

@@ -2,12 +2,21 @@
 <?php if (!empty($type) &&!empty($heading) && !empty($msg)) : ?>
     <div class="dcf-bleed">
         <div class="dcf-wrapper dcf-mt-4">
-            <div class="dcf-notice <?php echo $type;?>" >
+            <div class="dcf-notice <?php echo $type;?>" hidden>
                 <h2><?php echo $heading;?></h2>
                 <div>
                     <?php if (isset($url) && !empty($url)): ?>
                         <div class="dcf-d-flex dcf-flex-col dcf-mt-4">
-                            <div class="dcf-mb-4"><?php echo $msg;?></div>
+                            <div class="dcf-mb-4">
+                                <input
+                                    type="text"
+                                    id="gourl_out"
+                                    class="dcf-input-text dcf-w-100%"
+                                    title="Your Go URL"
+                                    readonly
+                                    value="<?php echo htmlspecialchars($url ?? '', ENT_QUOTES); ?>"
+                                >
+                            </div>
                             <div class="qrCode dcf-d-flex dcf-flex-wrap dcf-flex-row dcf-ai-center dcf-jc-evenly">
                                 <figure class="dcf-mb-4">
                                     <img
