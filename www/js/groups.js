@@ -54,3 +54,5 @@ async function loadTable(datatables) {
     loading_table_spinner.classList.add('dcf-d-none!');
     table_wrapper.classList.remove('dcf-d-none!');
 }
+
+document.dispatchEvent(new Event('goReady'));
