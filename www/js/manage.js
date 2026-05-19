@@ -7,12 +7,18 @@ if (table_wrapper !== null && loading_table_spinner !== null) {
     // Load it like this to avoid weird race conditions with chat widget
     document.addEventListener('autoLoaderPostLoad', async() => {
         const datatables = await import('/wdn/templates_6.0/js/plugins/plugin.datatables.js');
-        loadTable(datatables);
+
+        // Give it a little extra time since the chat widget isn't loaded by the plugin autoloader
+        setTimeout(() => {
+            loadTable(datatables);
+        }, 500);
     });
 }
 
 async function loadTable(datatables) {
     const $ = await datatables.initialize();
+
+    // console.log(JSON.stringify(window.UNL.chat));
     
     $('#go-urls').DataTable({
         responsive: true,
