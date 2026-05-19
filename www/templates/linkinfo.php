@@ -14,7 +14,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
 ?>
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
     <div class="dcf-wrapper">
-        <div class="dcf-grid-full dcf-grid-halves@md dcf-col-gap-8 dcf-row-gap-8">
+        <div class="dcf-d-grid dcf-grid-cols-1 dcf-grid-cols-2@md dcf-grid-cols-12 dcf-col-gap-vw dcf-row-gap-8">
             <div>
                 <h2 class="dcf-txt-h4"><?php echo htmlspecialchars($appName ?? ''); ?> Lookup</h2>
                 <form class="dcf-form" id="lookup-form" method="post" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/lookup')); ?>">
@@ -81,7 +81,7 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                     <dt>Group Users</dt>
                     <dd class="dcf-pl-6">
                         <?php if (!empty($group->users)): ?>
-                        <ul class="dcf-list-bare">
+                        <ul role="list">
                         <?php foreach($group->users as $index => $user): ?>
                             <li><?php echo htmlspecialchars($user->uid ?? ''); ?></li>
                         <?php endforeach; ?>
@@ -102,8 +102,8 @@ $exampleURL = $http . $_SERVER['SERVER_NAME'] . $lilurl->getBaseUrl($exampleURLI
                     ?>
 
                     <button
-                        class="dcf-btn dcf-btn-secondary dcf-btn-toggle-modal"
-                        data-toggles-modal="qr-modal-<?php echo htmlspecialchars($link->urlID ?? ''); ?>"
+                        class="dcf-btn dcf-btn-secondary dcf-btn-toggle-dialog"
+                        data-controls="qr-modal-<?php echo htmlspecialchars($link->urlID ?? ''); ?>"
                         type="button"
                         title="QR Code for <?php echo htmlspecialchars($link->urlID ?? ''); ?> URL"
                     >

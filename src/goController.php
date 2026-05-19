@@ -1,11 +1,11 @@
 <?php
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\Logo\Logo;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 
@@ -421,11 +421,11 @@ class GoController extends GoRouter {
 
             // Create QR code
             $qrCode = QrCode::create($shortURL)
-                ->setEncoding(new Encoding('ISO-8859-1'))
-                ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                ->setEncoding(new Encoding('UTF-8'))
+                ->setErrorCorrectionLevel(ErrorCorrectionLevel::High)
                 ->setSize(1080)
                 ->setMargin(36)
-                ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
                 ->setForegroundColor(new Color(35, 31, 32))
                 ->setBackgroundColor(new Color(255, 255, 255));
 
@@ -474,10 +474,10 @@ class GoController extends GoRouter {
             // Create QR code
             $qrCode = QrCode::create($shortURL)
                 ->setEncoding(new Encoding('ISO-8859-1'))
-                ->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh())
+                ->setErrorCorrectionLevel(ErrorCorrectionLevel::High)
                 ->setSize(1080)
                 ->setMargin(36)
-                ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+                ->setRoundBlockSizeMode(RoundBlockSizeMode::Margin)
                 ->setForegroundColor(new Color(35, 31, 32))
                 ->setBackgroundColor(new Color(255, 255, 255));
 

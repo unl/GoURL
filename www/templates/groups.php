@@ -9,31 +9,34 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
     <h2 class="dcf-txt-h4">Your Groups</h2>
     <?php $groups = $lilurl->getUserGroups($auth->getUserId()); ?>
     <?php if (count($groups) > 0): ?>
-      <table id="groups" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 0, &quot;asc&quot; ]]">
-        <caption class="dcf-sr-only">Your Groups</caption>
-        <thead>
-        <tr>
-          <th scope="col">Group</th>
-          <th scope="col" data-searchable="false" data-orderable="false">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($groups as $group): ?>
+      <div id="loading_table_spinner" class="dcf-progress-spinner"></div>
+      <div id="table_wrapper" class="dcf-d-none!">
+        <table id="groups" class="dcf-w-100% go_responsive_table flush-left dcf-table" data-order="[[ 0, &quot;asc&quot; ]]">
+          <caption class="dcf-sr-only">Your Groups</caption>
+          <thead>
           <tr>
-            <td data-header="Group"><?php echo htmlspecialchars($group->groupName ?? ''); ?></td>
-            <td class="dcf-txt-sm">
-              <div class="dcf-d-flex dcf-flex-wrap dcf-col-gap-1 dcf-row-gap-1">
-                <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/group/' . urlencode($group->groupID ?? ''))); ?>" title="Edit <?php echo htmlspecialchars($group->groupID ?? ''); ?> Go URL" >Edit</a>
-                <form class="dcf-form dcf-d-inline" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/groups')); ?>" method="post">
-                  <input type="hidden" name="groupID" value="<?php echo htmlspecialchars($group->groupID ?? ''); ?>" />
-                  <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure you want to delete group, \'<?php echo htmlspecialchars($group->groupName ?? ''); ?>\'?');">Delete</button>
-                </form>
-              </div>
-            </td>
+            <th scope="col">Group</th>
+            <th scope="col" data-searchable="false" data-orderable="false">Actions</th>
           </tr>
-        <?php endforeach; ?>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          <?php foreach ($groups as $group): ?>
+            <tr>
+              <td class="dcf-txt-sm" data-header="Group"><?php echo htmlspecialchars($group->groupName ?? ''); ?></td>
+              <td>
+                <div class="dcf-d-flex dcf-flex-wrap dcf-col-gap-1 dcf-row-gap-1">
+                  <a class="dcf-btn dcf-btn-secondary dcf-txt-xs unmc-h-fit-content" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/group/' . urlencode($group->groupID ?? ''))); ?>" title="Edit <?php echo htmlspecialchars($group->groupID ?? ''); ?> Go URL" >Edit</a>
+                  <form class="dcf-form dcf-d-inline" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/groups')); ?>" method="post">
+                    <input type="hidden" name="groupID" value="<?php echo htmlspecialchars($group->groupID ?? ''); ?>" />
+                    <button class="dcf-btn dcf-btn-primary dcf-txt-xs" type="submit" onclick="return confirm('Are you for sure you want to delete group, \'<?php echo htmlspecialchars($group->groupName ?? ''); ?>\'?');">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
     <?php else: ?>
       <p>You don't have any groups yet.</p>
     <?php endif;?>
@@ -42,20 +45,7 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
     </div>
   </div>
 </div>
+
 <?php
-$page->addScriptDeclaration("
-  require(['jquery', '/js/datatables-1.10.21.min.js'], function(jq) {
-    jq(document).ready(function ($) {
-      $('#groups').DataTable({
-        'oLanguage': {
-          'sSearch': 'Search'
-        }
-      });
-      $('.dataTables_length label').addClass('dcf-label');
-      $('.dataTables_length select').addClass('dcf-input-select dcf-d-inline-block dcf-w-10 dcf-txt-sm');
-      $('.dataTables_filter label').addClass('dcf-label');
-      $('.dataTables_filter label input').addClass('dcf-d-inline dcf-input-text dcf-txt-sm');
-      $('.dataTables_info, .dataTables_paginate, .dataTables_paginate a').addClass('dcf-txt-sm');
-    });
-  });");
+    $page->addScript($lilurl->getBaseUrl() . 'js/groups.js?v=' . filemtime(__DIR__ . '/../js/groups.js') , 'module');
 ?>
