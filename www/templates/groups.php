@@ -11,7 +11,7 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
     <?php if (count($groups) > 0): ?>
       <div id="loading_table_spinner" class="dcf-progress-spinner"></div>
       <div id="table_wrapper" class="dcf-d-none!">
-        <table id="groups" class="dcf-w-100% go_responsive_table flush-left dcf-table dcf-txt-sm" data-order="[[ 0, &quot;asc&quot; ]]">
+        <table id="groups" class="dcf-w-100% go_responsive_table flush-left dcf-table" data-order="[[ 0, &quot;asc&quot; ]]">
           <caption class="dcf-sr-only">Your Groups</caption>
           <thead>
           <tr>
@@ -22,13 +22,13 @@ $page->doctitle = 'Your Groups' . $appPart . $institutionPart;
           <tbody>
           <?php foreach ($groups as $group): ?>
             <tr>
-              <td data-header="Group"><?php echo htmlspecialchars($group->groupName ?? ''); ?></td>
-              <td class="dcf-txt-sm">
+              <td class="dcf-txt-sm" data-header="Group"><?php echo htmlspecialchars($group->groupName ?? ''); ?></td>
+              <td>
                 <div class="dcf-d-flex dcf-flex-wrap dcf-col-gap-1 dcf-row-gap-1">
-                  <a class="dcf-btn dcf-btn-secondary" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/group/' . urlencode($group->groupID ?? ''))); ?>" title="Edit <?php echo htmlspecialchars($group->groupID ?? ''); ?> Go URL" >Edit</a>
+                  <a class="dcf-btn dcf-btn-secondary dcf-txt-xs unmc-h-fit-content" href="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/group/' . urlencode($group->groupID ?? ''))); ?>" title="Edit <?php echo htmlspecialchars($group->groupID ?? ''); ?> Go URL" >Edit</a>
                   <form class="dcf-form dcf-d-inline" action="<?php echo htmlspecialchars($lilurl->getBaseUrl('a/groups')); ?>" method="post">
                     <input type="hidden" name="groupID" value="<?php echo htmlspecialchars($group->groupID ?? ''); ?>" />
-                    <button class="dcf-btn dcf-btn-primary" type="submit" onclick="return confirm('Are you for sure you want to delete group, \'<?php echo htmlspecialchars($group->groupName ?? ''); ?>\'?');">Delete</button>
+                    <button class="dcf-btn dcf-btn-primary dcf-txt-xs" type="submit" onclick="return confirm('Are you for sure you want to delete group, \'<?php echo htmlspecialchars($group->groupName ?? ''); ?>\'?');">Delete</button>
                   </form>
                 </div>
               </td>
