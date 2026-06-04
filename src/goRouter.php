@@ -21,6 +21,8 @@ class GoRouter {
     const ROUTE_NAME_QR_SVG = 'qr-svg';
     const ROUTE_NAME_REDIRECT = 'redirect';
     const ROUTE_NAME_RESET = 'reset';
+    const ROUTE_NAME_TOKEN_GENERATOR = 'token-generator';
+    const ROUTE_NAME_NEW_UUID = 'new-uuid';
 
     // route paths
     const ROUTE_PATH_A = 'a/';
@@ -34,7 +36,8 @@ class GoRouter {
     const ROUTE_PATH_LOGIN = 'a/login';
     const ROUTE_PATH_LOGOUT = 'a/logout';
     const ROUTE_PATH_LOOKUP = 'a/lookup';
-
+    const ROUTE_PATH_TOKEN_GENERATOR = 'a/token-generator';
+    const ROUTE_PATH_NEW_UUID = 'a/new-uuid';
     public static $corsAllowedDomains = array();
 
     protected $viewTemplate;
@@ -71,7 +74,12 @@ class GoRouter {
 
     public function route() {
         $this->route = NULL;
-
+//  do regular route check and determine method-> controller -> 
+// case handle request (just add a case for each method and route) -> 
+// call the method to handle the request -> 
+// return the view template and params to be rendered
+    // get token from handler --> token match personal API key
+    // header contains token/ api key
         if (empty($this->pathInfo)) {
             $this->route = self::ROUTE_NAME_HOME;
         } elseif ($this->pathInfo === self::ROUTE_PATH_API) {
@@ -99,7 +107,11 @@ class GoRouter {
             $this->route = self::ROUTE_NAME_MANAGE;
         } elseif (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_PATH_LOOKUP) {
             $this->route = self::ROUTE_NAME_LOOKUP;
-        } elseif (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
+        } elseif ($this->pathInfo === self::ROUTE_PATH_TOKEN_GENERATOR) {
+            $this->route = self::ROUTE_NAME_TOKEN_GENERATOR;
+        } elseif ($this->pathInfo === self::ROUTE_PATH_NEW_UUID) {
+            $this->route = self::ROUTE_NAME_NEW_UUID;
+        }elseif (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
             $this->route = self::ROUTE_NAME_GROUP;
             $this->groupId = $matches[1];
             $this->groupMode = self::MODE_EDIT;

@@ -51,6 +51,15 @@ CREATE TABLE IF NOT EXISTS `tblGroupUsers` (
   PRIMARY KEY (`groupID`, `uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+DROP TABLE IF EXISTS `tblAPIKeys`;
+CREATE TABLE IF NOT EXISTS `tblAPIKeys` (
+    `apiKey` CHAR(36) NOT NULL,
+    `uid` VARCHAR(50) NOT NULL,
+
+    PRIMARY KEY (`apiKey`),
+    UNIQUE KEY `unique_uid` (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 --
 -- Dumping data for table `tblURLs`
 --

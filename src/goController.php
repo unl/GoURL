@@ -186,11 +186,20 @@ class GoController extends GoRouter {
                 }
                 break;
 
+            case self::ROUTE_NAME_TOKEN_GENERATOR:
+                $this->handleRouteTokenGenerator();
+                break;
+
+            case self::ROUTE_NAME_NEW_UUID:
+                $this->handleRouteNewUUID();
+                break;
+
             default:
                 $this->handle404();
                 break;
         }
     }
+
 
     public function renderTemplate($file, $params = [])
     {
@@ -579,6 +588,57 @@ class GoController extends GoRouter {
                 }
             }
         }
+    }
+
+    private function handleRouteTokenGenerator() {
+        $this->viewTemplate = 'token-generator.php';
+
+        return [
+            'autoGenerateUUID' => true
+        ];
+    }
+
+    private function handleRouteNewUUID()
+    {
+        global $lilurl, $auth;
+
+        header('Content-Type: application/json');
+
+        try {
+
+            $uid = $auth->getUserId();
+
+            $newKey = Uuid::uuid4()->toString();
+
+            $existing = $lilurl->getUserAPIKey($uid);
+
+            if ($existing) {
+
+                $lilurl->updateUserAPIKey($uid, $newKey);
+
+            } else {
+
+                $lilurl->createUserAPIKey($uid);
+
+                $lilurl->updateUserAPIKey($uid, $newKey);
+            }
+
+            echo json_encode([
+                'success' => true,
+                'apiKey' => $newKey
+            ]);
+
+        } catch (Exception $e) {
+
+            http_response_code(500);
+
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+
+        exit;
     }
 
     private function handleException(Exception $e) {

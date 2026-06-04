@@ -992,4 +992,128 @@ class lilURL
             array(self::PDO_PLACEHOLDER_URL_ID => $id)
         );
     }
+
+    /**
+     * Returns user's API key
+     */
+    public function getUserAPIKey($uid)
+    {
+        return $this->db->run(
+            'SELECT * FROM tblAPIKeys WHERE uid = :uid LIMIT 1',
+            array(':uid' => $uid),
+            TRUE
+        );
+    }
+
+    /**
+     * Creates API key for user if one does not exist
+     */
+    public function createUserAPIKey($uid)
+    {
+        $existing = $this->getUserAPIKey($uid);
+
+        if ($existing) {
+            return $existing->apiKey;
+        }
+
+        $uuid = Uuid::uuid4()->toString();
+
+        $this->db->insert(
+            'tblAPIKeys',
+            array(
+                'apiKey' => $uuid,
+                'uid' => $uid
+            )
+        );
+
+        return $uuid;
+    }
+
+    public function updateUserAPIKey($uid, $newKey)
+    {
+        return $this->db->run(
+            'UPDATE tblAPIKeys
+             SET apiKey = :apiKey
+             WHERE uid = :uid',
+            array(
+                ':apiKey' => $newKey,
+                ':uid' => $uid
+            )
+        );
+    }
+
+    /**
+     * Validates API key and returns uid
+     */
+    public function validateAPIKey($apiKey)
+    {
+        $result = $this->db->run(
+            'SELECT uid FROM tblAPIKeys WHERE apiKey = :apiKey LIMIT 1',
+            array(':apiKey' => $apiKey),
+            TRUE
+        );
+
+        if ($result) {
+            return $result->uid;
+        }
+
+        return false;
+    }
+
+    // /**
+    //  * Returns all links owned by user
+    //  */
+    // public function getUserLinks($uid)
+    // {
+    //     return $this->db->run(
+    //         'SELECT *
+    //          FROM tblURLs
+    //          WHERE createdBy = :uid
+    //          ORDER BY submitDate DESC',
+    //         array(':uid' => $uid)
+    //     );
+    // }
+
+    // /**
+    //  * Checks whether user owns URL
+    //  */
+    // public function userOwnsLink($urlID, $uid)
+    // {
+    //     $result = $this->db->run(
+    //         'SELECT urlID
+    //          FROM tblURLs
+    //          WHERE urlID = :urlID
+    //          AND createdBy = :uid
+    //          LIMIT 1',
+    //         array(
+    //             ':urlID' => $urlID,
+    //             ':uid' => $uid
+    //         ),
+    //         TRUE
+    //     );
+
+    //     return $result ? true : false;
+    // }
+
+    // /**
+    //  * Updates existing URL
+    //  */
+    // public function updateLinkAPI($urlID, $longURL, $uid)
+    // {
+    //     if (!$this->userOwnsLink($urlID, $uid)) {
+    //         return false;
+    //     }
+
+    //     return $this->db->run(
+    //         'UPDATE tblURLs
+    //          SET longURL = :longURL
+    //          WHERE urlID = :urlID
+    //          AND createdBy = :uid',
+    //         array(
+    //             ':longURL' => $longURL,
+    //             ':urlID' => $urlID,
+    //             ':uid' => $uid
+    //         )
+    //     );
+    // }
 }
