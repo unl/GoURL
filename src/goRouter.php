@@ -6,14 +6,10 @@ class GoRouter {
 
     // route names
     const ROUTE_NAME_API  = 'api';
-
-
     const ROUTE_NAME_API_V1_READ  = 'api/v1/read';
     const ROUTE_NAME_API_V1_CREATE  = 'api/v1/create';
     const ROUTE_NAME_API_V1_UPDATE  = 'api/v1/update';
     const ROUTE_NAME_API_V1_DELETE  = 'api/v1/delete';
-
-
     const ROUTE_NAME_EDIT  = 'edit';
     const ROUTE_NAME_GROUP = 'group';
     const ROUTE_NAME_GROUP_USER_ADD = 'group-user-add';
@@ -35,13 +31,10 @@ class GoRouter {
     // route paths
     const ROUTE_PATH_A = 'a/';
     const ROUTE_PATH_API = 'api/';
-
     const ROUTE_PATH_API_V1_READ  = 'api/v1/read';
     const ROUTE_PATH_API_V1_CREATE  = 'api/v1/create';
     const ROUTE_PATH_API_V1_UPDATE  = 'api/v1/update';
     const ROUTE_PATH_API_V1_DELETE  = 'api/v1/delete';
-
-
     const ROUTE_PATH_GROUP = 'a/group';
     const ROUTE_PATH_GROUP_USER_ADD = 'a/group-user-add';
     const ROUTE_PATH_GROUP_USER_REMOVE = 'a/group-user-remove';
@@ -91,8 +84,6 @@ class GoRouter {
         $this->route = NULL;
         if (empty($this->pathInfo)) {
             $this->route = self::ROUTE_NAME_HOME;
-
-
         } elseif ($this->pathInfo === self::ROUTE_PATH_API_V1_READ) {
             $this->route = self::ROUTE_NAME_API_V1_READ;
         }  elseif ($this->pathInfo === self::ROUTE_PATH_API_V1_CREATE) {
@@ -101,8 +92,6 @@ class GoRouter {
             $this->route = self::ROUTE_NAME_API_V1_UPDATE;
         }  elseif ($this->pathInfo === self::ROUTE_PATH_API_V1_DELETE) {
             $this->route = self::ROUTE_NAME_API_V1_DELETE;
-
-
         } elseif ($this->pathInfo === self::ROUTE_PATH_API) {
             $this->route = self::ROUTE_NAME_API;
         } elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {

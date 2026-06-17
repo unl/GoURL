@@ -125,16 +125,18 @@ class GoController extends GoRouter {
             case self::ROUTE_NAME_API_V1_READ:
                 $this->handleRouteRead();
                 die();
+
             case self::ROUTE_NAME_API_V1_CREATE:
                 $this->handleRouteCreate();
                 die();
+
             case self::ROUTE_NAME_API_V1_UPDATE:
                 $this->handleRouteUpdate();
                 die();
+
             case self::ROUTE_NAME_API_V1_DELETE:
                 $this->handleRouteDelete();
                 die();
-
 
             case self::ROUTE_NAME_HOME:
                 $this->handleRouteHomePage();
@@ -331,9 +333,8 @@ class GoController extends GoRouter {
                 'message' => $e->getMessage()
             ]);
         }
-
-        var_dump(getallheaders()['X-Api-Key']);
     }
+
     public function handleRouteUpdate() {
         if ($_SERVER['REQUEST_METHOD'] != 'PUT') {
             http_response_code(421);
@@ -394,9 +395,8 @@ class GoController extends GoRouter {
                 'message' => $e->getMessage()
             ]);
         }
-
-        var_dump(getallheaders()['X-Api-Key']);
     }
+
     public function handleRouteDelete() {
         if ($_SERVER['REQUEST_METHOD'] != 'DELETE') {
             http_response_code(421);
@@ -443,8 +443,6 @@ class GoController extends GoRouter {
                 'message' => $e->getMessage()
             ]);
         }
-
-        var_dump(getallheaders()['X-Api-Key']);
     }
 
     public function aliasCheck($urlID = null, $longURL = null){
