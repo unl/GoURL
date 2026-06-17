@@ -994,7 +994,7 @@ class lilURL
     }
 
     /**
-     * Returns user's API key
+     * Returns user's ID/ API key
      */
     public function getUserAPIKey($uid)
     {

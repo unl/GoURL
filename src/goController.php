@@ -121,6 +121,21 @@ class GoController extends GoRouter {
 
         switch($this->route) {
             case self::ROUTE_NAME_API:
+
+            case self::ROUTE_NAME_API_V1_READ:
+                $this->handleRouteRead();
+                die();
+            case self::ROUTE_NAME_API_V1_CREATE:
+                $this->handleRouteCreate();
+                die();
+            case self::ROUTE_NAME_API_V1_UPDATE:
+                $this->handleRouteUpdate();
+                die();
+            case self::ROUTE_NAME_API_V1_DELETE:
+                $this->handleRouteDelete();
+                die();
+
+
             case self::ROUTE_NAME_HOME:
                 $this->handleRouteHomePage();
                 break;
@@ -200,6 +215,257 @@ class GoController extends GoRouter {
         }
     }
 
+    public function handleRouteRead() {
+        if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+            http_response_code(421);
+            var_dump("Wrong request method. GET required.");
+            die();
+        }
+
+        if (!isset(getallheaders()['X-Api-Key'])) {
+            http_response_code(401);
+            var_dump("No API Key was provided in the headers.");
+            die();
+        }
+
+        $urlID = isset($_GET['urlID']) ? $_GET['urlID'] : null;
+        if(!$this->lilurl->getURL($urlID)) {
+            http_response_code(404);
+            var_dump("URL not found.");
+            die();
+        }
+
+        $info = $this->lilurl->getLinkRow($urlID, NULL, PDO::FETCH_OBJ);
+        $group = $this->lilurl->getGroup($info->groupID);
+
+        header('Content-Type: application/json');
+
+        try {
+            echo json_encode([
+                'success' => true,
+                'message' => 'URL read successfully.',
+                'data' => [
+                    'Go_URL' => $info->urlID,
+                    'Long_URL' => $info->longURL,
+                    'Redirect_Count' => $info->redirects,
+                    'Last_Redirect' => $info->lastRedirect,
+                    'Created_On' => $info->submitDate,
+                    'Created_By' => $info->createdBy,
+                    'Group' => $group ? $group->groupName : null,
+                    'Group_Users' => $group ? array_column($this->lilurl->getGroupUsers($group->groupID), 'uid') : null
+                ]
+            ]); 
+
+        } catch (Exception $e) {
+
+            http_response_code(500);
+
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function handleRouteCreate() {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            http_response_code(421);
+            var_dump("Wrong request method. POST required.");
+            die();
+        }
+
+        $apiKey = isset(getallheaders()['X-Api-Key']) ? getallheaders()['X-Api-Key'] : null;
+        $uid = $this->lilurl->validateAPIKey($apiKey);
+        if ($apiKey === null) {
+            http_response_code(401);
+            var_dump("No API Key was provided in the headers.");
+            die();
+        }
+        if(!$uid) {
+            http_response_code(418);
+            var_dump("No user associated with API Key provided.");
+            die();
+        }
+
+        $longURL = isset($_POST['longURL']) ? $_POST['longURL'] : null;
+        if($longURL === null) {
+            http_response_code(418);
+            var_dump("No URL provided.");
+            die();
+        }
+        if(!$this->lilurl->getID($longURL)) {
+            http_response_code(400);
+            var_dump("URL provided already exist.");
+            die();
+        }
+
+        $urlID = isset($_POST['urlID']) ? $_POST['urlID'] : $this->lilurl->getRandomID();
+        
+        $this->aliasCheck($urlID, $longURL);
+
+        $groupID = isset($_POST['groupID']) ? $_POST['groupID'] : 0;
+        $malicious_check_value='unchecked';
+
+        $this->lilurl->addURL($longURL, $urlID, $uid,$groupID, $malicious_check_value);
+
+        header('Content-Type: application/json');
+
+        try {
+            echo json_encode([
+                'success' => true,
+                'message' => 'URL created successfully.',
+                'data' => [
+                    'Go_URL' => $urlID,
+                    'Long_URL' => $longURL,
+                    'Group' => $groupID,
+                    'Group_Users' => $groupID ? array_column($this->lilurl->getGroupUsers($groupID), 'uid') : null
+                ]
+            ]);
+
+        } catch (Exception $e) {
+
+            http_response_code(500);
+
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+
+        var_dump(getallheaders()['X-Api-Key']);
+    }
+    public function handleRouteUpdate() {
+        if ($_SERVER['REQUEST_METHOD'] != 'PUT') {
+            http_response_code(421);
+            var_dump("Wrong request method. PUT required.");
+            die();
+        }
+        else{
+            parse_str(file_get_contents('php://input'), $_PUT);
+        }
+
+        $apiKey = isset(getallheaders()['X-Api-Key']) ? getallheaders()['X-Api-Key'] : null;
+        if ($apiKey === null) {
+            http_response_code(401);
+            var_dump("No API Key was provided in the headers.");
+            die();
+        }
+        if(!$this->lilurl->validateAPIKey($apiKey)) {
+            http_response_code(418);
+            var_dump("No user associated with API Key.");
+            die();
+        }
+
+        $urlID = isset($_PUT['urlID']) ? $_PUT['urlID'] : null;
+        if(!$this->lilurl->getURL($urlID)) {
+            http_response_code(404);
+            var_dump("URL not found.");
+            die();
+        }
+
+        $longURL = isset($_PUT['longURL']) ? $_PUT['longURL'] : http_response_code(418);
+
+        $groupID = isset($_PUT['groupID']) ? $_PUT['groupID'] : 0;
+        $malicious_check_value='unchecked';
+
+        $uid = $this->lilurl->validateAPIKey($apiKey);
+        $this->lilurl->updateURL($longURL, $urlID, $uid, $groupID, $malicious_check_value);
+
+        header('Content-Type: application/json');
+
+        try {
+            echo json_encode([
+                'success' => true,
+                'message' => 'URL updated successfully.',
+                'data' => [
+                    'Go_URL' => $urlID,
+                    'Long_URL' => $longURL,
+                    'Group' => $groupID,
+                    'Group_Users' => $groupID ? array_column($this->lilurl->getGroupUsers($groupID), 'uid') : null
+                ]
+            ]);
+
+        } catch (Exception $e) {
+
+            http_response_code(500);
+
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+
+        var_dump(getallheaders()['X-Api-Key']);
+    }
+    public function handleRouteDelete() {
+        if ($_SERVER['REQUEST_METHOD'] != 'DELETE') {
+            http_response_code(421);
+            var_dump("Wrong request method. DELETE required.");
+            die();
+        }
+
+        $apiKey = isset(getallheaders()['X-Api-Key']) ? getallheaders()['X-Api-Key'] : null;
+        if ($apiKey === null) {
+            http_response_code(401);
+            var_dump("No API Key was provided in the headers.");
+            die();
+        }
+        if(!$this->lilurl->validateAPIKey($apiKey)) {
+            http_response_code(418);
+            var_dump("No user associated with API Key.");
+            die();
+        }
+
+        $urlID = isset($_GET['urlID']) ? $_GET['urlID'] : null;
+        if(!$this->lilurl->getURL($urlID)) {
+            http_response_code(404);
+            var_dump("URL not found.");
+            die();
+        }
+
+        $uid = $this->lilurl->validateAPIKey($apiKey);
+        $this->lilurl->deleteURL($urlID, $uid);
+
+        header('Content-Type: application/json');
+
+        try {
+            echo json_encode([
+                'success' => true,
+                'message' => 'URL deleted successfully.'
+            ]); 
+
+        } catch (Exception $e) {
+
+            http_response_code(500);
+
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+
+        var_dump(getallheaders()['X-Api-Key']);
+    }
+
+    public function aliasCheck($urlID = null, $longURL = null){
+        //validate the alias if specified (data integrity)
+        if (!empty($urlID) && !preg_match('/^[\w\-]+$/', $urlID)) {
+            $this->lilurl->setErrorPOST();
+            throw new Exception('Invalid custom alias.', lilURL::ERR_INVALID_ALIAS);
+        }
+
+        //make sure alias isn't already in use
+        if (empty($this->lilurl->getURL($urlID)) === false) {
+            $this->lilurl->setErrorPOST();
+            throw new Exception('Alias is already in use. Please use a different alias.', lilURL::ERR_ALIAS_EXISTS);
+        }
+
+        // Check to see if the pair already exists in db
+        if ($this->lilurl->getIDandURL($urlID, $longURL) !== false) {
+            $this->lilurl->setErrorPOST();
+            throw new Exception('This alias/URL pair already exists.', lilURL::ERR_USED);
+        }
+    }
 
     public function renderTemplate($file, $params = [])
     {
