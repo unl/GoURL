@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `tblGroupUsers` (
 
 DROP TABLE IF EXISTS `tblAPIKeys`;
 CREATE TABLE IF NOT EXISTS `tblAPIKeys` (
-    `apiKey` CHAR(36) NOT NULL,
+    `apiKey` CHAR(39) NOT NULL,
     `uid` VARCHAR(50) NOT NULL,
 
     PRIMARY KEY (`apiKey`),

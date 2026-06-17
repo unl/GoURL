@@ -9,7 +9,7 @@ if (!$apiKeyRow) {
     $generatedKey = $apiKeyRow->apiKey;
 }
 
-$maskedKey = substr($generatedKey, 0, 4) . str_repeat('*', max(strlen($generatedKey) - 4, 0));
+$maskedKey = substr($generatedKey, 0, 7) . str_repeat('*', max(strlen($generatedKey) - 7, 0));
 ?>
 
 <div class="dcf-bleed dcf-pt-8 dcf-pb-8">
@@ -17,15 +17,15 @@ $maskedKey = substr($generatedKey, 0, 4) . str_repeat('*', max(strlen($generated
         <div class="dcf-d-grid dcf-grid-cols-1 dcf-grid-cols-2@md dcf-grid-cols-12 dcf-col-gap-vw dcf-row-gap-8">
 
             <div>
-                <h2 class="dcf-txt-h4">API Key</h2>
+                <h2 class="dcf-txt-h4">API Token</h2>
 
                 <p class="dcf-txt-sm">
-                    Use this key to authenticate API requests. Keep it secure and do not share it publicly.
+                    Use this token to authenticate API requests. Keep it secure and do not share it publicly.
                 </p>
 
                 <div class="dcf-form">
                     <div class="dcf-form-group">
-                        <label for="api-key">Your API Key</label>
+                        <label for="api-key">Your API Token</label>
 
                         <div class="dcf-input-group">
                             <input
@@ -45,7 +45,7 @@ $maskedKey = substr($generatedKey, 0, 4) . str_repeat('*', max(strlen($generated
                         </div>
 
                         <span class="dcf-form-help">
-                            Click “Copy” to copy your API key to the clipboard.
+                            Click “Copy” to copy your API token to the clipboard.
                         </span>
                     </div>
                 </div>
@@ -68,7 +68,7 @@ $maskedKey = substr($generatedKey, 0, 4) . str_repeat('*', max(strlen($generated
 let actualApiKey = <?php echo json_encode($generatedKey); ?>;
 
 function maskKey(key) {
-    return key.substring(0, 4) + "*".repeat(Math.max(key.length - 4, 0));
+    return key.substring(0, 7) + "*".repeat(Math.max(key.length - 7, 0));
 }
 
 function copyKey() {

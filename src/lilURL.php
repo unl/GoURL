@@ -1016,7 +1016,8 @@ class lilURL
             return $existing->apiKey;
         }
 
-        $uuid = Uuid::uuid4()->toString();
+        $key = Uuid::uuid4()->toString();
+        $uuid = 'go_'.$key;
 
         $this->db->insert(
             'tblAPIKeys',

@@ -872,7 +872,8 @@ class GoController extends GoRouter {
 
             $uid = $auth->getUserId();
 
-            $newKey = Uuid::uuid4()->toString();
+            $key = Uuid::uuid4()->toString();
+            $newKey = 'go_'.$key;
 
             $existing = $lilurl->getUserAPIKey($uid);
 
