@@ -21,7 +21,6 @@ async function loadTable(datatables) {
     // console.log(JSON.stringify(window.UNL.chat));
     
     $('#go-urls').DataTable({
-        responsive: true,
     
         // Sort by "Last Redirect" column descending by default
         order: [[4, 'desc']],
