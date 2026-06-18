@@ -37,8 +37,7 @@
                         <?php
                         $submitDate = $lilurl->createDateTimeFromTimestamp($url->submitDate);
                         $lastRedirect = $lilurl->createDateTimeFromTimestamp($url->lastRedirect);
-                        $longURLDisplay = strlen($url->longURL) > 30 ?
-                            substr($url->longURL, 0, 30)."..." : htmlspecialchars($url->longURL);
+                        $longURLDisplay = htmlspecialchars($url->longURL);
                         ?>
                         <tr>
                             <td class="dcf-txt-sm" data-header="Short URL">
@@ -55,7 +54,9 @@
                                     href="<?php echo $lilurl->escapeURL($url->longURL); ?>"
                                     title="Full URL: <?php echo htmlspecialchars($url->longURL ?? ''); ?>"
                                 >
-                                    <?php echo $longURLDisplay; ?>
+                                    <span style="display: inline-block; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        <?php echo $longURLDisplay; ?>
+                                    </span>
                                 </a>
                             </td>
                             <td class="dcf-txt-sm" data-header="Group">
