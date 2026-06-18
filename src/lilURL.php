@@ -992,4 +992,72 @@ class lilURL
             array(self::PDO_PLACEHOLDER_URL_ID => $id)
         );
     }
+
+    /**
+     * Returns user's ID/ API key
+     */
+    public function getUserAPIKey($uid)
+    {
+        return $this->db->run(
+            'SELECT * FROM tblAPIKeys WHERE uid = :uid LIMIT 1',
+            array(':uid' => $uid),
+            TRUE
+        );
+    }
+
+    /**
+     * Creates API key for user if one does not exist
+     */
+    public function createUserAPIKey($uid)
+    {
+        $existing = $this->getUserAPIKey($uid);
+
+        if ($existing) {
+            return $existing->apiKey;
+        }
+
+        $key = Uuid::uuid4()->toString();
+        $uuid = 'go_'.$key;
+
+        $this->db->insert(
+            'tblAPIKeys',
+            array(
+                'apiKey' => $uuid,
+                'uid' => $uid
+            )
+        );
+
+        return $uuid;
+    }
+
+    public function updateUserAPIKey($uid, $newKey)
+    {
+        return $this->db->run(
+            'UPDATE tblAPIKeys
+             SET apiKey = :apiKey
+             WHERE uid = :uid',
+            array(
+                ':apiKey' => $newKey,
+                ':uid' => $uid
+            )
+        );
+    }
+
+    /**
+     * Validates API key and returns uid
+     */
+    public function validateAPIKey($apiKey)
+    {
+        $result = $this->db->run(
+            'SELECT uid FROM tblAPIKeys WHERE apiKey = :apiKey LIMIT 1',
+            array(':apiKey' => $apiKey),
+            TRUE
+        );
+
+        if ($result) {
+            return $result->uid;
+        }
+
+        return false;
+    }
 }
