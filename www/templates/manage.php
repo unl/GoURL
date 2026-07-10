@@ -66,22 +66,16 @@
                                 <?php echo htmlspecialchars($url->redirects ?? ''); ?>
                             </td>
                             <td
-                                class="dcf-txt-sm"
+                                class="dcf-txt-sm lastRedirect"
                                 data-header="LastRedirect"
-                                <?php if ($lastRedirect): ?>
-                                    data-search="<?php echo $lastRedirect->format('M j, Y m/d/Y') ?>"
-                                    data-order="<?php echo $lastRedirect->format('U') ?>"
-                                <?php endif; ?>
+                                data-raw-value="<?php echo !empty($lastRedirect) ? $lastRedirect->format('U') : 0; ?>"
                             >
                                 <?php echo !empty($lastRedirect) ? $lastRedirect->format('M j, Y') : 'Never'; ?>
                             </td>
                             <td
-                                class="dcf-txt-sm"
+                                class="dcf-txt-sm createdOn"
                                 data-header="Created on"
-                                <?php if ($submitDate): ?>
-                                    data-search="<?php echo $submitDate->format('M j, Y m/d/Y') ?>"
-                                    data-order="<?php echo $submitDate->format('U') ?>"
-                                <?php endif; ?>
+                                data-raw-value="<?php echo !empty($submitDate) ? $submitDate->format('U') : 0; ?>"
                             >
                                 <?php echo !empty($submitDate) ? $submitDate->format('M j, Y') : 'N/A'; ?>
                             </td>

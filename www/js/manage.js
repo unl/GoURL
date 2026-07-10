@@ -25,31 +25,57 @@ async function loadTable(datatables) {
         // Sort by "Last Redirect" column descending by default
         order: [[4, 'desc']],
     
-        columnDefs: [
-            // Last Redirect column
+        columns: [
             {
-                targets: 4,
-                type: 'date'
+                // Short URL
+                type: 'string',
             },
-    
-            // Created On column
             {
-                targets: 5,
-                type: 'date'
+                // Long URL
+                type: 'string',
             },
-    
-            // Actions column should not be sortable/searchable
             {
-                targets: 6,
+                // Group
+                type: 'string',
+            },
+            {
+                // Redirects
+                type: 'num',
+            },
+            {
+                // Last Redirect
+                type: 'num',
+                render: (data, type, row, meta) => {
+                    if (type === 'display' || type === 'filter') {
+                        return data; // whatever's already formatted for display
+                    }
+                    // For 'sort' and 'type', manually grab data-order from the cell
+                    const cell = meta.settings.aoData[meta.row].anCells[meta.col];
+                    const sortValue = cell.dataset?.rawValue ?? 0;
+
+                    return sortValue ? sortValue : data;
+                },
+            },
+            {
+                // Created on
+                type: 'num',
+                render: (data, type, row, meta) => {
+                    if (type === 'display' || type === 'filter') {
+                        return data; // whatever's already formatted for display
+                    }
+                    // For 'sort' and 'type', manually grab data-order from the cell
+                    const cell = meta.settings.aoData[meta.row].anCells[meta.col];
+                    const sortValue = cell.dataset?.rawValue ?? 0;
+
+                    return sortValue ? sortValue : data;
+                },
+            },
+            {
+                // Actions
+                type: 'html',
                 orderable: false,
-                searchable: false
+                searchable: false,
             },
-    
-            // Center redirect counts
-            {
-                targets: 3,
-                className: 'dt-center'
-            }
         ],
     
         buttons: [
