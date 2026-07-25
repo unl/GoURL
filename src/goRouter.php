@@ -6,6 +6,10 @@ class GoRouter {
 
     // route names
     const ROUTE_NAME_API  = 'api';
+    const ROUTE_NAME_API_V1_READ  = 'api/v1/read';
+    const ROUTE_NAME_API_V1_CREATE  = 'api/v1/create';
+    const ROUTE_NAME_API_V1_UPDATE  = 'api/v1/update';
+    const ROUTE_NAME_API_V1_DELETE  = 'api/v1/delete';
     const ROUTE_NAME_EDIT  = 'edit';
     const ROUTE_NAME_GROUP = 'group';
     const ROUTE_NAME_GROUP_USER_ADD = 'group-user-add';
@@ -21,10 +25,16 @@ class GoRouter {
     const ROUTE_NAME_QR_SVG = 'qr-svg';
     const ROUTE_NAME_REDIRECT = 'redirect';
     const ROUTE_NAME_RESET = 'reset';
+    const ROUTE_NAME_TOKEN_GENERATOR = 'token-generator';
+    const ROUTE_NAME_NEW_UUID = 'new-uuid';
 
     // route paths
     const ROUTE_PATH_A = 'a/';
     const ROUTE_PATH_API = 'api/';
+    const ROUTE_PATH_API_V1_READ  = 'api/v1/read';
+    const ROUTE_PATH_API_V1_CREATE  = 'api/v1/create';
+    const ROUTE_PATH_API_V1_UPDATE  = 'api/v1/update';
+    const ROUTE_PATH_API_V1_DELETE  = 'api/v1/delete';
     const ROUTE_PATH_GROUP = 'a/group';
     const ROUTE_PATH_GROUP_USER_ADD = 'a/group-user-add';
     const ROUTE_PATH_GROUP_USER_REMOVE = 'a/group-user-remove';
@@ -34,7 +44,8 @@ class GoRouter {
     const ROUTE_PATH_LOGIN = 'a/login';
     const ROUTE_PATH_LOGOUT = 'a/logout';
     const ROUTE_PATH_LOOKUP = 'a/lookup';
-
+    const ROUTE_PATH_TOKEN_GENERATOR = 'a/token-generator';
+    const ROUTE_PATH_NEW_UUID = 'a/new-uuid';
     public static $corsAllowedDomains = array();
 
     protected $viewTemplate;
@@ -71,9 +82,16 @@ class GoRouter {
 
     public function route() {
         $this->route = NULL;
-
         if (empty($this->pathInfo)) {
             $this->route = self::ROUTE_NAME_HOME;
+        } elseif ($this->pathInfo === self::ROUTE_PATH_API_V1_READ) {
+            $this->route = self::ROUTE_NAME_API_V1_READ;
+        }  elseif ($this->pathInfo === self::ROUTE_PATH_API_V1_CREATE) {
+            $this->route = self::ROUTE_NAME_API_V1_CREATE;
+        }  elseif ($this->pathInfo === self::ROUTE_PATH_API_V1_UPDATE) {
+            $this->route = self::ROUTE_NAME_API_V1_UPDATE;
+        }  elseif ($this->pathInfo === self::ROUTE_PATH_API_V1_DELETE) {
+            $this->route = self::ROUTE_NAME_API_V1_DELETE;
         } elseif ($this->pathInfo === self::ROUTE_PATH_API) {
             $this->route = self::ROUTE_NAME_API;
         } elseif (preg_match('#^([^/]+)\.qr$#', $this->pathInfo, $matches)) {
@@ -99,7 +117,11 @@ class GoRouter {
             $this->route = self::ROUTE_NAME_MANAGE;
         } elseif (isset($_GET['lookup']) || $this->pathInfo === self::ROUTE_PATH_LOOKUP) {
             $this->route = self::ROUTE_NAME_LOOKUP;
-        } elseif (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
+        } elseif ($this->pathInfo === self::ROUTE_PATH_TOKEN_GENERATOR) {
+            $this->route = self::ROUTE_NAME_TOKEN_GENERATOR;
+        } elseif ($this->pathInfo === self::ROUTE_PATH_NEW_UUID) {
+            $this->route = self::ROUTE_NAME_NEW_UUID;
+        }elseif (preg_match('/^a\/group\/(\d+)$/', $this->pathInfo, $matches)) {
             $this->route = self::ROUTE_NAME_GROUP;
             $this->groupId = $matches[1];
             $this->groupMode = self::MODE_EDIT;
