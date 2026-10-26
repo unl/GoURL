@@ -26,7 +26,7 @@ if ($useTheme === 'dcf') {
     GoController::$institution = 'University of Nebraska&ndash;Lincoln';
     GoController::$themePath = __DIR__ . '/src/Themes/unl';
     GoController::$template = UNL\Templates\Theme::TYPE_APP_LOCAL;
-    GoController::$templateVersion = UNL\Templates\Templates::VERSION_5_3;
+    GoController::$templateVersion = UNL\Templates\Templates::VERSION_6_1;
 }
 
 // Define Auth
